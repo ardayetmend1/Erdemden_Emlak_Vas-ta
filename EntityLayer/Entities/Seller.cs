@@ -2,10 +2,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EntityLayer.Entities;
 
-public class Seller
+public class Seller : BaseEntity
 {
-    public int Id { get; set; }
-
     [Required]
     [MaxLength(100)]
     public string Name { get; set; } = null!;
@@ -15,8 +13,6 @@ public class Seller
 
     [MaxLength(500)]
     public string? Avatar { get; set; }
-
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public virtual ICollection<Listing> Listings { get; set; } = new List<Listing>();
 }

@@ -2,11 +2,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EntityLayer.Entities;
 
-public class Model
+public class Model : BaseEntity
 {
-    public int Id { get; set; }
-
-    public int BrandId { get; set; }
+    public Guid BrandId { get; set; }
 
     [Required]
     [MaxLength(100)]

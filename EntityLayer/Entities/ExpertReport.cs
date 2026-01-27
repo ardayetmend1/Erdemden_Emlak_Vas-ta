@@ -2,11 +2,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EntityLayer.Entities;
 
-public class ExpertReport
+public class ExpertReport : BaseEntity
 {
-    public int Id { get; set; }
-
-    public int QuoteRequestId { get; set; }
+    public Guid QuoteRequestId { get; set; }
 
     [Required]
     [MaxLength(255)]
@@ -16,8 +14,6 @@ public class ExpertReport
     public string? ContentType { get; set; }
 
     public byte[]? Data { get; set; }
-
-    public DateTime UploadedAt { get; set; } = DateTime.UtcNow;
 
     public virtual QuoteRequest QuoteRequest { get; set; } = null!;
 }

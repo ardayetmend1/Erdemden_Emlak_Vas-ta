@@ -7,14 +7,14 @@ public class Vehicle
 {
     [Key]
     [ForeignKey("Listing")]
-    public int ListingId { get; set; }
+    public Guid ListingId { get; set; }
 
-    public int VehicleTypeId { get; set; }
-    public int? BodyTypeId { get; set; }
-    public int BrandId { get; set; }
-    public int ModelId { get; set; }
-    public int FuelTypeId { get; set; }
-    public int TransmissionTypeId { get; set; }
+    public Guid VehicleTypeId { get; set; }
+    public Guid? BodyTypeId { get; set; }
+    public Guid BrandId { get; set; }
+    public Guid ModelId { get; set; }
+    public Guid FuelTypeId { get; set; }
+    public Guid TransmissionTypeId { get; set; }
 
     public int? Year { get; set; }
     public int? Km { get; set; }

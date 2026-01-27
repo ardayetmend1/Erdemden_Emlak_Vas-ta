@@ -2,11 +2,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EntityLayer.Entities;
 
-public class NotaryDocument
+public class NotaryDocument : BaseEntity
 {
-    public int Id { get; set; }
-
-    public int ListingId { get; set; }
+    public Guid ListingId { get; set; }
 
     [Required]
     [MaxLength(255)]
@@ -16,8 +14,6 @@ public class NotaryDocument
     public string? ContentType { get; set; }
 
     public byte[]? Data { get; set; }
-
-    public DateTime UploadedAt { get; set; } = DateTime.UtcNow;
 
     public virtual Listing Listing { get; set; } = null!;
 }

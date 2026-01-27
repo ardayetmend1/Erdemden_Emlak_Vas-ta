@@ -2,11 +2,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EntityLayer.Entities;
 
-public class District
+public class District : BaseEntity
 {
-    public int Id { get; set; }
-
-    public int CityId { get; set; }
+    public Guid CityId { get; set; }
 
     [Required]
     [MaxLength(100)]

@@ -2,10 +2,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EntityLayer.Entities;
 
-public class VehicleType
+public class VehicleType : BaseEntity
 {
-    public int Id { get; set; }
-
     [Required]
     [MaxLength(100)]
     public string Name { get; set; } = null!;

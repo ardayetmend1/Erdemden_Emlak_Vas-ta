@@ -2,11 +2,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EntityLayer.Entities;
 
-public class BodyType
+public class BodyType : BaseEntity
 {
-    public int Id { get; set; }
-
-    public int VehicleTypeId { get; set; }
+    public Guid VehicleTypeId { get; set; }
 
     [Required]
     [MaxLength(100)]

@@ -2,13 +2,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EntityLayer.Entities;
 
-public class QuoteRequest
+public class QuoteRequest : BaseEntity
 {
-    public int Id { get; set; }
-
     public DateTime Date { get; set; } = DateTime.UtcNow;
-
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     // Araç bilgisi
     [MaxLength(20)]

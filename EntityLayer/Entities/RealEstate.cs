@@ -7,9 +7,9 @@ public class RealEstate
 {
     [Key]
     [ForeignKey("Listing")]
-    public int ListingId { get; set; }
+    public Guid ListingId { get; set; }
 
-    public int HousingTypeId { get; set; }
+    public Guid HousingTypeId { get; set; }
 
     [MaxLength(20)]
     public string? RoomCount { get; set; }

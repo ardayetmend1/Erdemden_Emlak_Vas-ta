@@ -3,10 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EntityLayer.Entities;
 
-public class Listing
+public class Listing : BaseEntity
 {
-    public int Id { get; set; }
-
     [Required]
     [MaxLength(255)]
     public string Title { get; set; } = null!;
@@ -29,13 +27,9 @@ public class Listing
 
     public DateTime ListingDate { get; set; } = DateTime.UtcNow;
 
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-    public DateTime? UpdatedAt { get; set; }
-
     // Konum
-    public int CityId { get; set; }
-    public int? DistrictId { get; set; }
+    public Guid CityId { get; set; }
+    public Guid? DistrictId { get; set; }
 
     // Satış Bilgileri (Admin)
     [Column(TypeName = "decimal(18,2)")]
@@ -61,7 +55,7 @@ public class Listing
     public BuyerReason? BuyerReason { get; set; }
 
     // Satıcı
-    public int? SellerId { get; set; }
+    public Guid? SellerId { get; set; }
 
     // Navigation
     public virtual City City { get; set; } = null!;

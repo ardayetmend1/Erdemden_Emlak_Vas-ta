@@ -2,8 +2,8 @@ namespace EntityLayer.Entities;
 
 public class UserFavorite
 {
-    public int UserId { get; set; }
-    public int ListingId { get; set; }
+    public Guid UserId { get; set; }
+    public Guid ListingId { get; set; }
 
     public DateTime AddedAt { get; set; } = DateTime.UtcNow;
 

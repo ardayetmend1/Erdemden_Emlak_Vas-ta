@@ -2,10 +2,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EntityLayer.Entities;
 
-public class SiteContent
+public class SiteContent : BaseEntity
 {
-    public int Id { get; set; }
-
     [Required]
     [MaxLength(100)]
     public string Key { get; set; } = null!;
@@ -18,6 +16,4 @@ public class SiteContent
 
     [MaxLength(1000)]
     public string? Description { get; set; }
-
-    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 }

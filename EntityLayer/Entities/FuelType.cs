@@ -2,10 +2,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EntityLayer.Entities;
 
-public class FuelType
+public class FuelType : BaseEntity
 {
-    public int Id { get; set; }
-
     [Required]
     [MaxLength(50)]
     public string Name { get; set; } = null!;

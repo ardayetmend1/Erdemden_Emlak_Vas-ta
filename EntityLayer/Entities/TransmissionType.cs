@@ -2,10 +2,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EntityLayer.Entities;
 
-public class TransmissionType
+public class TransmissionType : BaseEntity
 {
-    public int Id { get; set; }
-
     [Required]
     [MaxLength(50)]
     public string Name { get; set; } = null!;
