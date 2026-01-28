@@ -5,14 +5,11 @@ namespace DataAcessLayer.Concrete
 {
     public class Context : DbContext
     {
-        // Constructor Injection - Program.cs üzerinden ayar alabilmesi için
         public Context(DbContextOptions<Context> options) : base(options)
         {
         }
 
-        // OnConfiguring'i kaldırdık veya sadece fallback olarak bırakabiliriz.
-        // Artık ayarları Program.cs yapacak.
-
+        // DbSets
         public DbSet<Listing> Listings { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Seller> Sellers { get; set; }
@@ -33,5 +30,158 @@ namespace DataAcessLayer.Concrete
         public DbSet<UserFavorite> UserFavorites { get; set; }
         public DbSet<QuoteRequest> QuoteRequests { get; set; }
         public DbSet<SiteContent> SiteContents { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // ==================== LISTING ====================
+            modelBuilder.Entity<Listing>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                // City - Listing (1:N)
+                entity.HasOne(e => e.City)
+                    .WithMany(c => c.Listings)
+                    .HasForeignKey(e => e.CityId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                // District - Listing (1:N, optional)
+                entity.HasOne(e => e.District)
+                    .WithMany(d => d.Listings)
+                    .HasForeignKey(e => e.DistrictId)
+                    .OnDelete(DeleteBehavior.SetNull);
+
+                // Seller - Listing (1:N, optional)
+                entity.HasOne(e => e.Seller)
+                    .WithMany(s => s.Listings)
+                    .HasForeignKey(e => e.SellerId)
+                    .OnDelete(DeleteBehavior.SetNull);
+            });
+
+            // ==================== VEHICLE (1:1 with Listing) ====================
+            modelBuilder.Entity<Vehicle>(entity =>
+            {
+                entity.HasKey(e => e.ListingId);
+
+                entity.HasOne(e => e.Listing)
+                    .WithOne(l => l.Vehicle)
+                    .HasForeignKey<Vehicle>(e => e.ListingId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.Brand)
+                    .WithMany(b => b.Vehicles)
+                    .HasForeignKey(e => e.BrandId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(e => e.Model)
+                    .WithMany(m => m.Vehicles)
+                    .HasForeignKey(e => e.ModelId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(e => e.VehicleType)
+                    .WithMany(v => v.Vehicles)
+                    .HasForeignKey(e => e.VehicleTypeId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(e => e.BodyType)
+                    .WithMany(b => b.Vehicles)
+                    .HasForeignKey(e => e.BodyTypeId)
+                    .OnDelete(DeleteBehavior.SetNull);
+
+                entity.HasOne(e => e.FuelType)
+                    .WithMany(f => f.Vehicles)
+                    .HasForeignKey(e => e.FuelTypeId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(e => e.TransmissionType)
+                    .WithMany(t => t.Vehicles)
+                    .HasForeignKey(e => e.TransmissionTypeId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            // ==================== REALESTATE (1:1 with Listing) ====================
+            modelBuilder.Entity<RealEstate>(entity =>
+            {
+                entity.HasKey(e => e.ListingId);
+
+                entity.HasOne(e => e.Listing)
+                    .WithOne(l => l.RealEstate)
+                    .HasForeignKey<RealEstate>(e => e.ListingId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.HousingType)
+                    .WithMany(h => h.RealEstates)
+                    .HasForeignKey(e => e.HousingTypeId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            // ==================== MODEL - BRAND (1:N) ====================
+            modelBuilder.Entity<Model>(entity =>
+            {
+                entity.HasOne(e => e.Brand)
+                    .WithMany(b => b.Models)
+                    .HasForeignKey(e => e.BrandId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // ==================== DISTRICT - CITY (1:N) ====================
+            modelBuilder.Entity<District>(entity =>
+            {
+                entity.HasOne(e => e.City)
+                    .WithMany(c => c.Districts)
+                    .HasForeignKey(e => e.CityId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // ==================== LISTING IMAGE (1:N) ====================
+            modelBuilder.Entity<ListingImage>(entity =>
+            {
+                entity.HasOne(e => e.Listing)
+                    .WithMany(l => l.Images)
+                    .HasForeignKey(e => e.ListingId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // ==================== NOTARY DOCUMENT (1:N) ====================
+            modelBuilder.Entity<NotaryDocument>(entity =>
+            {
+                entity.HasOne(e => e.Listing)
+                    .WithMany(l => l.NotaryDocuments)
+                    .HasForeignKey(e => e.ListingId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // ==================== EXPERT REPORT (1:N with QuoteRequest) ====================
+            modelBuilder.Entity<ExpertReport>(entity =>
+            {
+                entity.HasOne(e => e.QuoteRequest)
+                    .WithMany(q => q.ExpertReports)
+                    .HasForeignKey(e => e.QuoteRequestId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // ==================== USER FAVORITE (M:N) ====================
+            modelBuilder.Entity<UserFavorite>(entity =>
+            {
+                entity.HasKey(e => new { e.UserId, e.ListingId });
+
+                entity.HasOne(e => e.User)
+                    .WithMany(u => u.Favorites)
+                    .HasForeignKey(e => e.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.Listing)
+                    .WithMany(l => l.FavoritedBy)
+                    .HasForeignKey(e => e.ListingId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // ==================== USER ====================
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.HasIndex(e => e.Email).IsUnique();
+            });
+        }
     }
 }
