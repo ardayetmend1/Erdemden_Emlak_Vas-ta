@@ -54,13 +54,9 @@ public class Listing : BaseEntity
 
     public BuyerReason? BuyerReason { get; set; }
 
-    // Satıcı
-    public Guid? SellerId { get; set; }
-
     // Navigation
     public virtual City City { get; set; } = null!;
     public virtual District? District { get; set; }
-    public virtual Seller? Seller { get; set; }
     public virtual Vehicle? Vehicle { get; set; }
     public virtual RealEstate? RealEstate { get; set; }
     public virtual ICollection<ListingImage> Images { get; set; } = new List<ListingImage>();

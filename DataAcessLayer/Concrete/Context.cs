@@ -12,7 +12,6 @@ namespace DataAcessLayer.Concrete
         // DbSets
         public DbSet<Listing> Listings { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<Seller> Sellers { get; set; }
         public DbSet<Vehicle> Vehicles { get; set; }
         public DbSet<RealEstate> RealEstates { get; set; }
         public DbSet<Brand> Brands { get; set; }
@@ -50,12 +49,6 @@ namespace DataAcessLayer.Concrete
                 entity.HasOne(e => e.District)
                     .WithMany(d => d.Listings)
                     .HasForeignKey(e => e.DistrictId)
-                    .OnDelete(DeleteBehavior.SetNull);
-
-                // Seller - Listing (1:N, optional)
-                entity.HasOne(e => e.Seller)
-                    .WithMany(s => s.Listings)
-                    .HasForeignKey(e => e.SellerId)
                     .OnDelete(DeleteBehavior.SetNull);
             });
 
