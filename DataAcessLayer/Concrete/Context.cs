@@ -29,6 +29,7 @@ namespace DataAcessLayer.Concrete
         public DbSet<UserFavorite> UserFavorites { get; set; }
         public DbSet<QuoteRequest> QuoteRequests { get; set; }
         public DbSet<SiteContent> SiteContents { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -174,6 +175,17 @@ namespace DataAcessLayer.Concrete
             modelBuilder.Entity<User>(entity =>
             {
                 entity.HasIndex(e => e.Email).IsUnique();
+            });
+
+            // ==================== REFRESH TOKEN (1:N with User) ====================
+            modelBuilder.Entity<RefreshToken>(entity =>
+            {
+                entity.HasOne(e => e.User)
+                    .WithMany(u => u.RefreshTokens)
+                    .HasForeignKey(e => e.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasIndex(e => e.Token);
             });
         }
     }

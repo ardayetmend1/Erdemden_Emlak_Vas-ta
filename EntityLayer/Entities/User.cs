@@ -22,4 +22,5 @@ public class User : BaseEntity
     public DateTime? LastLoginAt { get; set; }
 
     public virtual ICollection<UserFavorite> Favorites { get; set; } = new List<UserFavorite>();
+    public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 }
