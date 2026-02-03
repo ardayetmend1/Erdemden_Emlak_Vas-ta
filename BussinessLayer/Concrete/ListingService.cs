@@ -269,12 +269,64 @@ public class ListingService : IListingService
         if (filter.ToDate.HasValue)
             query = query.Where(l => l.ListingDate <= filter.ToDate.Value);
 
+        // ==================== Araç Filtreleri ====================
+        if (filter.VehicleTypeId.HasValue)
+            query = query.Where(l => l.Vehicle != null && l.Vehicle.VehicleTypeId == filter.VehicleTypeId.Value);
+
+        if (filter.BrandId.HasValue)
+            query = query.Where(l => l.Vehicle != null && l.Vehicle.BrandId == filter.BrandId.Value);
+
+        if (filter.ModelId.HasValue)
+            query = query.Where(l => l.Vehicle != null && l.Vehicle.ModelId == filter.ModelId.Value);
+
+        if (filter.BodyTypeId.HasValue)
+            query = query.Where(l => l.Vehicle != null && l.Vehicle.BodyTypeId == filter.BodyTypeId.Value);
+
+        if (filter.FuelTypeId.HasValue)
+            query = query.Where(l => l.Vehicle != null && l.Vehicle.FuelTypeId == filter.FuelTypeId.Value);
+
+        if (filter.TransmissionTypeId.HasValue)
+            query = query.Where(l => l.Vehicle != null && l.Vehicle.TransmissionTypeId == filter.TransmissionTypeId.Value);
+
+        if (filter.MinYear.HasValue)
+            query = query.Where(l => l.Vehicle != null && l.Vehicle.Year >= filter.MinYear.Value);
+
+        if (filter.MaxYear.HasValue)
+            query = query.Where(l => l.Vehicle != null && l.Vehicle.Year <= filter.MaxYear.Value);
+
+        if (filter.MinKm.HasValue)
+            query = query.Where(l => l.Vehicle != null && l.Vehicle.Km >= filter.MinKm.Value);
+
+        if (filter.MaxKm.HasValue)
+            query = query.Where(l => l.Vehicle != null && l.Vehicle.Km <= filter.MaxKm.Value);
+
+        // ==================== Emlak Filtreleri ====================
+        if (filter.HousingTypeId.HasValue)
+            query = query.Where(l => l.RealEstate != null && l.RealEstate.HousingTypeId == filter.HousingTypeId.Value);
+
+        if (!string.IsNullOrWhiteSpace(filter.RoomCount))
+            query = query.Where(l => l.RealEstate != null && l.RealEstate.RoomCount == filter.RoomCount);
+
+        if (filter.MinSize.HasValue)
+            query = query.Where(l => l.RealEstate != null && l.RealEstate.Size >= filter.MinSize.Value);
+
+        if (filter.MaxSize.HasValue)
+            query = query.Where(l => l.RealEstate != null && l.RealEstate.Size <= filter.MaxSize.Value);
+
         // Toplam kayıt sayısı
         var totalCount = await query.CountAsync();
 
-        // Sıralama ve sayfalama
+        // ==================== Sıralama ====================
+        query = filter.SortBy switch
+        {
+            "price_asc" => query.OrderBy(l => l.Price),
+            "price_desc" => query.OrderByDescending(l => l.Price),
+            "oldest" => query.OrderBy(l => l.CreatedAt),
+            _ => query.OrderByDescending(l => l.CreatedAt) // newest default
+        };
+
+        // Sayfalama
         var listings = await query
-            .OrderByDescending(l => l.CreatedAt)
             .Skip((filter.PageNumber - 1) * filter.PageSize)
             .Take(filter.PageSize)
             .ToListAsync();

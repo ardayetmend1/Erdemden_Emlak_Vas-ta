@@ -79,6 +79,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IListingService, ListingService>();
 builder.Services.AddScoped<IQuoteService, QuoteService>();
 builder.Services.AddScoped<IFavoriteService, FavoriteService>();
+builder.Services.AddScoped<ISiteContentService, SiteContentService>();
 
 // ==================== CORS ====================
 builder.Services.AddCors(options =>
