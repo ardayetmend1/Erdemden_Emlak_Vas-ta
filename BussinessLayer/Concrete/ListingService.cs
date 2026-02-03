@@ -68,6 +68,26 @@ public class ListingService : IListingService
             await _unitOfWork.Repository<Vehicle>().AddAsync(vehicle);
             await _unitOfWork.SaveChangesAsync();
 
+            // Görselleri ekle
+            if (listingDto.Images != null && listingDto.Images.Any())
+            {
+                var images = listingDto.Images.Select((img, index) => new ListingImage
+                {
+                    ListingId = listing.Id,
+                    Base64Data = img.Base64Data,
+                    FileName = img.FileName,
+                    MimeType = GetMimeType(img.FileName),
+                    IsCover = index == 0, // İlk görsel kapak
+                    Order = img.Order ?? index
+                }).ToList();
+
+                foreach (var image in images)
+                {
+                    await _unitOfWork.Repository<ListingImage>().AddAsync(image);
+                }
+                await _unitOfWork.SaveChangesAsync();
+            }
+
             await _unitOfWork.CommitTransactionAsync();
 
             // Oluşturulan ilanı getir
@@ -301,13 +321,17 @@ public class ListingService : IListingService
 
     private static ListingDto MapToListingDto(Listing listing)
     {
+        // Kapak görseli veya ilk görseli al
+        var coverImage = listing.Images?.FirstOrDefault(i => i.IsCover) ?? listing.Images?.FirstOrDefault();
+        var coverImageUrl = coverImage?.GetDisplayUrl();
+
         return new ListingDto
         {
             Id = listing.Id,
             Title = listing.Title,
             Price = listing.Price,
             Currency = listing.Currency,
-            ImageUrl = listing.Images?.FirstOrDefault()?.ImageUrl,
+            ImageUrl = coverImageUrl,
             Description = listing.Description,
             Category = listing.Category,
             Status = listing.Status,
@@ -325,7 +349,7 @@ public class ListingService : IListingService
             Images = listing.Images?.Select(i => new ImageDto
             {
                 Id = i.Id,
-                ImageUrl = i.ImageUrl,
+                ImageUrl = i.GetDisplayUrl(),
                 IsCover = i.IsCover,
                 Order = i.Order
             }).ToList() ?? new List<ImageDto>(),
@@ -370,6 +394,23 @@ public class ListingService : IListingService
                 ParentId = vehicle.BodyType.VehicleTypeId,
                 ParentName = vehicle.VehicleType?.Name ?? string.Empty
             } : null
+        };
+    }
+
+    /// <summary>
+    /// Dosya uzantısından MIME tipini belirle
+    /// </summary>
+    private static string GetMimeType(string fileName)
+    {
+        var extension = Path.GetExtension(fileName)?.ToLowerInvariant();
+        return extension switch
+        {
+            ".jpg" or ".jpeg" => "image/jpeg",
+            ".png" => "image/png",
+            ".gif" => "image/gif",
+            ".webp" => "image/webp",
+            ".bmp" => "image/bmp",
+            _ => "image/jpeg" // Varsayılan
         };
     }
 

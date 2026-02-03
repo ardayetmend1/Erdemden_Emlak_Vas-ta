@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Core.DTOs.ImageDtos;
 using EntityLayer.Entities;
 
 namespace Core.DTOs.ListingDtos;
@@ -40,4 +41,9 @@ public class CreateListingDto
     /// Masraflar
     /// </summary>
     public decimal? Expenses { get; set; }
+
+    /// <summary>
+    /// İlan görselleri (Base64 formatında)
+    /// </summary>
+    public List<UploadImageDto>? Images { get; set; }
 }
