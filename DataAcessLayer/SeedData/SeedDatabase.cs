@@ -11,9 +11,20 @@ namespace DataAcessLayer.SeedData
     {
         public static async Task InitializeAsync(Context context)
         {
-            // Veritabanının var olduğundan emin ol
-            // await context.Database.MigrateAsync(); // Migration kullanılıyorsa
+            // Lookup verilerini seed et
+            await SeedBrands.SeedAsync(context);
+            await SeedVehicleTypes.SeedAsync(context);
+            await SeedFuelTypes.SeedAsync(context);
+            await SeedTransmissionTypes.SeedAsync(context);
+            await SeedCities.SeedAsync(context);
+            await SeedHousingTypes.SeedAsync(context);
 
+            // Admin kullanıcı oluştur
+            await SeedAdminUser(context);
+        }
+
+        private static async Task SeedAdminUser(Context context)
+        {
             // Admin var mı kontrol et
             if (!await context.Users.AnyAsync(u => u.Role == UserRole.Admin))
             {

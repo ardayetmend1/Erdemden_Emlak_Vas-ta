@@ -7,6 +7,7 @@ using DataAcessLayer.Abstract;
 using BussinessLayer.Abstract;
 using BussinessLayer.Concrete;
 using BussinessLayer.Settings;
+using DataAcessLayer.SeedData;
 
 // Load .env file
 DotNetEnv.Env.Load();
@@ -75,6 +76,7 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 // Services
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IListingService, ListingService>();
 
 // ==================== CORS ====================
 builder.Services.AddCors(options =>
@@ -101,6 +103,13 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 var app = builder.Build();
+
+// ==================== Seed Database ====================
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<Context>();
+    await SeedDatabase.InitializeAsync(context);
+}
 
 // ==================== Middleware Pipeline ====================
 if (app.Environment.IsDevelopment())

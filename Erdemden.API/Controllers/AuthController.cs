@@ -15,11 +15,13 @@ public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
     private readonly JwtSettings _jwtSettings;
+    private readonly IWebHostEnvironment _environment;
 
-    public AuthController(IAuthService authService, IOptions<JwtSettings> jwtSettings)
+    public AuthController(IAuthService authService, IOptions<JwtSettings> jwtSettings, IWebHostEnvironment environment)
     {
         _authService = authService;
         _jwtSettings = jwtSettings.Value;
+        _environment = environment;
     }
 
     /// <summary>
@@ -174,23 +176,27 @@ public class AuthController : ControllerBase
 
     private void SetTokenCookies(string accessToken, string refreshToken)
     {
-        var cookieOptions = new CookieOptions
-        {
-            HttpOnly = true,                    // JavaScript erişemez (XSS koruması)
-            Secure = true,                      // Sadece HTTPS
-            SameSite = SameSiteMode.Strict,     // CSRF koruması
-            Expires = DateTime.UtcNow.AddDays(_jwtSettings.RefreshTokenExpirationDays)
-        };
+        // Development: SameSite=None + Secure=true (HTTPS localhost için çalışır)
+        // Production: SameSite=Strict + Secure=true
+        var isProduction = _environment.IsProduction();
 
         Response.Cookies.Append("accessToken", accessToken, new CookieOptions
         {
             HttpOnly = true,
-            Secure = true,
-            SameSite = SameSiteMode.Strict,
-            Expires = DateTime.UtcNow.AddMinutes(_jwtSettings.AccessTokenExpirationMinutes)
+            Secure = true, // HTTPS kullandığımız için her zaman true
+            SameSite = isProduction ? SameSiteMode.Strict : SameSiteMode.None,
+            Expires = DateTime.UtcNow.AddMinutes(_jwtSettings.AccessTokenExpirationMinutes),
+            Path = "/"
         });
 
-        Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
+        Response.Cookies.Append("refreshToken", refreshToken, new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true, // HTTPS kullandığımız için her zaman true
+            SameSite = isProduction ? SameSiteMode.Strict : SameSiteMode.None,
+            Expires = DateTime.UtcNow.AddDays(_jwtSettings.RefreshTokenExpirationDays),
+            Path = "/"
+        });
     }
 
     private void DeleteTokenCookies()

@@ -8,7 +8,9 @@ public class ListingImage : BaseEntity
 
     [Required]
     [MaxLength(500)]
-    public string Url { get; set; } = null!;
+    public string ImageUrl { get; set; } = null!;
+
+    public bool IsCover { get; set; }
 
     public int Order { get; set; }
 
