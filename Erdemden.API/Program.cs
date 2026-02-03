@@ -77,6 +77,7 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IListingService, ListingService>();
+builder.Services.AddScoped<IQuoteService, QuoteService>();
 
 // ==================== CORS ====================
 builder.Services.AddCors(options =>
