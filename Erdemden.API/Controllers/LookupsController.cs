@@ -33,14 +33,22 @@ public class LookupsController : ControllerBase
     }
 
     /// <summary>
-    /// Markaya ait modelleri getir
+    /// Markaya ve opsiyonel olarak kasa tipine ait modelleri getir
     /// </summary>
     [HttpGet("models/{brandId:guid}")]
-    public async Task<IActionResult> GetModelsByBrand(Guid brandId)
+    public async Task<IActionResult> GetModelsByBrand(Guid brandId, [FromQuery] Guid? bodyTypeId = null)
     {
-        var models = await _unitOfWork.Repository<Model>()
+        var query = _unitOfWork.Repository<Model>()
             .Query()
-            .Where(m => m.BrandId == brandId)
+            .Where(m => m.BrandId == brandId);
+
+        // Eğer bodyTypeId verilmişse, o kasa tipine ait modelleri filtrele
+        if (bodyTypeId.HasValue)
+        {
+            query = query.Where(m => m.BodyTypeId == bodyTypeId.Value);
+        }
+
+        var models = await query
             .OrderBy(m => m.Name)
             .Select(m => new LookupWithParentDto
             {

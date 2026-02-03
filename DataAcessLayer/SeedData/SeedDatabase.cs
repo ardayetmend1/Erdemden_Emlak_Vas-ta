@@ -11,13 +11,16 @@ namespace DataAcessLayer.SeedData
     {
         public static async Task InitializeAsync(Context context)
         {
-            // Lookup verilerini seed et
-            await SeedBrands.SeedAsync(context);
+            // Lookup verilerini seed et (sıralama önemli - VehicleTypes önce olmalı çünkü BodyTypes'a bağlı)
             await SeedVehicleTypes.SeedAsync(context);
+            await SeedBrands.SeedAsync(context);
             await SeedFuelTypes.SeedAsync(context);
             await SeedTransmissionTypes.SeedAsync(context);
             await SeedCities.SeedAsync(context);
             await SeedHousingTypes.SeedAsync(context);
+
+            // Mevcut modellere BodyTypeId ata (migration sonrası için)
+            await SeedBrands.UpdateModelBodyTypesAsync(context);
 
             // Admin kullanıcı oluştur
             await SeedAdminUser(context);
