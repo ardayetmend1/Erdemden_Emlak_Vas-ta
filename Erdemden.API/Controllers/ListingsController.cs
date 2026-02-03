@@ -2,6 +2,7 @@ using BussinessLayer.Abstract;
 using Core.DTOs.Common;
 using Core.DTOs.ListingDtos;
 using Core.DTOs.VehicleDtos;
+using Core.DTOs.RealEstateDtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,6 +27,23 @@ public class ListingsController : ControllerBase
     public async Task<IActionResult> CreateVehicleListing([FromBody] CreateVehicleListingRequest request)
     {
         var result = await _listingService.CreateVehicleListingAsync(request.Listing, request.Vehicle);
+
+        if (!result.Success)
+        {
+            return BadRequest(result);
+        }
+
+        return CreatedAtAction(nameof(GetListingById), new { id = result.Data!.Id }, result);
+    }
+
+    /// <summary>
+    /// Emlak ilanı oluştur
+    /// </summary>
+    [Authorize(Policy = "AdminOnly")]
+    [HttpPost("real-estate")]
+    public async Task<IActionResult> CreateRealEstateListing([FromBody] CreateRealEstateListingRequest request)
+    {
+        var result = await _listingService.CreateRealEstateListingAsync(request.Listing, request.RealEstate);
 
         if (!result.Success)
         {
@@ -96,6 +114,23 @@ public class ListingsController : ControllerBase
     }
 
     /// <summary>
+    /// Emlak bilgilerini güncelle
+    /// </summary>
+    [Authorize(Policy = "AdminOnly")]
+    [HttpPut("{id:guid}/real-estate")]
+    public async Task<IActionResult> UpdateRealEstate(Guid id, [FromBody] UpdateRealEstateDto updateDto)
+    {
+        var result = await _listingService.UpdateRealEstateAsync(id, updateDto);
+
+        if (!result.Success)
+        {
+            return BadRequest(result);
+        }
+
+        return Ok(result);
+    }
+
+    /// <summary>
     /// İlan sil
     /// </summary>
     [Authorize(Policy = "AdminOnly")]
@@ -120,4 +155,13 @@ public class CreateVehicleListingRequest
 {
     public CreateListingDto Listing { get; set; } = null!;
     public CreateVehicleDto Vehicle { get; set; } = null!;
+}
+
+/// <summary>
+/// Emlak ilanı oluşturma isteği (Listing + RealEstate birlikte)
+/// </summary>
+public class CreateRealEstateListingRequest
+{
+    public CreateListingDto Listing { get; set; } = null!;
+    public CreateRealEstateDto RealEstate { get; set; } = null!;
 }

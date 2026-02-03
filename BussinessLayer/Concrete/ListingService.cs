@@ -2,6 +2,7 @@ using BussinessLayer.Abstract;
 using Core.DTOs.Common;
 using Core.DTOs.ListingDtos;
 using Core.DTOs.VehicleDtos;
+using Core.DTOs.RealEstateDtos;
 using Core.DTOs.ImageDtos;
 using DataAcessLayer.Abstract;
 using EntityLayer.Entities;
@@ -101,6 +102,85 @@ public class ListingService : IListingService
     }
 
     /// <summary>
+    /// Emlak ilanı oluştur (Listing + RealEstate birlikte)
+    /// </summary>
+    public async Task<ApiResponseDto<ListingDto>> CreateRealEstateListingAsync(CreateListingDto listingDto, CreateRealEstateDto realEstateDto)
+    {
+        try
+        {
+            await _unitOfWork.BeginTransactionAsync();
+
+            // Listing oluştur
+            var listing = new Listing
+            {
+                Title = listingDto.Title,
+                Price = listingDto.Price,
+                Currency = listingDto.Currency,
+                Description = listingDto.Description,
+                Category = ListingCategory.RealEstate,
+                Status = listingDto.Status,
+                CityId = listingDto.CityId,
+                DistrictId = listingDto.DistrictId,
+                PurchasePrice = listingDto.PurchasePrice,
+                Expenses = listingDto.Expenses,
+                ListingDate = DateTime.UtcNow
+            };
+
+            await _unitOfWork.Repository<Listing>().AddAsync(listing);
+            await _unitOfWork.SaveChangesAsync();
+
+            // RealEstate oluştur (Listing ID'yi kullanarak)
+            var realEstate = new RealEstate
+            {
+                ListingId = listing.Id,
+                RoomCount = realEstateDto.RoomCount,
+                Size = realEstateDto.Size,
+                Floor = realEstateDto.Floor,
+                TotalFloors = realEstateDto.TotalFloors,
+                BuildingAge = realEstateDto.BuildingAge,
+                HasElevator = realEstateDto.HasElevator,
+                HasParking = realEstateDto.HasParking,
+                IsFurnished = realEstateDto.IsFurnished,
+                HousingTypeId = realEstateDto.HousingTypeId
+            };
+
+            await _unitOfWork.
+               Repository<RealEstate>().AddAsync(realEstate);
+            await _unitOfWork.SaveChangesAsync();
+
+            // Görselleri ekle
+            if (listingDto.Images != null && listingDto.Images.Any())
+            {
+                var images = listingDto.Images.Select((img, index) => new ListingImage
+                {
+                    ListingId = listing.Id,
+                    Base64Data = img.Base64Data,
+                    FileName = img.FileName,
+                    MimeType = GetMimeType(img.FileName),
+                    IsCover = index == 0,
+                    Order = img.Order ?? index
+                }).ToList();
+
+                foreach (var image in images)
+                {
+                    await _unitOfWork.Repository<ListingImage>().AddAsync(image);
+                }
+                await _unitOfWork.SaveChangesAsync();
+            }
+
+            await _unitOfWork.CommitTransactionAsync();
+
+            // Oluşturulan ilanı getir
+            return await GetListingByIdAsync(listing.Id);
+        }
+        catch (Exception ex)
+        {
+            await _unitOfWork.RollbackTransactionAsync();
+            return ApiResponseDto<ListingDto>.FailResponse($"Emlak ilanı oluşturulurken hata: {ex.Message}");
+        }
+    }
+
+    /// <summary>
     /// İlan getir (ID ile)
     /// </summary>
     public async Task<ApiResponseDto<ListingDto>> GetListingByIdAsync(Guid id)
@@ -122,6 +202,8 @@ public class ListingService : IListingService
                 .ThenInclude(v => v!.TransmissionType)
             .Include(l => l.Vehicle)
                 .ThenInclude(v => v!.BodyType)
+            .Include(l => l.RealEstate)
+                .ThenInclude(r => r!.HousingType)
             .FirstOrDefaultAsync(l => l.Id == id);
 
         if (listing == null)
@@ -154,6 +236,8 @@ public class ListingService : IListingService
                 .ThenInclude(v => v!.TransmissionType)
             .Include(l => l.Vehicle)
                 .ThenInclude(v => v!.BodyType)
+            .Include(l => l.RealEstate)
+                .ThenInclude(r => r!.HousingType)
             .AsQueryable();
 
         // Filtreleme
@@ -296,6 +380,44 @@ public class ListingService : IListingService
     }
 
     /// <summary>
+    /// Emlak bilgilerini güncelle
+    /// </summary>
+    public async Task<ApiResponseDto<RealEstateDto>> UpdateRealEstateAsync(Guid listingId, UpdateRealEstateDto updateDto)
+    {
+        var realEstate = await _unitOfWork.Repository<RealEstate>()
+            .Query()
+            .Include(r => r.HousingType)
+            .FirstOrDefaultAsync(r => r.ListingId == listingId);
+
+        if (realEstate == null)
+        {
+            return ApiResponseDto<RealEstateDto>.FailResponse("Emlak bulunamadı");
+        }
+
+        // Güncelleme
+        if (updateDto.RoomCount != null) realEstate.RoomCount = updateDto.RoomCount;
+        if (updateDto.Size.HasValue) realEstate.Size = updateDto.Size.Value;
+        if (updateDto.Floor.HasValue) realEstate.Floor = updateDto.Floor;
+        if (updateDto.TotalFloors.HasValue) realEstate.TotalFloors = updateDto.TotalFloors;
+        if (updateDto.BuildingAge.HasValue) realEstate.BuildingAge = updateDto.BuildingAge;
+        if (updateDto.HasElevator.HasValue) realEstate.HasElevator = updateDto.HasElevator.Value;
+        if (updateDto.HasParking.HasValue) realEstate.HasParking = updateDto.HasParking.Value;
+        if (updateDto.IsFurnished.HasValue) realEstate.IsFurnished = updateDto.IsFurnished.Value;
+        if (updateDto.HousingTypeId.HasValue) realEstate.HousingTypeId = updateDto.HousingTypeId.Value;
+
+        _unitOfWork.Repository<RealEstate>().Update(realEstate);
+        await _unitOfWork.SaveChangesAsync();
+
+        // Güncel realEstate'i tekrar getir
+        realEstate = await _unitOfWork.Repository<RealEstate>()
+            .Query()
+            .Include(r => r.HousingType)
+            .FirstOrDefaultAsync(r => r.ListingId == listingId);
+
+        return ApiResponseDto<RealEstateDto>.SuccessResponse(MapToRealEstateDto(realEstate!));
+    }
+
+    /// <summary>
     /// İlan sil
     /// </summary>
     public async Task<ApiResponseDto> DeleteListingAsync(Guid id)
@@ -303,6 +425,7 @@ public class ListingService : IListingService
         var listing = await _unitOfWork.Repository<Listing>()
             .Query()
             .Include(l => l.Vehicle)
+            .Include(l => l.RealEstate)
             .Include(l => l.Images)
             .FirstOrDefaultAsync(l => l.Id == id);
 
@@ -344,7 +467,7 @@ public class ListingService : IListingService
                 Id = listing.District.Id,
                 Name = listing.District.Name,
                 ParentId = listing.District.CityId,
-                ParentName = listing.City?.Name
+                ParentName = listing.City?.Name ?? string.Empty
             } : null,
             Images = listing.Images?.Select(i => new ImageDto
             {
@@ -354,6 +477,7 @@ public class ListingService : IListingService
                 Order = i.Order
             }).ToList() ?? new List<ImageDto>(),
             Vehicle = listing.Vehicle != null ? MapToVehicleDto(listing.Vehicle) : null,
+            RealEstate = listing.RealEstate != null ? MapToRealEstateDto(listing.RealEstate) : null,
             SaleInfo = new ListingSaleInfoDto
             {
                 PurchasePrice = listing.PurchasePrice,
@@ -394,6 +518,22 @@ public class ListingService : IListingService
                 ParentId = vehicle.BodyType.VehicleTypeId,
                 ParentName = vehicle.VehicleType?.Name ?? string.Empty
             } : null
+        };
+    }
+
+    private static RealEstateDto MapToRealEstateDto(RealEstate realEstate)
+    {
+        return new RealEstateDto
+        {
+            RoomCount = realEstate.RoomCount ?? string.Empty,
+            Size = realEstate.Size ?? 0,
+            Floor = realEstate.Floor,
+            TotalFloors = realEstate.TotalFloors,
+            BuildingAge = realEstate.BuildingAge,
+            HasElevator = realEstate.HasElevator ?? false,
+            HasParking = realEstate.HasParking ?? false,
+            IsFurnished = realEstate.IsFurnished ?? false,
+            HousingType = new LookupDto { Id = realEstate.HousingType.Id, Name = realEstate.HousingType.Name }
         };
     }
 

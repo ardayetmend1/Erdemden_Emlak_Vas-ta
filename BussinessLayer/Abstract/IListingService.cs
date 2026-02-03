@@ -1,6 +1,7 @@
 using Core.DTOs.Common;
 using Core.DTOs.ListingDtos;
 using Core.DTOs.VehicleDtos;
+using Core.DTOs.RealEstateDtos;
 
 namespace BussinessLayer.Abstract;
 
@@ -13,6 +14,11 @@ public interface IListingService
     /// Araç ilanı oluştur (Listing + Vehicle birlikte)
     /// </summary>
     Task<ApiResponseDto<ListingDto>> CreateVehicleListingAsync(CreateListingDto listingDto, CreateVehicleDto vehicleDto);
+
+    /// <summary>
+    /// Emlak ilanı oluştur (Listing + RealEstate birlikte)
+    /// </summary>
+    Task<ApiResponseDto<ListingDto>> CreateRealEstateListingAsync(CreateListingDto listingDto, CreateRealEstateDto realEstateDto);
 
     /// <summary>
     /// İlan getir (ID ile)
@@ -33,6 +39,11 @@ public interface IListingService
     /// Araç bilgilerini güncelle
     /// </summary>
     Task<ApiResponseDto<VehicleDto>> UpdateVehicleAsync(Guid listingId, UpdateVehicleDto updateDto);
+
+    /// <summary>
+    /// Emlak bilgilerini güncelle
+    /// </summary>
+    Task<ApiResponseDto<RealEstateDto>> UpdateRealEstateAsync(Guid listingId, UpdateRealEstateDto updateDto);
 
     /// <summary>
     /// İlan sil

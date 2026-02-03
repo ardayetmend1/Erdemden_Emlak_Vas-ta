@@ -3,9 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EntityLayer.Entities;
 
-public class RealEstate
+public class RealEstate : BaseEntity
 {
-    [Key]
     [ForeignKey("Listing")]
     public Guid ListingId { get; set; }
 
