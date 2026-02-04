@@ -63,7 +63,41 @@ public class ListingService : IListingService
                 ModelId = vehicleDto.ModelId,
                 FuelTypeId = vehicleDto.FuelTypeId,
                 TransmissionTypeId = vehicleDto.TransmissionTypeId,
-                BodyTypeId = vehicleDto.BodyTypeId
+                BodyTypeId = vehicleDto.BodyTypeId,
+
+                // ==================== GÜVENLİK ====================
+                HasABS = vehicleDto.HasABS,
+                HasESP = vehicleDto.HasESP,
+                HasAirbag = vehicleDto.HasAirbag,
+                HasRearCamera = vehicleDto.HasRearCamera,
+                HasParkingSensor = vehicleDto.HasParkingSensor,
+                HasLaneAssist = vehicleDto.HasLaneAssist,
+                HasBlindSpotWarning = vehicleDto.HasBlindSpotWarning,
+                HasCentralLock = vehicleDto.HasCentralLock,
+                HasImmobilizer = vehicleDto.HasImmobilizer,
+                HasIsofix = vehicleDto.HasIsofix,
+
+                // ==================== KONFOR ====================
+                HasAirConditioning = vehicleDto.HasAirConditioning,
+                HasDigitalAC = vehicleDto.HasDigitalAC,
+                HasLeatherSeats = vehicleDto.HasLeatherSeats,
+                HasSeatHeating = vehicleDto.HasSeatHeating,
+                HasElectricWindows = vehicleDto.HasElectricWindows,
+                HasElectricMirrors = vehicleDto.HasElectricMirrors,
+                HasSunroof = vehicleDto.HasSunroof,
+                HasCruiseControl = vehicleDto.HasCruiseControl,
+                HasSteeringWheelHeating = vehicleDto.HasSteeringWheelHeating,
+                HasStartStop = vehicleDto.HasStartStop,
+
+                // ==================== MULTİMEDYA ====================
+                HasBluetooth = vehicleDto.HasBluetooth,
+                HasUSB = vehicleDto.HasUSB,
+                HasAUX = vehicleDto.HasAUX,
+                HasNavigation = vehicleDto.HasNavigation,
+                HasTouchScreen = vehicleDto.HasTouchScreen,
+                HasCarPlay = vehicleDto.HasCarPlay,
+                HasRearEntertainment = vehicleDto.HasRearEntertainment,
+                HasPremiumSound = vehicleDto.HasPremiumSound
             };
 
             await _unitOfWork.Repository<Vehicle>().AddAsync(vehicle);
@@ -414,6 +448,40 @@ public class ListingService : IListingService
         if (updateDto.TransmissionTypeId.HasValue) vehicle.TransmissionTypeId = updateDto.TransmissionTypeId.Value;
         if (updateDto.BodyTypeId.HasValue) vehicle.BodyTypeId = updateDto.BodyTypeId;
 
+        // ==================== GÜVENLİK ====================
+        if (updateDto.HasABS.HasValue) vehicle.HasABS = updateDto.HasABS.Value;
+        if (updateDto.HasESP.HasValue) vehicle.HasESP = updateDto.HasESP.Value;
+        if (updateDto.HasAirbag.HasValue) vehicle.HasAirbag = updateDto.HasAirbag.Value;
+        if (updateDto.HasRearCamera.HasValue) vehicle.HasRearCamera = updateDto.HasRearCamera.Value;
+        if (updateDto.HasParkingSensor.HasValue) vehicle.HasParkingSensor = updateDto.HasParkingSensor.Value;
+        if (updateDto.HasLaneAssist.HasValue) vehicle.HasLaneAssist = updateDto.HasLaneAssist.Value;
+        if (updateDto.HasBlindSpotWarning.HasValue) vehicle.HasBlindSpotWarning = updateDto.HasBlindSpotWarning.Value;
+        if (updateDto.HasCentralLock.HasValue) vehicle.HasCentralLock = updateDto.HasCentralLock.Value;
+        if (updateDto.HasImmobilizer.HasValue) vehicle.HasImmobilizer = updateDto.HasImmobilizer.Value;
+        if (updateDto.HasIsofix.HasValue) vehicle.HasIsofix = updateDto.HasIsofix.Value;
+
+        // ==================== KONFOR ====================
+        if (updateDto.HasAirConditioning.HasValue) vehicle.HasAirConditioning = updateDto.HasAirConditioning.Value;
+        if (updateDto.HasDigitalAC.HasValue) vehicle.HasDigitalAC = updateDto.HasDigitalAC.Value;
+        if (updateDto.HasLeatherSeats.HasValue) vehicle.HasLeatherSeats = updateDto.HasLeatherSeats.Value;
+        if (updateDto.HasSeatHeating.HasValue) vehicle.HasSeatHeating = updateDto.HasSeatHeating.Value;
+        if (updateDto.HasElectricWindows.HasValue) vehicle.HasElectricWindows = updateDto.HasElectricWindows.Value;
+        if (updateDto.HasElectricMirrors.HasValue) vehicle.HasElectricMirrors = updateDto.HasElectricMirrors.Value;
+        if (updateDto.HasSunroof.HasValue) vehicle.HasSunroof = updateDto.HasSunroof.Value;
+        if (updateDto.HasCruiseControl.HasValue) vehicle.HasCruiseControl = updateDto.HasCruiseControl.Value;
+        if (updateDto.HasSteeringWheelHeating.HasValue) vehicle.HasSteeringWheelHeating = updateDto.HasSteeringWheelHeating.Value;
+        if (updateDto.HasStartStop.HasValue) vehicle.HasStartStop = updateDto.HasStartStop.Value;
+
+        // ==================== MULTİMEDYA ====================
+        if (updateDto.HasBluetooth.HasValue) vehicle.HasBluetooth = updateDto.HasBluetooth.Value;
+        if (updateDto.HasUSB.HasValue) vehicle.HasUSB = updateDto.HasUSB.Value;
+        if (updateDto.HasAUX.HasValue) vehicle.HasAUX = updateDto.HasAUX.Value;
+        if (updateDto.HasNavigation.HasValue) vehicle.HasNavigation = updateDto.HasNavigation.Value;
+        if (updateDto.HasTouchScreen.HasValue) vehicle.HasTouchScreen = updateDto.HasTouchScreen.Value;
+        if (updateDto.HasCarPlay.HasValue) vehicle.HasCarPlay = updateDto.HasCarPlay.Value;
+        if (updateDto.HasRearEntertainment.HasValue) vehicle.HasRearEntertainment = updateDto.HasRearEntertainment.Value;
+        if (updateDto.HasPremiumSound.HasValue) vehicle.HasPremiumSound = updateDto.HasPremiumSound.Value;
+
         _unitOfWork.Repository<Vehicle>().Update(vehicle);
         await _unitOfWork.SaveChangesAsync();
 
@@ -569,7 +637,41 @@ public class ListingService : IListingService
                 Name = vehicle.BodyType.Name,
                 ParentId = vehicle.BodyType.VehicleTypeId,
                 ParentName = vehicle.VehicleType?.Name ?? string.Empty
-            } : null
+            } : null,
+
+            // ==================== GÜVENLİK ====================
+            HasABS = vehicle.HasABS,
+            HasESP = vehicle.HasESP,
+            HasAirbag = vehicle.HasAirbag,
+            HasRearCamera = vehicle.HasRearCamera,
+            HasParkingSensor = vehicle.HasParkingSensor,
+            HasLaneAssist = vehicle.HasLaneAssist,
+            HasBlindSpotWarning = vehicle.HasBlindSpotWarning,
+            HasCentralLock = vehicle.HasCentralLock,
+            HasImmobilizer = vehicle.HasImmobilizer,
+            HasIsofix = vehicle.HasIsofix,
+
+            // ==================== KONFOR ====================
+            HasAirConditioning = vehicle.HasAirConditioning,
+            HasDigitalAC = vehicle.HasDigitalAC,
+            HasLeatherSeats = vehicle.HasLeatherSeats,
+            HasSeatHeating = vehicle.HasSeatHeating,
+            HasElectricWindows = vehicle.HasElectricWindows,
+            HasElectricMirrors = vehicle.HasElectricMirrors,
+            HasSunroof = vehicle.HasSunroof,
+            HasCruiseControl = vehicle.HasCruiseControl,
+            HasSteeringWheelHeating = vehicle.HasSteeringWheelHeating,
+            HasStartStop = vehicle.HasStartStop,
+
+            // ==================== MULTİMEDYA ====================
+            HasBluetooth = vehicle.HasBluetooth,
+            HasUSB = vehicle.HasUSB,
+            HasAUX = vehicle.HasAUX,
+            HasNavigation = vehicle.HasNavigation,
+            HasTouchScreen = vehicle.HasTouchScreen,
+            HasCarPlay = vehicle.HasCarPlay,
+            HasRearEntertainment = vehicle.HasRearEntertainment,
+            HasPremiumSound = vehicle.HasPremiumSound
         };
     }
 
