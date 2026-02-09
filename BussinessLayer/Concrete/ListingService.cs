@@ -178,7 +178,31 @@ public class ListingService : IListingService
                 HousingTypeId = realEstateDto.HousingTypeId,
                 ListingType = (RealEstateListingType)realEstateDto.ListingType,
                 MonthlyRent = realEstateDto.MonthlyRent,
-                Deposit = realEstateDto.Deposit
+                Deposit = realEstateDto.Deposit,
+                // İç Özellikler
+                HasBalcony = realEstateDto.HasBalcony,
+                HasTerrace = realEstateDto.HasTerrace,
+                HasCellar = realEstateDto.HasCellar,
+                HasStorageRoom = realEstateDto.HasStorageRoom,
+                HasFireplace = realEstateDto.HasFireplace,
+                HasAirConditioning = realEstateDto.HasAirConditioning,
+                HasUnderfloorHeating = realEstateDto.HasUnderfloorHeating,
+                HasBuiltInKitchen = realEstateDto.HasBuiltInKitchen,
+                // Dış Özellikler
+                HasGarden = realEstateDto.HasGarden,
+                HasPool = realEstateDto.HasPool,
+                HasCoveredParking = realEstateDto.HasCoveredParking,
+                // Güvenlik
+                HasSecurity = realEstateDto.HasSecurity,
+                HasSteelDoor = realEstateDto.HasSteelDoor,
+                HasVideoIntercom = realEstateDto.HasVideoIntercom,
+                HasAlarm = realEstateDto.HasAlarm,
+                // Altyapı
+                HasSatellite = realEstateDto.HasSatellite,
+                HasCableTv = realEstateDto.HasCableTv,
+                HasInternet = realEstateDto.HasInternet,
+                HasGenerator = realEstateDto.HasGenerator,
+                HasNaturalGas = realEstateDto.HasNaturalGas
             };
 
             await _unitOfWork.
@@ -530,6 +554,30 @@ public class ListingService : IListingService
         if (updateDto.ListingType.HasValue) realEstate.ListingType = (RealEstateListingType)updateDto.ListingType.Value;
         if (updateDto.MonthlyRent.HasValue) realEstate.MonthlyRent = updateDto.MonthlyRent;
         if (updateDto.Deposit.HasValue) realEstate.Deposit = updateDto.Deposit;
+        // İç Özellikler
+        if (updateDto.HasBalcony.HasValue) realEstate.HasBalcony = updateDto.HasBalcony.Value;
+        if (updateDto.HasTerrace.HasValue) realEstate.HasTerrace = updateDto.HasTerrace.Value;
+        if (updateDto.HasCellar.HasValue) realEstate.HasCellar = updateDto.HasCellar.Value;
+        if (updateDto.HasStorageRoom.HasValue) realEstate.HasStorageRoom = updateDto.HasStorageRoom.Value;
+        if (updateDto.HasFireplace.HasValue) realEstate.HasFireplace = updateDto.HasFireplace.Value;
+        if (updateDto.HasAirConditioning.HasValue) realEstate.HasAirConditioning = updateDto.HasAirConditioning.Value;
+        if (updateDto.HasUnderfloorHeating.HasValue) realEstate.HasUnderfloorHeating = updateDto.HasUnderfloorHeating.Value;
+        if (updateDto.HasBuiltInKitchen.HasValue) realEstate.HasBuiltInKitchen = updateDto.HasBuiltInKitchen.Value;
+        // Dış Özellikler
+        if (updateDto.HasGarden.HasValue) realEstate.HasGarden = updateDto.HasGarden.Value;
+        if (updateDto.HasPool.HasValue) realEstate.HasPool = updateDto.HasPool.Value;
+        if (updateDto.HasCoveredParking.HasValue) realEstate.HasCoveredParking = updateDto.HasCoveredParking.Value;
+        // Güvenlik
+        if (updateDto.HasSecurity.HasValue) realEstate.HasSecurity = updateDto.HasSecurity.Value;
+        if (updateDto.HasSteelDoor.HasValue) realEstate.HasSteelDoor = updateDto.HasSteelDoor.Value;
+        if (updateDto.HasVideoIntercom.HasValue) realEstate.HasVideoIntercom = updateDto.HasVideoIntercom.Value;
+        if (updateDto.HasAlarm.HasValue) realEstate.HasAlarm = updateDto.HasAlarm.Value;
+        // Altyapı
+        if (updateDto.HasSatellite.HasValue) realEstate.HasSatellite = updateDto.HasSatellite.Value;
+        if (updateDto.HasCableTv.HasValue) realEstate.HasCableTv = updateDto.HasCableTv.Value;
+        if (updateDto.HasInternet.HasValue) realEstate.HasInternet = updateDto.HasInternet.Value;
+        if (updateDto.HasGenerator.HasValue) realEstate.HasGenerator = updateDto.HasGenerator.Value;
+        if (updateDto.HasNaturalGas.HasValue) realEstate.HasNaturalGas = updateDto.HasNaturalGas.Value;
 
         _unitOfWork.Repository<RealEstate>().Update(realEstate);
         await _unitOfWork.SaveChangesAsync();
@@ -734,7 +782,31 @@ public class ListingService : IListingService
             HousingType = new LookupDto { Id = realEstate.HousingType.Id, Name = realEstate.HousingType.Name },
             ListingType = (int)realEstate.ListingType,
             MonthlyRent = realEstate.MonthlyRent,
-            Deposit = realEstate.Deposit
+            Deposit = realEstate.Deposit,
+            // İç Özellikler
+            HasBalcony = realEstate.HasBalcony ?? false,
+            HasTerrace = realEstate.HasTerrace ?? false,
+            HasCellar = realEstate.HasCellar ?? false,
+            HasStorageRoom = realEstate.HasStorageRoom ?? false,
+            HasFireplace = realEstate.HasFireplace ?? false,
+            HasAirConditioning = realEstate.HasAirConditioning ?? false,
+            HasUnderfloorHeating = realEstate.HasUnderfloorHeating ?? false,
+            HasBuiltInKitchen = realEstate.HasBuiltInKitchen ?? false,
+            // Dış Özellikler
+            HasGarden = realEstate.HasGarden ?? false,
+            HasPool = realEstate.HasPool ?? false,
+            HasCoveredParking = realEstate.HasCoveredParking ?? false,
+            // Güvenlik
+            HasSecurity = realEstate.HasSecurity ?? false,
+            HasSteelDoor = realEstate.HasSteelDoor ?? false,
+            HasVideoIntercom = realEstate.HasVideoIntercom ?? false,
+            HasAlarm = realEstate.HasAlarm ?? false,
+            // Altyapı
+            HasSatellite = realEstate.HasSatellite ?? false,
+            HasCableTv = realEstate.HasCableTv ?? false,
+            HasInternet = realEstate.HasInternet ?? false,
+            HasGenerator = realEstate.HasGenerator ?? false,
+            HasNaturalGas = realEstate.HasNaturalGas ?? false
         };
     }
 

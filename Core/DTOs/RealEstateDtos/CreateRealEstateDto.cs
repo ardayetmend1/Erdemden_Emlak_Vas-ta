@@ -30,6 +30,34 @@ public class CreateRealEstateDto
     [Required(ErrorMessage = "Emlak tipi gereklidir")]
     public Guid HousingTypeId { get; set; }
 
+    // ==================== İÇ ÖZELLİKLER ====================
+    public bool HasBalcony { get; set; }
+    public bool HasTerrace { get; set; }
+    public bool HasCellar { get; set; }
+    public bool HasStorageRoom { get; set; }
+    public bool HasFireplace { get; set; }
+    public bool HasAirConditioning { get; set; }
+    public bool HasUnderfloorHeating { get; set; }
+    public bool HasBuiltInKitchen { get; set; }
+
+    // ==================== DIŞ ÖZELLİKLER ====================
+    public bool HasGarden { get; set; }
+    public bool HasPool { get; set; }
+    public bool HasCoveredParking { get; set; }
+
+    // ==================== GÜVENLİK ====================
+    public bool HasSecurity { get; set; }
+    public bool HasSteelDoor { get; set; }
+    public bool HasVideoIntercom { get; set; }
+    public bool HasAlarm { get; set; }
+
+    // ==================== ALTYAPI ====================
+    public bool HasSatellite { get; set; }
+    public bool HasCableTv { get; set; }
+    public bool HasInternet { get; set; }
+    public bool HasGenerator { get; set; }
+    public bool HasNaturalGas { get; set; }
+
     /// <summary>
     /// 0 = Satılık, 1 = Kiralık
     /// </summary>
