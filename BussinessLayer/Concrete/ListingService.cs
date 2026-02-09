@@ -175,7 +175,10 @@ public class ListingService : IListingService
                 HasElevator = realEstateDto.HasElevator,
                 HasParking = realEstateDto.HasParking,
                 IsFurnished = realEstateDto.IsFurnished,
-                HousingTypeId = realEstateDto.HousingTypeId
+                HousingTypeId = realEstateDto.HousingTypeId,
+                ListingType = (RealEstateListingType)realEstateDto.ListingType,
+                MonthlyRent = realEstateDto.MonthlyRent,
+                Deposit = realEstateDto.Deposit
             };
 
             await _unitOfWork.
@@ -524,6 +527,9 @@ public class ListingService : IListingService
         if (updateDto.HasParking.HasValue) realEstate.HasParking = updateDto.HasParking.Value;
         if (updateDto.IsFurnished.HasValue) realEstate.IsFurnished = updateDto.IsFurnished.Value;
         if (updateDto.HousingTypeId.HasValue) realEstate.HousingTypeId = updateDto.HousingTypeId.Value;
+        if (updateDto.ListingType.HasValue) realEstate.ListingType = (RealEstateListingType)updateDto.ListingType.Value;
+        if (updateDto.MonthlyRent.HasValue) realEstate.MonthlyRent = updateDto.MonthlyRent;
+        if (updateDto.Deposit.HasValue) realEstate.Deposit = updateDto.Deposit;
 
         _unitOfWork.Repository<RealEstate>().Update(realEstate);
         await _unitOfWork.SaveChangesAsync();
@@ -558,6 +564,44 @@ public class ListingService : IListingService
         await _unitOfWork.SaveChangesAsync();
 
         return ApiResponseDto.SuccessResponse("İlan başarıyla silindi");
+    }
+
+    /// <summary>
+    /// İlanı pasife al
+    /// </summary>
+    public async Task<ApiResponseDto> SetListingPassiveAsync(Guid id)
+    {
+        var listing = await _unitOfWork.Repository<Listing>().GetByIdAsync(id);
+
+        if (listing == null)
+        {
+            return ApiResponseDto.FailResponse("İlan bulunamadı");
+        }
+
+        listing.Status = ListingStatus.Pasif;
+        _unitOfWork.Repository<Listing>().Update(listing);
+        await _unitOfWork.SaveChangesAsync();
+
+        return ApiResponseDto.SuccessResponse("İlan pasife alındı");
+    }
+
+    /// <summary>
+    /// İlanı aktif et
+    /// </summary>
+    public async Task<ApiResponseDto> SetListingActiveAsync(Guid id)
+    {
+        var listing = await _unitOfWork.Repository<Listing>().GetByIdAsync(id);
+
+        if (listing == null)
+        {
+            return ApiResponseDto.FailResponse("İlan bulunamadı");
+        }
+
+        listing.Status = ListingStatus.Satilik;
+        _unitOfWork.Repository<Listing>().Update(listing);
+        await _unitOfWork.SaveChangesAsync();
+
+        return ApiResponseDto.SuccessResponse("İlan aktif edildi");
     }
 
     #region Private Methods
@@ -687,7 +731,10 @@ public class ListingService : IListingService
             HasElevator = realEstate.HasElevator ?? false,
             HasParking = realEstate.HasParking ?? false,
             IsFurnished = realEstate.IsFurnished ?? false,
-            HousingType = new LookupDto { Id = realEstate.HousingType.Id, Name = realEstate.HousingType.Name }
+            HousingType = new LookupDto { Id = realEstate.HousingType.Id, Name = realEstate.HousingType.Name },
+            ListingType = (int)realEstate.ListingType,
+            MonthlyRent = realEstate.MonthlyRent,
+            Deposit = realEstate.Deposit
         };
     }
 

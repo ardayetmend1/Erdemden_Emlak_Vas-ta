@@ -146,6 +146,40 @@ public class ListingsController : ControllerBase
 
         return Ok(result);
     }
+
+    /// <summary>
+    /// İlanı pasife al
+    /// </summary>
+    [Authorize(Policy = "AdminOnly")]
+    [HttpPatch("{id:guid}/set-passive")]
+    public async Task<IActionResult> SetListingPassive(Guid id)
+    {
+        var result = await _listingService.SetListingPassiveAsync(id);
+
+        if (!result.Success)
+        {
+            return NotFound(result);
+        }
+
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// İlanı aktif et
+    /// </summary>
+    [Authorize(Policy = "AdminOnly")]
+    [HttpPatch("{id:guid}/set-active")]
+    public async Task<IActionResult> SetListingActive(Guid id)
+    {
+        var result = await _listingService.SetListingActiveAsync(id);
+
+        if (!result.Success)
+        {
+            return NotFound(result);
+        }
+
+        return Ok(result);
+    }
 }
 
 /// <summary>

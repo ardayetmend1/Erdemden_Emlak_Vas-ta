@@ -3,6 +3,7 @@ using System;
 using DataAcessLayer.Concrete;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAcessLayer.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20260209105025_passivelistinnig")]
+    partial class passivelistinnig
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -476,9 +479,6 @@ namespace DataAcessLayer.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<decimal?>("Deposit")
-                        .HasColumnType("numeric");
-
                     b.Property<int?>("Floor")
                         .HasColumnType("integer");
 
@@ -496,12 +496,6 @@ namespace DataAcessLayer.Migrations
 
                     b.Property<bool?>("IsFurnished")
                         .HasColumnType("boolean");
-
-                    b.Property<int>("ListingType")
-                        .HasColumnType("integer");
-
-                    b.Property<decimal?>("MonthlyRent")
-                        .HasColumnType("numeric");
 
                     b.Property<string>("RoomCount")
                         .HasMaxLength(20)

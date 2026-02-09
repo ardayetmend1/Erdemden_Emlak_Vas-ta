@@ -26,4 +26,19 @@ public class UpdateRealEstateDto
     public bool? IsFurnished { get; set; }
 
     public Guid? HousingTypeId { get; set; }
+
+    /// <summary>
+    /// 0 = Satılık, 1 = Kiralık
+    /// </summary>
+    public int? ListingType { get; set; }
+
+    /// <summary>
+    /// Aylık kira ücreti (Kiralık için)
+    /// </summary>
+    public decimal? MonthlyRent { get; set; }
+
+    /// <summary>
+    /// Depozito (Kiralık için)
+    /// </summary>
+    public decimal? Deposit { get; set; }
 }

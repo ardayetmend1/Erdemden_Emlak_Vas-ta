@@ -16,7 +16,8 @@ public enum ListingStatus
 {
     Satilik,
     Satildi,
-    Opsiyonlu
+    Opsiyonlu,
+    Pasif
 }
 
 public enum BuyerReason
@@ -27,4 +28,10 @@ public enum BuyerReason
     Yatirimlik,
     SirketIcin,
     Diger
+}
+
+public enum RealEstateListingType
+{
+    Satilik,
+    Kiralik
 }

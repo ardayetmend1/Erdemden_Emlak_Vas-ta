@@ -27,6 +27,13 @@ public class RealEstate : BaseEntity
 
     public bool? IsFurnished { get; set; }
 
+    // Kiralık/Satılık bilgileri
+    public RealEstateListingType ListingType { get; set; } = RealEstateListingType.Satilik;
+
+    public decimal? MonthlyRent { get; set; }
+
+    public decimal? Deposit { get; set; }
+
     // Navigation
     public virtual Listing Listing { get; set; } = null!;
     public virtual HousingType HousingType { get; set; } = null!;

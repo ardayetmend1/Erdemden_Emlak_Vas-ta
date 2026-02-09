@@ -49,4 +49,14 @@ public interface IListingService
     /// İlan sil
     /// </summary>
     Task<ApiResponseDto> DeleteListingAsync(Guid id);
+
+    /// <summary>
+    /// İlanı pasife al
+    /// </summary>
+    Task<ApiResponseDto> SetListingPassiveAsync(Guid id);
+
+    /// <summary>
+    /// İlanı aktif et
+    /// </summary>
+    Task<ApiResponseDto> SetListingActiveAsync(Guid id);
 }
