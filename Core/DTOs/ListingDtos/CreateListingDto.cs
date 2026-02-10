@@ -18,13 +18,17 @@ public class CreateListingDto
     public decimal Price { get; set; }
 
     [Required(ErrorMessage = "Para birimi gereklidir")]
+    [StringLength(10)]
     public string Currency { get; set; } = "TRY";
 
+    [StringLength(2000)]
     public string? Description { get; set; }
 
     [Required(ErrorMessage = "Kategori gereklidir")]
+    [EnumDataType(typeof(ListingCategory), ErrorMessage = "Geçersiz kategori değeri")]
     public ListingCategory Category { get; set; }
 
+    [EnumDataType(typeof(ListingStatus), ErrorMessage = "Geçersiz durum değeri")]
     public ListingStatus Status { get; set; } = ListingStatus.Satilik;
 
     [Required(ErrorMessage = "Şehir gereklidir")]
@@ -35,11 +39,13 @@ public class CreateListingDto
     /// <summary>
     /// Admin satın alma fiyatı
     /// </summary>
+    [Range(0, (double)decimal.MaxValue, ErrorMessage = "Alış fiyatı 0'dan büyük olmalıdır")]
     public decimal? PurchasePrice { get; set; }
 
     /// <summary>
     /// Masraflar
     /// </summary>
+    [Range(0, (double)decimal.MaxValue, ErrorMessage = "Masraf 0'dan büyük olmalıdır")]
     public decimal? Expenses { get; set; }
 
     /// <summary>

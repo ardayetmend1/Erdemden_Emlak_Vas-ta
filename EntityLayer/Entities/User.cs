@@ -12,8 +12,13 @@ public class User : BaseEntity
     [MaxLength(255)]
     public string Email { get; set; } = null!;
 
-    [Required]
-    public string PasswordHash { get; set; } = null!;
+    public string? PasswordHash { get; set; }
+
+    [MaxLength(255)]
+    public string? GoogleId { get; set; }
+
+    [MaxLength(50)]
+    public string? AuthProvider { get; set; }
 
     public UserRole Role { get; set; } = UserRole.User;
 

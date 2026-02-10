@@ -18,6 +18,7 @@ public class CreateVehicleDto
     [StringLength(50)]
     public string? Color { get; set; }
 
+    [StringLength(255)]
     public string? DamageStatus { get; set; }
 
     [Required(ErrorMessage = "Araç tipi gereklidir")]

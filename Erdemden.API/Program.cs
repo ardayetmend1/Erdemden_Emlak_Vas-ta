@@ -121,6 +121,20 @@ using (var scope = app.Services.CreateScope())
 }
 
 // ==================== Middleware Pipeline ====================
+
+// Global Exception Handler - Stack trace sızıntısını önle
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        context.Response.StatusCode = 500;
+        context.Response.ContentType = "application/json";
+
+        var response = new { success = false, message = "Sunucu hatası oluştu. Lütfen daha sonra tekrar deneyin." };
+        await context.Response.WriteAsJsonAsync(response);
+    });
+});
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

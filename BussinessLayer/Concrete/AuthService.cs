@@ -1,10 +1,13 @@
 using BussinessLayer.Abstract;
+using BussinessLayer.Settings;
 using Core.DTOs.AuthDtos;
 using Core.DTOs.Common;
 using Core.DTOs.UserDtos;
 using DataAcessLayer.Abstract;
 using EntityLayer.Entities;
+using Google.Apis.Auth;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace BussinessLayer.Concrete;
 
@@ -15,11 +18,13 @@ public class AuthService : IAuthService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ITokenService _tokenService;
+    private readonly JwtSettings _jwtSettings;
 
-    public AuthService(IUnitOfWork unitOfWork, ITokenService tokenService)
+    public AuthService(IUnitOfWork unitOfWork, ITokenService tokenService, IOptions<JwtSettings> jwtSettings)
     {
         _unitOfWork = unitOfWork;
         _tokenService = tokenService;
+        _jwtSettings = jwtSettings.Value;
     }
 
     /// <summary>
@@ -33,6 +38,11 @@ public class AuthService : IAuthService
         if (user == null)
         {
             return ApiResponseDto<AuthResponseDto>.FailResponse("E-posta veya şifre hatalı");
+        }
+
+        if (string.IsNullOrEmpty(user.PasswordHash))
+        {
+            return ApiResponseDto<AuthResponseDto>.FailResponse("Bu hesap Google ile oluşturuldu. Lütfen Google ile giriş yapın.");
         }
 
         if (!VerifyPassword(loginDto.Password, user.PasswordHash))
@@ -191,6 +201,11 @@ public class AuthService : IAuthService
             return ApiResponseDto.FailResponse("Kullanıcı bulunamadı");
         }
 
+        if (string.IsNullOrEmpty(user.PasswordHash))
+        {
+            return ApiResponseDto.FailResponse("Google hesapları için şifre değiştirilemez");
+        }
+
         if (!VerifyPassword(changePasswordDto.CurrentPassword, user.PasswordHash))
         {
             return ApiResponseDto.FailResponse("Mevcut şifre hatalı");
@@ -216,6 +231,93 @@ public class AuthService : IAuthService
         await _unitOfWork.SaveChangesAsync();
 
         return ApiResponseDto.SuccessResponse("Tüm oturumlar sonlandırıldı");
+    }
+
+    /// <summary>
+    /// Google ile giriş
+    /// </summary>
+    public async Task<ApiResponseDto<AuthResponseDto>> GoogleLoginAsync(GoogleLoginDto googleLoginDto)
+    {
+        try
+        {
+            // 1. Google ID token'ı doğrula
+            var settings = new GoogleJsonWebSignature.ValidationSettings
+            {
+                Audience = new[] { _jwtSettings.GoogleClientId }
+            };
+
+            var payload = await GoogleJsonWebSignature.ValidateAsync(googleLoginDto.IdToken, settings);
+
+            var email = payload.Email;
+            var name = payload.Name;
+            var googleId = payload.Subject;
+
+            if (string.IsNullOrEmpty(email))
+            {
+                return ApiResponseDto<AuthResponseDto>.FailResponse("Google hesabında e-posta bulunamadı");
+            }
+
+            // 2. Kullanıcıyı email ile bul
+            var user = await _unitOfWork.Repository<User>()
+                .GetAsync(u => u.Email == email);
+
+            // 3. Kullanıcı yoksa oluştur
+            if (user == null)
+            {
+                user = new User
+                {
+                    Name = name ?? email.Split('@')[0],
+                    Email = email,
+                    PasswordHash = null,
+                    GoogleId = googleId,
+                    AuthProvider = "Google",
+                    Role = UserRole.User,
+                    IsActive = true
+                };
+
+                await _unitOfWork.Repository<User>().AddAsync(user);
+                await _unitOfWork.SaveChangesAsync();
+            }
+            else
+            {
+                // Mevcut kullanıcıya Google ID bağla (ilk Google login)
+                if (string.IsNullOrEmpty(user.GoogleId))
+                {
+                    user.GoogleId = googleId;
+                    if (string.IsNullOrEmpty(user.AuthProvider))
+                        user.AuthProvider = string.IsNullOrEmpty(user.PasswordHash) ? "Google" : "Local";
+                }
+
+                user.LastLoginAt = DateTime.UtcNow;
+                _unitOfWork.Repository<User>().Update(user);
+                await _unitOfWork.SaveChangesAsync();
+            }
+
+            // 4. Hesap aktif mi kontrol et
+            if (!user.IsActive)
+            {
+                return ApiResponseDto<AuthResponseDto>.FailResponse("Hesabınız devre dışı bırakılmış");
+            }
+
+            // 5. JWT token oluştur (normal login ile aynı)
+            var accessToken = _tokenService.GenerateAccessToken(user);
+            var refreshToken = _tokenService.GenerateRefreshToken(user.Id);
+
+            await _unitOfWork.Repository<RefreshToken>().AddAsync(refreshToken);
+            await _unitOfWork.SaveChangesAsync();
+
+            return ApiResponseDto<AuthResponseDto>.SuccessResponse(new AuthResponseDto
+            {
+                AccessToken = accessToken,
+                RefreshToken = refreshToken.Token,
+                ExpiresAt = refreshToken.ExpiresAt,
+                User = MapToUserDto(user)
+            }, "Google ile giriş başarılı");
+        }
+        catch (InvalidJwtException)
+        {
+            return ApiResponseDto<AuthResponseDto>.FailResponse("Geçersiz Google token");
+        }
     }
 
     #region Private Methods

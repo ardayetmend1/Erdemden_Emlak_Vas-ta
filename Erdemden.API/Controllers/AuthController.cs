@@ -72,6 +72,29 @@ public class AuthController : ControllerBase
     }
 
     /// <summary>
+    /// Google ile giriş - ID token doğrulama
+    /// </summary>
+    [HttpPost("google-login")]
+    public async Task<IActionResult> GoogleLogin([FromBody] GoogleLoginDto googleLoginDto)
+    {
+        var result = await _authService.GoogleLoginAsync(googleLoginDto);
+
+        if (!result.Success)
+        {
+            return BadRequest(result);
+        }
+
+        // Token'ları HttpOnly Cookie'ye yaz (normal login ile aynı)
+        SetTokenCookies(result.Data!.AccessToken, result.Data.RefreshToken);
+
+        return Ok(ApiResponseDto<object>.SuccessResponse(new
+        {
+            result.Data.User,
+            result.Message
+        }));
+    }
+
+    /// <summary>
     /// Token yenileme - Cookie'deki refresh token ile
     /// </summary>
     [HttpPost("refresh")]

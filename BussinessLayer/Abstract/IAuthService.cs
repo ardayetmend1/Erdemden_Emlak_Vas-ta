@@ -37,4 +37,9 @@ public interface IAuthService
     /// Kullanıcının tüm oturumlarını sonlandır
     /// </summary>
     Task<ApiResponseDto> RevokeAllTokensAsync(Guid userId);
+
+    /// <summary>
+    /// Google ile giriş (ID token doğrulama)
+    /// </summary>
+    Task<ApiResponseDto<AuthResponseDto>> GoogleLoginAsync(GoogleLoginDto googleLoginDto);
 }

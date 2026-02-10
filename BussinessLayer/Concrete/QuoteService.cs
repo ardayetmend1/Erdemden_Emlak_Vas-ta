@@ -15,6 +15,7 @@ public class QuoteService : IQuoteService
 {
     private readonly IUnitOfWork _unitOfWork;
     private const string UploadBasePath = "Uploads/QuoteMedia";
+    private const int MaxBase64FileSizeMB = 20; // Maksimum dosya boyutu (MB)
 
     public QuoteService(IUnitOfWork unitOfWork)
     {
@@ -57,6 +58,15 @@ public class QuoteService : IQuoteService
             {
                 foreach (var report in expertReports)
                 {
+                    // Base64 boyut validasyonu (decode öncesi bellek koruması)
+                    var estimatedSizeBytes = (report.Base64Data.Length * 3) / 4;
+                    if (estimatedSizeBytes > MaxBase64FileSizeMB * 1024 * 1024)
+                    {
+                        await _unitOfWork.RollbackTransactionAsync();
+                        return ApiResponseDto<QuoteRequestDto>.FailResponse(
+                            $"'{report.FileName}' dosyası çok büyük. Maksimum {MaxBase64FileSizeMB}MB yüklenebilir.");
+                    }
+
                     var expertReport = new ExpertReport
                     {
                         QuoteRequestId = quoteRequest.Id,
@@ -74,7 +84,7 @@ public class QuoteService : IQuoteService
             await _unitOfWork.CommitTransactionAsync();
 
             // Response DTO oluştur
-            var responseDto = await MapToDto(quoteRequest);
+            var responseDto = MapToDto(quoteRequest);
             return ApiResponseDto<QuoteRequestDto>.SuccessResponse(responseDto, "Teklif talebiniz başarıyla alındı.");
         }
         catch (Exception ex)
@@ -96,7 +106,7 @@ public class QuoteService : IQuoteService
             .OrderByDescending(q => q.Date)
             .ToListAsync();
 
-        var dtos = quotes.Select(q => MapToDto(q).Result).ToList();
+        var dtos = quotes.Select(MapToDto).ToList();
         return ApiResponseDto<List<QuoteRequestDto>>.SuccessResponse(dtos);
     }
 
@@ -113,7 +123,7 @@ public class QuoteService : IQuoteService
             .OrderByDescending(q => q.Date)
             .ToListAsync();
 
-        var dtos = quotes.Select(q => MapToDto(q).Result).ToList();
+        var dtos = quotes.Select(MapToDto).ToList();
         return ApiResponseDto<List<QuoteRequestDto>>.SuccessResponse(dtos);
     }
 
@@ -131,7 +141,7 @@ public class QuoteService : IQuoteService
         if (quote == null)
             return ApiResponseDto<QuoteRequestDto>.FailResponse("Teklif talebi bulunamadı.");
 
-        var dto = await MapToDto(quote);
+        var dto = MapToDto(quote);
         return ApiResponseDto<QuoteRequestDto>.SuccessResponse(dto);
     }
 
@@ -278,7 +288,7 @@ public class QuoteService : IQuoteService
     /// <summary>
     /// Entity'yi DTO'ya map et
     /// </summary>
-    private Task<QuoteRequestDto> MapToDto(QuoteRequest quote)
+    private QuoteRequestDto MapToDto(QuoteRequest quote)
     {
         var dto = new QuoteRequestDto
         {
@@ -328,6 +338,6 @@ public class QuoteService : IQuoteService
                 }).ToList()
         };
 
-        return Task.FromResult(dto);
+        return dto;
     }
 }

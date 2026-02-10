@@ -41,6 +41,12 @@ namespace DataAcessLayer.Concrete
             {
                 entity.HasKey(e => e.Id);
 
+                // Sık sorgulanan alanlar için indexler
+                entity.HasIndex(e => e.Status);
+                entity.HasIndex(e => e.Category);
+                entity.HasIndex(e => e.CityId);
+                entity.HasIndex(e => e.ListingDate);
+
                 // City - Listing (1:N)
                 entity.HasOne(e => e.City)
                     .WithMany(c => c.Listings)
@@ -58,6 +64,9 @@ namespace DataAcessLayer.Concrete
             modelBuilder.Entity<Vehicle>(entity =>
             {
                 entity.HasKey(e => e.ListingId);
+
+                entity.HasIndex(e => e.BrandId);
+                entity.HasIndex(e => e.ModelId);
 
                 entity.HasOne(e => e.Listing)
                     .WithOne(l => l.Vehicle)
@@ -145,6 +154,14 @@ namespace DataAcessLayer.Concrete
                     .WithMany(l => l.NotaryDocuments)
                     .HasForeignKey(e => e.ListingId)
                     .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // ==================== QUOTE REQUEST ====================
+            modelBuilder.Entity<QuoteRequest>(entity =>
+            {
+                entity.HasIndex(e => e.Email);
+                entity.HasIndex(e => e.IsRead);
+                entity.HasIndex(e => e.Date);
             });
 
             // ==================== EXPERT REPORT (1:N with QuoteRequest) ====================

@@ -194,6 +194,7 @@ public class QuotesController : ControllerBase
     /// <summary>
     /// Ekspertiz raporu indir
     /// </summary>
+    [Authorize]
     [HttpGet("reports/{reportId:guid}/download")]
     public async Task<IActionResult> DownloadExpertReport(Guid reportId)
     {
@@ -214,6 +215,7 @@ public class QuotesController : ControllerBase
     /// <summary>
     /// Medya dosyası indir (fotoğraf/video)
     /// </summary>
+    [Authorize]
     [HttpGet("media/{mediaId:guid}/download")]
     public async Task<IActionResult> DownloadMedia(Guid mediaId)
     {
@@ -237,7 +239,7 @@ public class QuotesController : ControllerBase
     /// </summary>
     [Authorize(Policy = "AdminOnly")]
     [HttpGet("{quoteId:guid}/download-all")]
-    public async Task<IActionResult> DownloadAllFiles(Guid quoteId)
+    public async Task DownloadAllFiles(Guid quoteId)
     {
         var quote = await _unitOfWork.Repository<QuoteRequest>()
             .Query()
@@ -246,49 +248,54 @@ public class QuotesController : ControllerBase
             .FirstOrDefaultAsync(q => q.Id == quoteId);
 
         if (quote == null)
-            return NotFound(new { success = false, message = "Teklif talebi bulunamadı." });
-
-        using var memoryStream = new MemoryStream();
-        using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
         {
-            // Ekspertiz raporları
-            foreach (var report in quote.ExpertReports)
-            {
-                if (report.Data != null)
-                {
-                    var entry = archive.CreateEntry($"Raporlar/{report.Name}");
-                    using var entryStream = entry.Open();
-                    await entryStream.WriteAsync(report.Data);
-                }
-            }
+            HttpContext.Response.StatusCode = 404;
+            HttpContext.Response.ContentType = "application/json";
+            await HttpContext.Response.WriteAsJsonAsync(new { success = false, message = "Teklif talebi bulunamadı." });
+            return;
+        }
 
-            // Fotoğraflar
-            foreach (var media in quote.Media.Where(m => m.MediaType == "Photo"))
-            {
-                if (media.Data != null)
-                {
-                    var entry = archive.CreateEntry($"Fotograflar/{media.FileName}");
-                    using var entryStream = entry.Open();
-                    await entryStream.WriteAsync(media.Data);
-                }
-            }
+        var zipName = $"{(string.IsNullOrEmpty(quote.Plate) ? quote.Id.ToString()[..8] : quote.Plate)}_Dosyalar.zip";
 
-            // Videolar
-            foreach (var media in quote.Media.Where(m => m.MediaType == "Video"))
+        HttpContext.Response.ContentType = "application/zip";
+        HttpContext.Response.Headers.Append("Content-Disposition", $"attachment; filename=\"{zipName}\"");
+
+        // ZIP'i doğrudan response stream'e yaz - RAM'de tamponlamadan
+        using var archive = new ZipArchive(HttpContext.Response.Body, ZipArchiveMode.Create, leaveOpen: true);
+
+        // Ekspertiz raporları
+        foreach (var report in quote.ExpertReports)
+        {
+            if (report.Data != null)
             {
-                if (!string.IsNullOrEmpty(media.FilePath) && System.IO.File.Exists(media.FilePath))
-                {
-                    var entry = archive.CreateEntry($"Videolar/{media.FileName}");
-                    using var entryStream = entry.Open();
-                    using var fileStream = System.IO.File.OpenRead(media.FilePath);
-                    await fileStream.CopyToAsync(entryStream);
-                }
+                var entry = archive.CreateEntry($"Raporlar/{report.Name}");
+                using var entryStream = entry.Open();
+                await entryStream.WriteAsync(report.Data);
             }
         }
 
-        memoryStream.Position = 0;
-        var zipName = $"{(string.IsNullOrEmpty(quote.Plate) ? quote.Id.ToString()[..8] : quote.Plate)}_Dosyalar.zip";
-        return File(memoryStream.ToArray(), "application/zip", zipName);
+        // Fotoğraflar
+        foreach (var media in quote.Media.Where(m => m.MediaType == "Photo"))
+        {
+            if (media.Data != null)
+            {
+                var entry = archive.CreateEntry($"Fotograflar/{media.FileName}");
+                using var entryStream = entry.Open();
+                await entryStream.WriteAsync(media.Data);
+            }
+        }
+
+        // Videolar - dosya sisteminden stream et
+        foreach (var media in quote.Media.Where(m => m.MediaType == "Video"))
+        {
+            if (!string.IsNullOrEmpty(media.FilePath) && System.IO.File.Exists(media.FilePath))
+            {
+                var entry = archive.CreateEntry($"Videolar/{media.FileName}");
+                using var entryStream = entry.Open();
+                using var fileStream = System.IO.File.OpenRead(media.FilePath);
+                await fileStream.CopyToAsync(entryStream);
+            }
+        }
     }
 }
 

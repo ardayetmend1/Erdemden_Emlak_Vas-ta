@@ -31,4 +31,9 @@ public class JwtSettings
     /// Refresh token süresi (gün) - Varsayılan: 7 gün
     /// </summary>
     public int RefreshTokenExpirationDays { get; set; } = 7;
+
+    /// <summary>
+    /// Google OAuth Client ID (Google Sign-In doğrulama için)
+    /// </summary>
+    public string GoogleClientId { get; set; } = string.Empty;
 }
