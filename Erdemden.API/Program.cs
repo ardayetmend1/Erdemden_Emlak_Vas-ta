@@ -17,6 +17,12 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 var builder = WebApplication.CreateBuilder(args);
 
+// ==================== Kestrel - Büyük dosya yükleme desteği ====================
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxRequestBodySize = 500 * 1024 * 1024; // 500MB
+});
+
 // ==================== JWT Settings ====================
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(JwtSettings.SectionName));
 

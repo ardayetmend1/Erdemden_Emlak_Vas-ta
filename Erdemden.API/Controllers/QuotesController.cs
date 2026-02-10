@@ -1,9 +1,11 @@
+using System.IO.Compression;
 using BussinessLayer.Abstract;
 using Core.DTOs.QuoteRequestDtos;
 using DataAcessLayer.Abstract;
 using EntityLayer.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Erdemden.API.Controllers;
 
@@ -41,6 +43,72 @@ public class QuotesController : ControllerBase
         }
 
         return CreatedAtAction(nameof(GetQuoteById), new { id = result.Data!.Id }, result);
+    }
+
+    /// <summary>
+    /// Teklif talebine medya dosyaları yükle (fotoğraf/video)
+    /// </summary>
+    [HttpPost("{quoteId:guid}/media")]
+    [RequestSizeLimit(500 * 1024 * 1024)] // 500MB
+    public async Task<IActionResult> UploadMedia(Guid quoteId, [FromForm] List<IFormFile> files)
+    {
+        if (files == null || files.Count == 0)
+            return BadRequest(new { success = false, message = "Dosya seçilmedi." });
+
+        var allowedPhotoTypes = new[] { "image/jpeg", "image/png", "image/webp" };
+        var allowedVideoTypes = new[] { "video/mp4", "video/quicktime", "video/webm" };
+        const long maxPhotoSize = 10 * 1024 * 1024; // 10MB
+        const long maxVideoSize = 100 * 1024 * 1024; // 100MB
+
+        var mediaFiles = new List<MediaFileUploadDto>();
+
+        foreach (var file in files)
+        {
+            var contentType = file.ContentType.ToLower();
+            string mediaType;
+
+            if (allowedPhotoTypes.Contains(contentType))
+            {
+                if (file.Length > maxPhotoSize)
+                    return BadRequest(new { success = false, message = $"Fotoğraf '{file.FileName}' 10MB'dan büyük olamaz." });
+                mediaType = "Photo";
+            }
+            else if (allowedVideoTypes.Contains(contentType))
+            {
+                if (file.Length > maxVideoSize)
+                    return BadRequest(new { success = false, message = $"Video '{file.FileName}' 100MB'dan büyük olamaz." });
+                mediaType = "Video";
+            }
+            else
+            {
+                return BadRequest(new { success = false, message = $"'{file.FileName}' desteklenmeyen dosya formatı. Fotoğraf: jpg, png, webp - Video: mp4, mov, webm" });
+            }
+
+            mediaFiles.Add(new MediaFileUploadDto
+            {
+                FileName = file.FileName,
+                ContentType = file.ContentType,
+                MediaType = mediaType,
+                FileStream = file.OpenReadStream(),
+                FileSize = file.Length
+            });
+        }
+
+        // Fotoğraf ve video sayı limitleri
+        var photoCount = mediaFiles.Count(f => f.MediaType == "Photo");
+        var videoCount = mediaFiles.Count(f => f.MediaType == "Video");
+
+        if (photoCount > 10)
+            return BadRequest(new { success = false, message = "En fazla 10 fotoğraf yüklenebilir." });
+        if (videoCount > 3)
+            return BadRequest(new { success = false, message = "En fazla 3 video yüklenebilir." });
+
+        var result = await _quoteService.UploadMediaAsync(quoteId, mediaFiles);
+
+        if (!result.Success)
+            return BadRequest(result);
+
+        return Ok(result);
     }
 
     /// <summary>
@@ -136,7 +204,91 @@ public class QuotesController : ControllerBase
             return NotFound(new { success = false, message = "Rapor bulunamadı." });
         }
 
-        return File(report.Data, report.ContentType ?? "application/octet-stream", report.Name);
+        // Tarayıcıda yeni sekmede aç (inline), indirme yapmasın
+        return new FileContentResult(report.Data, report.ContentType ?? "application/pdf")
+        {
+            EnableRangeProcessing = true
+        };
+    }
+
+    /// <summary>
+    /// Medya dosyası indir (fotoğraf/video)
+    /// </summary>
+    [HttpGet("media/{mediaId:guid}/download")]
+    public async Task<IActionResult> DownloadMedia(Guid mediaId)
+    {
+        var result = await _quoteService.GetMediaFileAsync(mediaId);
+
+        if (result == null || result.Value.Data == null)
+        {
+            return NotFound(new { success = false, message = "Medya dosyası bulunamadı." });
+        }
+
+        var (data, fileName, contentType) = result.Value;
+        // Tarayıcıda yeni sekmede aç (inline), indirme yapmasın
+        return new FileContentResult(data!, contentType)
+        {
+            EnableRangeProcessing = true
+        };
+    }
+
+    /// <summary>
+    /// Teklif talebinin tüm dosyalarını ZIP olarak indir (Sadece Admin)
+    /// </summary>
+    [Authorize(Policy = "AdminOnly")]
+    [HttpGet("{quoteId:guid}/download-all")]
+    public async Task<IActionResult> DownloadAllFiles(Guid quoteId)
+    {
+        var quote = await _unitOfWork.Repository<QuoteRequest>()
+            .Query()
+            .Include(q => q.ExpertReports)
+            .Include(q => q.Media)
+            .FirstOrDefaultAsync(q => q.Id == quoteId);
+
+        if (quote == null)
+            return NotFound(new { success = false, message = "Teklif talebi bulunamadı." });
+
+        using var memoryStream = new MemoryStream();
+        using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+        {
+            // Ekspertiz raporları
+            foreach (var report in quote.ExpertReports)
+            {
+                if (report.Data != null)
+                {
+                    var entry = archive.CreateEntry($"Raporlar/{report.Name}");
+                    using var entryStream = entry.Open();
+                    await entryStream.WriteAsync(report.Data);
+                }
+            }
+
+            // Fotoğraflar
+            foreach (var media in quote.Media.Where(m => m.MediaType == "Photo"))
+            {
+                if (media.Data != null)
+                {
+                    var entry = archive.CreateEntry($"Fotograflar/{media.FileName}");
+                    using var entryStream = entry.Open();
+                    await entryStream.WriteAsync(media.Data);
+                }
+            }
+
+            // Videolar
+            foreach (var media in quote.Media.Where(m => m.MediaType == "Video"))
+            {
+                if (!string.IsNullOrEmpty(media.FilePath) && System.IO.File.Exists(media.FilePath))
+                {
+                    var entry = archive.CreateEntry($"Videolar/{media.FileName}");
+                    using var entryStream = entry.Open();
+                    using var fileStream = System.IO.File.OpenRead(media.FilePath);
+                    await fileStream.CopyToAsync(entryStream);
+                }
+            }
+        }
+
+        memoryStream.Position = 0;
+        var zipName = $"{(string.IsNullOrEmpty(quote.Plate) ? quote.Id.ToString()[..8] : quote.Plate)}_Dosyalar.zip";
+        return File(memoryStream.ToArray(), "application/zip", zipName);
     }
 }
 

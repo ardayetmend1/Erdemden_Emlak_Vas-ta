@@ -30,4 +30,8 @@ public class QuoteRequestDto
 
     // Ekspertiz raporları
     public List<DocumentDto> ExpertReports { get; set; } = new();
+
+    // Medya dosyaları
+    public List<MediaDocumentDto> Photos { get; set; } = new();
+    public List<MediaDocumentDto> Videos { get; set; } = new();
 }

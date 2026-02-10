@@ -37,6 +37,16 @@ public interface IQuoteService
     /// Teklif talebini sil
     /// </summary>
     Task<ApiResponseDto> DeleteQuoteAsync(Guid id);
+
+    /// <summary>
+    /// Teklif talebine medya dosyaları yükle (fotoğraf/video)
+    /// </summary>
+    Task<ApiResponseDto> UploadMediaAsync(Guid quoteId, List<MediaFileUploadDto> files);
+
+    /// <summary>
+    /// Medya dosyasını getir (download için)
+    /// </summary>
+    Task<(byte[]? Data, string FileName, string ContentType)?> GetMediaFileAsync(Guid mediaId);
 }
 
 /// <summary>
@@ -47,4 +57,16 @@ public class FileUploadDto
     public string FileName { get; set; } = string.Empty;
     public string ContentType { get; set; } = string.Empty;
     public string Base64Data { get; set; } = string.Empty;
+}
+
+/// <summary>
+/// Medya dosyası yükleme DTO
+/// </summary>
+public class MediaFileUploadDto
+{
+    public string FileName { get; set; } = string.Empty;
+    public string ContentType { get; set; } = string.Empty;
+    public string MediaType { get; set; } = string.Empty; // "Photo" veya "Video"
+    public Stream FileStream { get; set; } = null!;
+    public long FileSize { get; set; }
 }

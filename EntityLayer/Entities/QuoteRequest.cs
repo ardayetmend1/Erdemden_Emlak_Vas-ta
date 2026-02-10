@@ -50,4 +50,5 @@ public class QuoteRequest : BaseEntity
     public bool IsRead { get; set; } = false;
 
     public virtual ICollection<ExpertReport> ExpertReports { get; set; } = new List<ExpertReport>();
+    public virtual ICollection<QuoteMedia> Media { get; set; } = new List<QuoteMedia>();
 }

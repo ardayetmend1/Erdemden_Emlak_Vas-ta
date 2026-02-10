@@ -14,6 +14,7 @@ namespace BussinessLayer.Concrete;
 public class QuoteService : IQuoteService
 {
     private readonly IUnitOfWork _unitOfWork;
+    private const string UploadBasePath = "Uploads/QuoteMedia";
 
     public QuoteService(IUnitOfWork unitOfWork)
     {
@@ -91,6 +92,7 @@ public class QuoteService : IQuoteService
         var quotes = await _unitOfWork.Repository<QuoteRequest>()
             .Query()
             .Include(q => q.ExpertReports)
+            .Include(q => q.Media)
             .OrderByDescending(q => q.Date)
             .ToListAsync();
 
@@ -106,6 +108,7 @@ public class QuoteService : IQuoteService
         var quotes = await _unitOfWork.Repository<QuoteRequest>()
             .Query()
             .Include(q => q.ExpertReports)
+            .Include(q => q.Media)
             .Where(q => q.Email != null && q.Email.ToLower() == email.ToLower())
             .OrderByDescending(q => q.Date)
             .ToListAsync();
@@ -122,6 +125,7 @@ public class QuoteService : IQuoteService
         var quote = await _unitOfWork.Repository<QuoteRequest>()
             .Query()
             .Include(q => q.ExpertReports)
+            .Include(q => q.Media)
             .FirstOrDefaultAsync(q => q.Id == id);
 
         if (quote == null)
@@ -156,10 +160,23 @@ public class QuoteService : IQuoteService
         var quote = await _unitOfWork.Repository<QuoteRequest>()
             .Query()
             .Include(q => q.ExpertReports)
+            .Include(q => q.Media)
             .FirstOrDefaultAsync(q => q.Id == id);
 
         if (quote == null)
             return ApiResponseDto.FailResponse("Teklif talebi bulunamadı.");
+
+        // Video dosyalarını diskten sil
+        foreach (var media in quote.Media.Where(m => m.MediaType == "Video" && !string.IsNullOrEmpty(m.FilePath)))
+        {
+            if (File.Exists(media.FilePath!))
+                File.Delete(media.FilePath!);
+        }
+
+        // Quote klasörünü sil (varsa)
+        var quoteMediaDir = Path.Combine(UploadBasePath, id.ToString());
+        if (Directory.Exists(quoteMediaDir))
+            Directory.Delete(quoteMediaDir, true);
 
         // Ekspertiz raporlarını sil (Cascade ile otomatik silinir ama explicit olsun)
         foreach (var report in quote.ExpertReports.ToList())
@@ -167,10 +184,95 @@ public class QuoteService : IQuoteService
             _unitOfWork.Repository<ExpertReport>().Delete(report);
         }
 
+        foreach (var media in quote.Media.ToList())
+        {
+            _unitOfWork.Repository<QuoteMedia>().Delete(media);
+        }
+
         _unitOfWork.Repository<QuoteRequest>().Delete(quote);
         await _unitOfWork.SaveChangesAsync();
 
         return ApiResponseDto.SuccessResponse("Teklif talebi silindi.");
+    }
+
+    /// <summary>
+    /// Teklif talebine medya dosyaları yükle
+    /// </summary>
+    public async Task<ApiResponseDto> UploadMediaAsync(Guid quoteId, List<MediaFileUploadDto> files)
+    {
+        var quote = await _unitOfWork.Repository<QuoteRequest>().GetByIdAsync(quoteId);
+        if (quote == null)
+            return ApiResponseDto.FailResponse("Teklif talebi bulunamadı.");
+
+        try
+        {
+            foreach (var file in files)
+            {
+                var media = new QuoteMedia
+                {
+                    QuoteRequestId = quoteId,
+                    FileName = file.FileName,
+                    ContentType = file.ContentType,
+                    MediaType = file.MediaType,
+                    FileSize = file.FileSize
+                };
+
+                if (file.MediaType == "Photo")
+                {
+                    // Fotoğrafları DB'de sakla
+                    using var ms = new MemoryStream();
+                    await file.FileStream.CopyToAsync(ms);
+                    media.Data = ms.ToArray();
+                }
+                else
+                {
+                    // Videoları dosya sisteminde sakla
+                    var quoteDir = Path.Combine(UploadBasePath, quoteId.ToString());
+                    Directory.CreateDirectory(quoteDir);
+
+                    var safeFileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+                    var filePath = Path.Combine(quoteDir, safeFileName);
+
+                    using var fs = new FileStream(filePath, FileMode.Create);
+                    await file.FileStream.CopyToAsync(fs);
+
+                    media.FilePath = filePath;
+                }
+
+                await _unitOfWork.Repository<QuoteMedia>().AddAsync(media);
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+            return ApiResponseDto.SuccessResponse("Medya dosyaları başarıyla yüklendi.");
+        }
+        catch (Exception ex)
+        {
+            return ApiResponseDto.FailResponse($"Medya yüklenirken hata: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Medya dosyasını getir (download için)
+    /// </summary>
+    public async Task<(byte[]? Data, string FileName, string ContentType)?> GetMediaFileAsync(Guid mediaId)
+    {
+        var media = await _unitOfWork.Repository<QuoteMedia>().GetByIdAsync(mediaId);
+        if (media == null) return null;
+
+        byte[]? data;
+        if (media.MediaType == "Photo")
+        {
+            data = media.Data;
+        }
+        else
+        {
+            if (string.IsNullOrEmpty(media.FilePath) || !File.Exists(media.FilePath))
+                return null;
+
+            data = await File.ReadAllBytesAsync(media.FilePath);
+        }
+
+        return (data, media.FileName, media.ContentType);
     }
 
     /// <summary>
@@ -201,7 +303,29 @@ public class QuoteService : IQuoteService
                 Name = r.Name,
                 ContentType = r.ContentType ?? "application/octet-stream",
                 DownloadUrl = $"/api/quotes/reports/{r.Id}/download"
-            }).ToList()
+            }).ToList(),
+            Photos = quote.Media
+                .Where(m => m.MediaType == "Photo")
+                .Select(m => new MediaDocumentDto
+                {
+                    Id = m.Id,
+                    FileName = m.FileName,
+                    ContentType = m.ContentType,
+                    MediaType = m.MediaType,
+                    FileSize = m.FileSize,
+                    DownloadUrl = $"/api/quotes/media/{m.Id}/download"
+                }).ToList(),
+            Videos = quote.Media
+                .Where(m => m.MediaType == "Video")
+                .Select(m => new MediaDocumentDto
+                {
+                    Id = m.Id,
+                    FileName = m.FileName,
+                    ContentType = m.ContentType,
+                    MediaType = m.MediaType,
+                    FileSize = m.FileSize,
+                    DownloadUrl = $"/api/quotes/media/{m.Id}/download"
+                }).ToList()
         };
 
         return Task.FromResult(dto);

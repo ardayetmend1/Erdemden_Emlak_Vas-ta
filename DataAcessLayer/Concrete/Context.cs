@@ -28,6 +28,7 @@ namespace DataAcessLayer.Concrete
         public DbSet<NotaryDocument> NotaryDocuments { get; set; }
         public DbSet<UserFavorite> UserFavorites { get; set; }
         public DbSet<QuoteRequest> QuoteRequests { get; set; }
+        public DbSet<QuoteMedia> QuoteMedia { get; set; }
         public DbSet<SiteContent> SiteContents { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
 
@@ -151,6 +152,15 @@ namespace DataAcessLayer.Concrete
             {
                 entity.HasOne(e => e.QuoteRequest)
                     .WithMany(q => q.ExpertReports)
+                    .HasForeignKey(e => e.QuoteRequestId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // ==================== QUOTE MEDIA (1:N with QuoteRequest) ====================
+            modelBuilder.Entity<QuoteMedia>(entity =>
+            {
+                entity.HasOne(e => e.QuoteRequest)
+                    .WithMany(q => q.Media)
                     .HasForeignKey(e => e.QuoteRequestId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
