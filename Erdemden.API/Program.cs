@@ -95,7 +95,8 @@ builder.Services.AddCors(options =>
         policy.WithOrigins(
             "http://localhost:3000",
             "http://localhost:5173",
-            "https://erdemden.com"  // Production URL
+            "https://erdemden.com",
+            "https://testerdemden.d1-tech.com"
         )
         .AllowAnyHeader()
         .AllowAnyMethod()
@@ -113,10 +114,11 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// ==================== Seed Database ====================
+// ==================== Database Migration & Seed ====================
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<Context>();
+    await context.Database.MigrateAsync();
     await SeedDatabase.InitializeAsync(context);
 }
 
