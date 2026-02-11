@@ -12,6 +12,7 @@ public class Vehicle : BaseEntity
     public Guid? BodyTypeId { get; set; }
     public Guid BrandId { get; set; }
     public Guid ModelId { get; set; }
+    public Guid? PackageId { get; set; }
     public Guid FuelTypeId { get; set; }
     public Guid TransmissionTypeId { get; set; }
 
@@ -64,6 +65,7 @@ public class Vehicle : BaseEntity
     public virtual BodyType? BodyType { get; set; }
     public virtual Brand Brand { get; set; } = null!;
     public virtual Model Model { get; set; } = null!;
+    public virtual Package? Package { get; set; }
     public virtual FuelType FuelType { get; set; } = null!;
     public virtual TransmissionType TransmissionType { get; set; } = null!;
 }

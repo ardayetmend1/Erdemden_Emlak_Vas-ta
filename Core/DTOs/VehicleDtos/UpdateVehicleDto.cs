@@ -25,6 +25,7 @@ public class UpdateVehicleDto
     public Guid? FuelTypeId { get; set; }
     public Guid? TransmissionTypeId { get; set; }
     public Guid? BodyTypeId { get; set; }
+    public Guid? PackageId { get; set; }
 
     // ==================== GÜVENLİK ====================
     public bool? HasABS { get; set; }

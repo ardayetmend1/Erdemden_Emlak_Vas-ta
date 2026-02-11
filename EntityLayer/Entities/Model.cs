@@ -15,4 +15,5 @@ public class Model : BaseEntity
     public virtual Brand Brand { get; set; } = null!;
     public virtual BodyType? BodyType { get; set; }
     public virtual ICollection<Vehicle> Vehicles { get; set; } = new List<Vehicle>();
+    public virtual ICollection<Package> Packages { get; set; } = new List<Package>();
 }

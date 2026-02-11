@@ -22,6 +22,7 @@ namespace DataAcessLayer.Concrete
         public DbSet<BodyType> BodyTypes { get; set; }
         public DbSet<FuelType> FuelTypes { get; set; }
         public DbSet<TransmissionType> TransmissionTypes { get; set; }
+        public DbSet<Package> Packages { get; set; }
         public DbSet<HousingType> HousingTypes { get; set; }
         public DbSet<ListingImage> ListingImages { get; set; }
         public DbSet<ExpertReport> ExpertReports { get; set; }
@@ -102,6 +103,20 @@ namespace DataAcessLayer.Concrete
                     .WithMany(t => t.Vehicles)
                     .HasForeignKey(e => e.TransmissionTypeId)
                     .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(e => e.Package)
+                    .WithMany(p => p.Vehicles)
+                    .HasForeignKey(e => e.PackageId)
+                    .OnDelete(DeleteBehavior.SetNull);
+            });
+
+            // ==================== PACKAGE - MODEL (1:N) ====================
+            modelBuilder.Entity<Package>(entity =>
+            {
+                entity.HasOne(e => e.Model)
+                    .WithMany(m => m.Packages)
+                    .HasForeignKey(e => e.ModelId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             // ==================== REALESTATE (1:1 with Listing) ====================

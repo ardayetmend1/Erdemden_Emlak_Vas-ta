@@ -18,14 +18,14 @@ namespace DataAcessLayer.SeedData
             "Model Y", "Model X",                            // Tesla
             "HR-V", "CR-V",                                  // Honda
             "Puma", "Kuga", "Explorer",                      // Ford
-            "Tucson", "Kona", "Santa Fe", "Bayon"            // Hyundai
+            "Tucson", "Kona", "Santa Fe", "Bayon", "IONIQ 5" // Hyundai
         };
 
         // Sedan modelleri - kasa tipi Sedan olacak
         private static readonly HashSet<string> SedanModels = new()
         {
             "3 Serisi", "5 Serisi", "7 Serisi",              // BMW
-            "C Serisi", "E Serisi", "S Serisi", "CLA",       // Mercedes
+            "C Serisi", "E Serisi", "S Serisi", "CLA", "EQE", "EQS", // Mercedes
             "A3", "A4", "A6", "A8",                          // Audi
             "Passat", "Jetta", "Arteon",                     // VW
             "Corolla", "Camry",                              // Toyota
@@ -33,7 +33,24 @@ namespace DataAcessLayer.SeedData
             "Model 3", "Model S",                            // Tesla
             "Civic", "City", "Accord",                       // Honda
             "Focus", "Mondeo",                               // Ford
-            "Elantra", "Sonata", "i10", "i20"                // Hyundai
+            "Elantra", "Sonata"                              // Hyundai
+        };
+
+        // Hatchback modelleri - kasa tipi Hatchback olacak
+        private static readonly HashSet<string> HatchbackModels = new()
+        {
+            "Golf", "Polo",                                  // VW
+            "Yaris",                                         // Toyota
+            "Fiesta",                                        // Ford
+            "i10", "i20"                                     // Hyundai
+        };
+
+        // Pickup modelleri - kasa tipi Pickup olacak
+        private static readonly HashSet<string> PickupModels = new()
+        {
+            "Amarok",                                        // VW
+            "Hilux",                                         // Toyota
+            "Ranger"                                         // Ford
         };
 
         public static async Task SeedAsync(Context context)
@@ -41,10 +58,12 @@ namespace DataAcessLayer.SeedData
             if (await context.Set<Brand>().AnyAsync())
                 return;
 
-            // Önce BodyType'ları al (sadece SUV ve Sedan)
+            // BodyType'ları al
             var bodyTypes = await context.Set<BodyType>().ToListAsync();
             var suvBodyType = bodyTypes.FirstOrDefault(b => b.Name == "SUV");
             var sedanBodyType = bodyTypes.FirstOrDefault(b => b.Name == "Sedan");
+            var hatchbackBodyType = bodyTypes.FirstOrDefault(b => b.Name == "Hatchback");
+            var pickupBodyType = bodyTypes.FirstOrDefault(b => b.Name == "Pickup");
 
             var brandModels = new Dictionary<string, string[]>
             {
@@ -73,13 +92,15 @@ namespace DataAcessLayer.SeedData
 
                 foreach (var modelName in brandData.Value)
                 {
-                    // Model ismine göre BodyTypeId belirle (sadece SUV ve Sedan)
                     Guid? bodyTypeId = null;
                     if (SuvModels.Contains(modelName))
                         bodyTypeId = suvBodyType?.Id;
                     else if (SedanModels.Contains(modelName))
                         bodyTypeId = sedanBodyType?.Id;
-                    // Diğer modeller (Hatchback, Pickup vs.) null kalır - tüm listelerde görünür
+                    else if (HatchbackModels.Contains(modelName))
+                        bodyTypeId = hatchbackBodyType?.Id;
+                    else if (PickupModels.Contains(modelName))
+                        bodyTypeId = pickupBodyType?.Id;
 
                     var model = new Model
                     {
@@ -105,18 +126,21 @@ namespace DataAcessLayer.SeedData
             var bodyTypes = await context.Set<BodyType>().ToListAsync();
             var suvBodyType = bodyTypes.FirstOrDefault(b => b.Name == "SUV");
             var sedanBodyType = bodyTypes.FirstOrDefault(b => b.Name == "Sedan");
+            var hatchbackBodyType = bodyTypes.FirstOrDefault(b => b.Name == "Hatchback");
+            var pickupBodyType = bodyTypes.FirstOrDefault(b => b.Name == "Pickup");
 
             var models = await context.Set<Model>().ToListAsync();
 
             foreach (var model in models)
             {
-                if (model.BodyTypeId != null) continue; // Zaten atanmış
-
                 if (SuvModels.Contains(model.Name))
                     model.BodyTypeId = suvBodyType?.Id;
                 else if (SedanModels.Contains(model.Name))
                     model.BodyTypeId = sedanBodyType?.Id;
-                // Diğer modeller null kalır - tüm listelerde görünür
+                else if (HatchbackModels.Contains(model.Name))
+                    model.BodyTypeId = hatchbackBodyType?.Id;
+                else if (PickupModels.Contains(model.Name))
+                    model.BodyTypeId = pickupBodyType?.Id;
             }
 
             await context.SaveChangesAsync();

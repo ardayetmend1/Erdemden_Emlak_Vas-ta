@@ -19,6 +19,7 @@ public class VehicleDto
     public LookupDto FuelType { get; set; } = null!;
     public LookupDto TransmissionType { get; set; } = null!;
     public LookupWithParentDto? BodyType { get; set; }
+    public LookupWithParentDto? Package { get; set; }
 
     // ==================== GÜVENLİK ====================
     public bool HasABS { get; set; }

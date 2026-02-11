@@ -18,18 +18,41 @@ public class LookupsController : ControllerBase
     }
 
     /// <summary>
-    /// Tüm markaları getir
+    /// Markaları getir (opsiyonel: araç tipi ve kasa tipine göre filtrele)
     /// </summary>
     [HttpGet("brands")]
-    public async Task<IActionResult> GetBrands()
+    public async Task<IActionResult> GetBrands([FromQuery] Guid? vehicleTypeId = null, [FromQuery] Guid? bodyTypeId = null)
     {
-        var brands = await _unitOfWork.Repository<Brand>()
+        if (vehicleTypeId.HasValue || bodyTypeId.HasValue)
+        {
+            var modelsQuery = _unitOfWork.Repository<Model>().Query();
+
+            if (bodyTypeId.HasValue)
+            {
+                modelsQuery = modelsQuery.Where(m => m.BodyTypeId == bodyTypeId.Value || m.BodyTypeId == null);
+            }
+            else if (vehicleTypeId.HasValue)
+            {
+                modelsQuery = modelsQuery.Where(m => m.BodyType != null && m.BodyType.VehicleTypeId == vehicleTypeId.Value || m.BodyTypeId == null);
+            }
+
+            var brands = await modelsQuery
+                .Select(m => m.Brand)
+                .Distinct()
+                .OrderBy(b => b.Name)
+                .Select(b => new LookupDto { Id = b.Id, Name = b.Name })
+                .ToListAsync();
+
+            return Ok(ApiResponseDto<List<LookupDto>>.SuccessResponse(brands));
+        }
+
+        var allBrands = await _unitOfWork.Repository<Brand>()
             .Query()
             .OrderBy(b => b.Name)
             .Select(b => new LookupDto { Id = b.Id, Name = b.Name })
             .ToListAsync();
 
-        return Ok(ApiResponseDto<List<LookupDto>>.SuccessResponse(brands));
+        return Ok(ApiResponseDto<List<LookupDto>>.SuccessResponse(allBrands));
     }
 
     /// <summary>
@@ -169,6 +192,28 @@ public class LookupsController : ControllerBase
             .ToListAsync();
 
         return Ok(ApiResponseDto<List<LookupWithParentDto>>.SuccessResponse(bodyTypes));
+    }
+
+    /// <summary>
+    /// Modele ait paketleri getir
+    /// </summary>
+    [HttpGet("packages/{modelId:guid}")]
+    public async Task<IActionResult> GetPackagesByModel(Guid modelId)
+    {
+        var packages = await _unitOfWork.Repository<Package>()
+            .Query()
+            .Where(p => p.ModelId == modelId)
+            .OrderBy(p => p.Name)
+            .Select(p => new LookupWithParentDto
+            {
+                Id = p.Id,
+                Name = p.Name,
+                ParentId = p.ModelId,
+                ParentName = p.Model.Name
+            })
+            .ToListAsync();
+
+        return Ok(ApiResponseDto<List<LookupWithParentDto>>.SuccessResponse(packages));
     }
 
     /// <summary>

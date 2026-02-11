@@ -64,6 +64,7 @@ public class ListingService : IListingService
                 FuelTypeId = vehicleDto.FuelTypeId,
                 TransmissionTypeId = vehicleDto.TransmissionTypeId,
                 BodyTypeId = vehicleDto.BodyTypeId,
+                PackageId = vehicleDto.PackageId,
 
                 // ==================== GÜVENLİK ====================
                 HasABS = vehicleDto.HasABS,
@@ -263,6 +264,8 @@ public class ListingService : IListingService
                 .ThenInclude(v => v!.TransmissionType)
             .Include(l => l.Vehicle)
                 .ThenInclude(v => v!.BodyType)
+            .Include(l => l.Vehicle)
+                .ThenInclude(v => v!.Package)
             .Include(l => l.RealEstate)
                 .ThenInclude(r => r!.HousingType)
             .FirstOrDefaultAsync(l => l.Id == id);
@@ -297,6 +300,8 @@ public class ListingService : IListingService
                 .ThenInclude(v => v!.TransmissionType)
             .Include(l => l.Vehicle)
                 .ThenInclude(v => v!.BodyType)
+            .Include(l => l.Vehicle)
+                .ThenInclude(v => v!.Package)
             .Include(l => l.RealEstate)
                 .ThenInclude(r => r!.HousingType)
             .AsQueryable();
@@ -342,6 +347,9 @@ public class ListingService : IListingService
 
         if (filter.BodyTypeId.HasValue)
             query = query.Where(l => l.Vehicle != null && l.Vehicle.BodyTypeId == filter.BodyTypeId.Value);
+
+        if (filter.PackageId.HasValue)
+            query = query.Where(l => l.Vehicle != null && l.Vehicle.PackageId == filter.PackageId.Value);
 
         if (filter.FuelTypeId.HasValue)
             query = query.Where(l => l.Vehicle != null && l.Vehicle.FuelTypeId == filter.FuelTypeId.Value);
@@ -456,6 +464,7 @@ public class ListingService : IListingService
             .Include(v => v.FuelType)
             .Include(v => v.TransmissionType)
             .Include(v => v.BodyType)
+            .Include(v => v.Package)
             .FirstOrDefaultAsync(v => v.ListingId == listingId);
 
         if (vehicle == null)
@@ -474,6 +483,7 @@ public class ListingService : IListingService
         if (updateDto.FuelTypeId.HasValue) vehicle.FuelTypeId = updateDto.FuelTypeId.Value;
         if (updateDto.TransmissionTypeId.HasValue) vehicle.TransmissionTypeId = updateDto.TransmissionTypeId.Value;
         if (updateDto.BodyTypeId.HasValue) vehicle.BodyTypeId = updateDto.BodyTypeId;
+        if (updateDto.PackageId.HasValue) vehicle.PackageId = updateDto.PackageId;
 
         // ==================== GÜVENLİK ====================
         if (updateDto.HasABS.HasValue) vehicle.HasABS = updateDto.HasABS.Value;
@@ -521,6 +531,7 @@ public class ListingService : IListingService
             .Include(v => v.FuelType)
             .Include(v => v.TransmissionType)
             .Include(v => v.BodyType)
+            .Include(v => v.Package)
             .FirstOrDefaultAsync(v => v.ListingId == listingId);
 
         return ApiResponseDto<VehicleDto>.SuccessResponse(MapToVehicleDto(vehicle!));
@@ -729,6 +740,13 @@ public class ListingService : IListingService
                 Name = vehicle.BodyType.Name,
                 ParentId = vehicle.BodyType.VehicleTypeId,
                 ParentName = vehicle.VehicleType?.Name ?? string.Empty
+            } : null,
+            Package = vehicle.Package != null ? new LookupWithParentDto
+            {
+                Id = vehicle.Package.Id,
+                Name = vehicle.Package.Name,
+                ParentId = vehicle.Package.ModelId,
+                ParentName = vehicle.Model?.Name ?? string.Empty
             } : null,
 
             // ==================== GÜVENLİK ====================

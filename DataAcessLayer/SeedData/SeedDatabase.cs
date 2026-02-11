@@ -22,6 +22,9 @@ namespace DataAcessLayer.SeedData
             // Mevcut modellere BodyTypeId ata (migration sonrası için)
             await SeedBrands.UpdateModelBodyTypesAsync(context);
 
+            // Paketleri seed et (Brands/Models seed edildikten sonra çalışmalı)
+            await SeedPackages.SeedAsync(context);
+
             // Admin kullanıcı oluştur
             await SeedAdminUser(context);
         }

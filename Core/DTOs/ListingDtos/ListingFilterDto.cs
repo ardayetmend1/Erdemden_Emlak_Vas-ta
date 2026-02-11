@@ -31,6 +31,7 @@ public class ListingFilterDto : PaginationRequestDto
     public Guid? BrandId { get; set; }
     public Guid? ModelId { get; set; }
     public Guid? BodyTypeId { get; set; }
+    public Guid? PackageId { get; set; }
     public Guid? FuelTypeId { get; set; }
     public Guid? TransmissionTypeId { get; set; }
     public int? MinYear { get; set; }

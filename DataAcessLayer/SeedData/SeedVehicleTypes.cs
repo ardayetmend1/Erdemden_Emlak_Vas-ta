@@ -14,8 +14,7 @@ namespace DataAcessLayer.SeedData
             var vehicleTypeBodyMap = new Dictionary<string, string[]>
             {
                 { "Otomobil", new[] { "Sedan", "Hatchback", "Station Wagon", "Coupe", "Cabrio", "Roadster" } },
-                { "SUV & Arazi Araçları", new[] { "SUV", "Pickup", "Crossover", "Arazi Aracı" } },
-                { "Elektrikli Otomobil", new[] { "Sedan", "Hatchback", "SUV" } }
+                { "SUV & Arazi Araçları", new[] { "SUV", "Pickup", "Crossover", "Arazi Aracı" } }
             };
 
             foreach (var vehicleTypeData in vehicleTypeBodyMap)
