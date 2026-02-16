@@ -7,25 +7,28 @@ public class ApiResponseDto<T>
 {
     public bool Success { get; set; }
     public string? Message { get; set; }
+    public string? ErrorCode { get; set; }
     public T? Data { get; set; }
     public List<string>? Errors { get; set; }
 
-    public static ApiResponseDto<T> SuccessResponse(T data, string? message = null)
+    public static ApiResponseDto<T> SuccessResponse(T data, string? message = null, string? errorCode = null)
     {
         return new ApiResponseDto<T>
         {
             Success = true,
             Data = data,
-            Message = message
+            Message = message,
+            ErrorCode = errorCode
         };
     }
 
-    public static ApiResponseDto<T> FailResponse(string message, List<string>? errors = null)
+    public static ApiResponseDto<T> FailResponse(string message, string? errorCode = null, List<string>? errors = null)
     {
         return new ApiResponseDto<T>
         {
             Success = false,
             Message = message,
+            ErrorCode = errorCode,
             Errors = errors
         };
     }

@@ -24,6 +24,13 @@ public class User : BaseEntity
 
     public bool IsActive { get; set; } = true;
 
+    public bool IsEmailVerified { get; set; } = false;
+
+    [MaxLength(6)]
+    public string? EmailVerificationCode { get; set; }
+
+    public DateTime? EmailVerificationCodeExpiry { get; set; }
+
     public DateTime? LastLoginAt { get; set; }
 
     public virtual ICollection<UserFavorite> Favorites { get; set; } = new List<UserFavorite>();

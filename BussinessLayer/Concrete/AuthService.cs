@@ -19,12 +19,14 @@ public class AuthService : IAuthService
     private readonly IUnitOfWork _unitOfWork;
     private readonly ITokenService _tokenService;
     private readonly JwtSettings _jwtSettings;
+    private readonly IEmailService _emailService;
 
-    public AuthService(IUnitOfWork unitOfWork, ITokenService tokenService, IOptions<JwtSettings> jwtSettings)
+    public AuthService(IUnitOfWork unitOfWork, ITokenService tokenService, IOptions<JwtSettings> jwtSettings, IEmailService emailService)
     {
         _unitOfWork = unitOfWork;
         _tokenService = tokenService;
         _jwtSettings = jwtSettings.Value;
+        _emailService = emailService;
     }
 
     /// <summary>
@@ -55,6 +57,21 @@ public class AuthService : IAuthService
             return ApiResponseDto<AuthResponseDto>.FailResponse("Hesabınız devre dışı bırakılmış");
         }
 
+        // E-posta doğrulama kontrolü
+        if (!user.IsEmailVerified)
+        {
+            // Yeni kod gönder
+            var code = GenerateVerificationCode();
+            user.EmailVerificationCode = code;
+            user.EmailVerificationCodeExpiry = DateTime.UtcNow.AddMinutes(10);
+            _unitOfWork.Repository<User>().Update(user);
+            await _unitOfWork.SaveChangesAsync();
+
+            try { await _emailService.SendVerificationEmailAsync(user.Email, user.Name, code); } catch { }
+
+            return ApiResponseDto<AuthResponseDto>.FailResponse("E-posta adresiniz doğrulanmamış. Doğrulama kodu e-posta adresinize gönderildi.", "EMAIL_NOT_VERIFIED");
+        }
+
         // Token oluştur
         var accessToken = _tokenService.GenerateAccessToken(user);
         var refreshToken = _tokenService.GenerateRefreshToken(user.Id);
@@ -80,8 +97,45 @@ public class AuthService : IAuthService
     /// <summary>
     /// Kullanıcı kaydı
     /// </summary>
+    // İzin verilen gerçek e-posta domainleri
+    private static readonly HashSet<string> AllowedEmailDomains = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "gmail.com", "googlemail.com",
+        "hotmail.com", "hotmail.com.tr", "outlook.com", "outlook.com.tr", "live.com", "msn.com",
+        "yahoo.com", "yahoo.com.tr",
+        "icloud.com", "me.com", "mac.com",
+        "yandex.com", "yandex.com.tr",
+        "protonmail.com", "proton.me",
+        "aol.com",
+        "mail.com",
+        "zoho.com",
+        "edu.tr", "k12.tr"
+    };
+
+    private static bool IsAllowedEmailDomain(string email)
+    {
+        var parts = email.Split('@');
+        if (parts.Length != 2) return false;
+        var domain = parts[1].ToLowerInvariant();
+
+        // Direkt eşleşme
+        if (AllowedEmailDomains.Contains(domain)) return true;
+
+        // .edu.tr ve .k12.tr ile biten eğitim domainleri
+        if (domain.EndsWith(".edu.tr") || domain.EndsWith(".k12.tr")) return true;
+
+        return false;
+    }
+
     public async Task<ApiResponseDto<AuthResponseDto>> RegisterAsync(RegisterDto registerDto)
     {
+        // E-posta domain kontrolü
+        if (!IsAllowedEmailDomain(registerDto.Email))
+        {
+            return ApiResponseDto<AuthResponseDto>.FailResponse(
+                "Lütfen geçerli bir e-posta adresi kullanın (Gmail, Hotmail, Outlook, Yahoo vb.)");
+        }
+
         // E-posta kontrolü
         var existingUser = await _unitOfWork.Repository<User>()
             .ExistsAsync(u => u.Email == registerDto.Email);
@@ -91,6 +145,9 @@ public class AuthService : IAuthService
             return ApiResponseDto<AuthResponseDto>.FailResponse("Bu e-posta adresi zaten kullanılıyor");
         }
 
+        // Doğrulama kodu oluştur
+        var verificationCode = GenerateVerificationCode();
+
         // Yeni kullanıcı oluştur
         var user = new User
         {
@@ -98,25 +155,26 @@ public class AuthService : IAuthService
             Email = registerDto.Email,
             PasswordHash = HashPassword(registerDto.Password),
             Role = UserRole.User,
-            IsActive = true
+            IsActive = true,
+            IsEmailVerified = false,
+            EmailVerificationCode = verificationCode,
+            EmailVerificationCodeExpiry = DateTime.UtcNow.AddMinutes(10)
         };
 
         await _unitOfWork.Repository<User>().AddAsync(user);
-
-        // Token oluştur
-        var accessToken = _tokenService.GenerateAccessToken(user);
-        var refreshToken = _tokenService.GenerateRefreshToken(user.Id);
-
-        await _unitOfWork.Repository<RefreshToken>().AddAsync(refreshToken);
         await _unitOfWork.SaveChangesAsync();
 
-        return ApiResponseDto<AuthResponseDto>.SuccessResponse(new AuthResponseDto
+        // Doğrulama e-postası gönder
+        try
         {
-            AccessToken = accessToken,
-            RefreshToken = refreshToken.Token,
-            ExpiresAt = refreshToken.ExpiresAt,
-            User = MapToUserDto(user)
-        }, "Kayıt başarılı");
+            await _emailService.SendVerificationEmailAsync(user.Email, user.Name, verificationCode);
+        }
+        catch
+        {
+            // Mail gönderilemese bile kayıt tamamlansın
+        }
+
+        return ApiResponseDto<AuthResponseDto>.SuccessResponse(null!, "Kayıt başarılı! Doğrulama kodu e-posta adresinize gönderildi.", "EMAIL_VERIFICATION_REQUIRED");
     }
 
     /// <summary>
@@ -272,7 +330,8 @@ public class AuthService : IAuthService
                     GoogleId = googleId,
                     AuthProvider = "Google",
                     Role = UserRole.User,
-                    IsActive = true
+                    IsActive = true,
+                    IsEmailVerified = true
                 };
 
                 await _unitOfWork.Repository<User>().AddAsync(user);
@@ -320,7 +379,93 @@ public class AuthService : IAuthService
         }
     }
 
+    public async Task<ApiResponseDto<AuthResponseDto>> VerifyEmailAsync(VerifyEmailDto verifyEmailDto)
+    {
+        var user = await _unitOfWork.Repository<User>()
+            .GetAsync(u => u.Email == verifyEmailDto.Email);
+
+        if (user == null)
+        {
+            return ApiResponseDto<AuthResponseDto>.FailResponse("Kullanıcı bulunamadı");
+        }
+
+        if (user.IsEmailVerified)
+        {
+            return ApiResponseDto<AuthResponseDto>.FailResponse("E-posta adresi zaten doğrulanmış");
+        }
+
+        if (user.EmailVerificationCode != verifyEmailDto.Code)
+        {
+            return ApiResponseDto<AuthResponseDto>.FailResponse("Doğrulama kodu hatalı");
+        }
+
+        if (user.EmailVerificationCodeExpiry < DateTime.UtcNow)
+        {
+            return ApiResponseDto<AuthResponseDto>.FailResponse("Doğrulama kodunun süresi dolmuş. Lütfen yeni kod isteyin.");
+        }
+
+        // Doğrulama başarılı
+        user.IsEmailVerified = true;
+        user.EmailVerificationCode = null;
+        user.EmailVerificationCodeExpiry = null;
+        user.LastLoginAt = DateTime.UtcNow;
+        _unitOfWork.Repository<User>().Update(user);
+
+        // Token oluştur ve giriş yap
+        var accessToken = _tokenService.GenerateAccessToken(user);
+        var refreshToken = _tokenService.GenerateRefreshToken(user.Id);
+
+        await _unitOfWork.Repository<RefreshToken>().AddAsync(refreshToken);
+        await _unitOfWork.SaveChangesAsync();
+
+        return ApiResponseDto<AuthResponseDto>.SuccessResponse(new AuthResponseDto
+        {
+            AccessToken = accessToken,
+            RefreshToken = refreshToken.Token,
+            ExpiresAt = refreshToken.ExpiresAt,
+            User = MapToUserDto(user)
+        }, "E-posta doğrulandı, giriş başarılı!");
+    }
+
+    public async Task<ApiResponseDto> ResendVerificationCodeAsync(ResendCodeDto resendCodeDto)
+    {
+        var user = await _unitOfWork.Repository<User>()
+            .GetAsync(u => u.Email == resendCodeDto.Email);
+
+        if (user == null)
+        {
+            return ApiResponseDto.FailResponse("Kullanıcı bulunamadı");
+        }
+
+        if (user.IsEmailVerified)
+        {
+            return ApiResponseDto.FailResponse("E-posta adresi zaten doğrulanmış");
+        }
+
+        var code = GenerateVerificationCode();
+        user.EmailVerificationCode = code;
+        user.EmailVerificationCodeExpiry = DateTime.UtcNow.AddMinutes(10);
+        _unitOfWork.Repository<User>().Update(user);
+        await _unitOfWork.SaveChangesAsync();
+
+        try
+        {
+            await _emailService.SendVerificationEmailAsync(user.Email, user.Name, code);
+        }
+        catch
+        {
+            return ApiResponseDto.FailResponse("E-posta gönderilemedi, lütfen tekrar deneyin");
+        }
+
+        return ApiResponseDto.SuccessResponse("Doğrulama kodu e-posta adresinize gönderildi");
+    }
+
     #region Private Methods
+
+    private static string GenerateVerificationCode()
+    {
+        return Random.Shared.Next(100000, 999999).ToString();
+    }
 
     private async Task RevokeAllUserTokens(Guid userId)
     {

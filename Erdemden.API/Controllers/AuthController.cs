@@ -34,6 +34,7 @@ public class AuthController : ControllerBase
 
         if (!result.Success)
         {
+            // ErrorCode ile birlikte dön (frontend EMAIL_NOT_VERIFIED kodunu yakalar)
             return BadRequest(result);
         }
 
@@ -61,7 +62,28 @@ public class AuthController : ControllerBase
             return BadRequest(result);
         }
 
-        // Token'ları HttpOnly Cookie'ye yaz
+        // Kayıt sonrası doğrulama gerekiyor, token yok
+        return Ok(ApiResponseDto<object>.SuccessResponse(new
+        {
+            Message = result.Message,
+            ErrorCode = result.ErrorCode
+        }, result.Message));
+    }
+
+    /// <summary>
+    /// E-posta doğrulama
+    /// </summary>
+    [HttpPost("verify-email")]
+    public async Task<IActionResult> VerifyEmail([FromBody] VerifyEmailDto verifyEmailDto)
+    {
+        var result = await _authService.VerifyEmailAsync(verifyEmailDto);
+
+        if (!result.Success)
+        {
+            return BadRequest(result);
+        }
+
+        // Doğrulama başarılı, token'ları cookie'ye yaz
         SetTokenCookies(result.Data!.AccessToken, result.Data.RefreshToken);
 
         return Ok(ApiResponseDto<object>.SuccessResponse(new
@@ -69,6 +91,22 @@ public class AuthController : ControllerBase
             result.Data.User,
             result.Message
         }));
+    }
+
+    /// <summary>
+    /// Doğrulama kodu yeniden gönder
+    /// </summary>
+    [HttpPost("resend-code")]
+    public async Task<IActionResult> ResendVerificationCode([FromBody] ResendCodeDto resendCodeDto)
+    {
+        var result = await _authService.ResendVerificationCodeAsync(resendCodeDto);
+
+        if (!result.Success)
+        {
+            return BadRequest(result);
+        }
+
+        return Ok(result);
     }
 
     /// <summary>
