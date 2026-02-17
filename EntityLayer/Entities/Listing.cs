@@ -28,7 +28,7 @@ public class Listing : BaseEntity
     public DateTime ListingDate { get; set; } = DateTime.UtcNow;
 
     // Konum
-    public Guid CityId { get; set; }
+    public Guid? CityId { get; set; }
     public Guid? DistrictId { get; set; }
 
     // Satış Bilgileri (Admin)
@@ -55,7 +55,7 @@ public class Listing : BaseEntity
     public BuyerReason? BuyerReason { get; set; }
 
     // Navigation
-    public virtual City City { get; set; } = null!;
+    public virtual City? City { get; set; }
     public virtual District? District { get; set; }
     public virtual Vehicle? Vehicle { get; set; }
     public virtual RealEstate? RealEstate { get; set; }

@@ -132,7 +132,10 @@ public class ListingService : IListingService
         catch (Exception ex)
         {
             await _unitOfWork.RollbackTransactionAsync();
-            return ApiResponseDto<ListingDto>.FailResponse($"İlan oluşturulurken hata: {ex.Message}");
+            var errorMsg = ex.InnerException != null
+                ? $"İlan oluşturulurken hata: {ex.InnerException.Message}"
+                : $"İlan oluşturulurken hata: {ex.Message}";
+            return ApiResponseDto<ListingDto>.FailResponse(errorMsg);
         }
     }
 

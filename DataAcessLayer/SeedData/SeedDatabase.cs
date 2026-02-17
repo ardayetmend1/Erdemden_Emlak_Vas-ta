@@ -13,17 +13,24 @@ namespace DataAcessLayer.SeedData
         {
             // Lookup verilerini seed et (sıralama önemli - VehicleTypes önce olmalı çünkü BodyTypes'a bağlı)
             await SeedVehicleTypes.SeedAsync(context);
+            await SeedVehicleTypes.EnsureBodyTypesAsync(context); // Eksik BodyType kayıtlarını oluştur
             await SeedBrands.SeedAsync(context);
             await SeedFuelTypes.SeedAsync(context);
             await SeedTransmissionTypes.SeedAsync(context);
             await SeedCities.SeedAsync(context);
             await SeedHousingTypes.SeedAsync(context);
 
-            // Mevcut modellere BodyTypeId ata (migration sonrası için)
+            // Mevcut modellere BodyTypeId ata (EnsureBodyTypesAsync sonrası tüm body type'lar garanti mevcut)
             await SeedBrands.UpdateModelBodyTypesAsync(context);
+
+            // Mevcut markalara eksik modelleri ekle
+            await SeedBrands.AddMissingModelsAsync(context);
 
             // Paketleri seed et (Brands/Models seed edildikten sonra çalışmalı)
             await SeedPackages.SeedAsync(context);
+
+            // Mevcut modellere eksik paketleri ekle
+            await SeedPackages.AddMissingPackagesAsync(context);
 
             // Admin kullanıcı oluştur
             await SeedAdminUser(context);

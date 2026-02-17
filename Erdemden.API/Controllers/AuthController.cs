@@ -62,12 +62,14 @@ public class AuthController : ControllerBase
             return BadRequest(result);
         }
 
-        // Kayıt sonrası doğrulama gerekiyor, token yok
+        // Token'ları HttpOnly Cookie'ye yaz
+        SetTokenCookies(result.Data!.AccessToken, result.Data.RefreshToken);
+
         return Ok(ApiResponseDto<object>.SuccessResponse(new
         {
-            Message = result.Message,
-            ErrorCode = result.ErrorCode
-        }, result.Message));
+            result.Data.User,
+            result.Message
+        }));
     }
 
     /// <summary>

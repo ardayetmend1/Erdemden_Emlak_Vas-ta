@@ -23,11 +23,20 @@ public class QuotesController : ControllerBase
     }
 
     /// <summary>
-    /// Yeni teklif talebi oluştur (Herkes erişebilir)
+    /// Yeni teklif talebi oluştur (E-posta doğrulaması gerekir)
     /// </summary>
     [HttpPost]
     public async Task<IActionResult> CreateQuote([FromBody] CreateQuoteWithFilesDto request)
     {
+        // E-posta doğrulama kontrolü
+        var user = await _unitOfWork.Repository<User>()
+            .GetAsync(u => u.Email == request.Quote.Email);
+
+        if (user != null && !user.IsEmailVerified)
+        {
+            return BadRequest(new { success = false, message = "Teklif oluşturmak için e-posta adresinizi doğrulamanız gerekiyor.", errorCode = "EMAIL_NOT_VERIFIED" });
+        }
+
         var expertReports = request.ExpertReports?.Select(r => new FileUploadDto
         {
             FileName = r.Name,

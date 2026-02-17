@@ -29,11 +29,11 @@ public class LookupsController : ControllerBase
 
             if (bodyTypeId.HasValue)
             {
-                modelsQuery = modelsQuery.Where(m => m.BodyTypeId == bodyTypeId.Value || m.BodyTypeId == null);
+                modelsQuery = modelsQuery.Where(m => m.BodyTypeId == bodyTypeId.Value);
             }
             else if (vehicleTypeId.HasValue)
             {
-                modelsQuery = modelsQuery.Where(m => m.BodyType != null && m.BodyType.VehicleTypeId == vehicleTypeId.Value || m.BodyTypeId == null);
+                modelsQuery = modelsQuery.Where(m => m.BodyType != null && m.BodyType.VehicleTypeId == vehicleTypeId.Value);
             }
 
             var brands = await modelsQuery
@@ -229,6 +229,40 @@ public class LookupsController : ControllerBase
             .ToListAsync();
 
         return Ok(ApiResponseDto<List<LookupDto>>.SuccessResponse(housingTypes));
+    }
+
+    /// <summary>
+    /// Veritabanı durumunu teşhis et - BodyType ve Model ilişkilerini kontrol et
+    /// </summary>
+    [HttpGet("diagnostic")]
+    public async Task<IActionResult> GetDiagnostic()
+    {
+        var bodyTypes = await _unitOfWork.Repository<BodyType>()
+            .Query()
+            .Select(b => new { b.Id, b.Name, b.VehicleTypeId })
+            .ToListAsync();
+
+        var modelStats = await _unitOfWork.Repository<Model>()
+            .Query()
+            .GroupBy(m => m.BodyTypeId)
+            .Select(g => new { BodyTypeId = g.Key, Count = g.Count() })
+            .ToListAsync();
+
+        var sampleModels = await _unitOfWork.Repository<Model>()
+            .Query()
+            .OrderBy(m => m.Name)
+            .Take(50)
+            .Select(m => new { m.Id, m.Name, m.BodyTypeId, BrandName = m.Brand.Name })
+            .ToListAsync();
+
+        return Ok(new
+        {
+            bodyTypes,
+            modelStats,
+            sampleModels,
+            totalModels = await _unitOfWork.Repository<Model>().Query().CountAsync(),
+            modelsWithNullBodyType = await _unitOfWork.Repository<Model>().Query().CountAsync(m => m.BodyTypeId == null)
+        });
     }
 
     /// <summary>

@@ -31,8 +31,7 @@ public class CreateListingDto
     [EnumDataType(typeof(ListingStatus), ErrorMessage = "Geçersiz durum değeri")]
     public ListingStatus Status { get; set; } = ListingStatus.Satilik;
 
-    [Required(ErrorMessage = "Şehir gereklidir")]
-    public Guid CityId { get; set; }
+    public Guid? CityId { get; set; }
 
     public Guid? DistrictId { get; set; }
 

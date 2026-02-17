@@ -57,21 +57,6 @@ public class AuthService : IAuthService
             return ApiResponseDto<AuthResponseDto>.FailResponse("Hesabınız devre dışı bırakılmış");
         }
 
-        // E-posta doğrulama kontrolü
-        if (!user.IsEmailVerified)
-        {
-            // Yeni kod gönder
-            var code = GenerateVerificationCode();
-            user.EmailVerificationCode = code;
-            user.EmailVerificationCodeExpiry = DateTime.UtcNow.AddMinutes(10);
-            _unitOfWork.Repository<User>().Update(user);
-            await _unitOfWork.SaveChangesAsync();
-
-            try { await _emailService.SendVerificationEmailAsync(user.Email, user.Name, code); } catch { }
-
-            return ApiResponseDto<AuthResponseDto>.FailResponse("E-posta adresiniz doğrulanmamış. Doğrulama kodu e-posta adresinize gönderildi.", "EMAIL_NOT_VERIFIED");
-        }
-
         // Token oluştur
         var accessToken = _tokenService.GenerateAccessToken(user);
         var refreshToken = _tokenService.GenerateRefreshToken(user.Id);
@@ -145,9 +130,6 @@ public class AuthService : IAuthService
             return ApiResponseDto<AuthResponseDto>.FailResponse("Bu e-posta adresi zaten kullanılıyor");
         }
 
-        // Doğrulama kodu oluştur
-        var verificationCode = GenerateVerificationCode();
-
         // Yeni kullanıcı oluştur
         var user = new User
         {
@@ -156,25 +138,29 @@ public class AuthService : IAuthService
             PasswordHash = HashPassword(registerDto.Password),
             Role = UserRole.User,
             IsActive = true,
-            IsEmailVerified = false,
-            EmailVerificationCode = verificationCode,
-            EmailVerificationCodeExpiry = DateTime.UtcNow.AddMinutes(10)
+            IsEmailVerified = false
         };
 
         await _unitOfWork.Repository<User>().AddAsync(user);
         await _unitOfWork.SaveChangesAsync();
 
-        // Doğrulama e-postası gönder
-        try
-        {
-            await _emailService.SendVerificationEmailAsync(user.Email, user.Name, verificationCode);
-        }
-        catch
-        {
-            // Mail gönderilemese bile kayıt tamamlansın
-        }
+        // Token oluştur - direkt giriş yap
+        var accessToken = _tokenService.GenerateAccessToken(user);
+        var refreshToken = _tokenService.GenerateRefreshToken(user.Id);
 
-        return ApiResponseDto<AuthResponseDto>.SuccessResponse(null!, "Kayıt başarılı! Doğrulama kodu e-posta adresinize gönderildi.", "EMAIL_VERIFICATION_REQUIRED");
+        await _unitOfWork.Repository<RefreshToken>().AddAsync(refreshToken);
+
+        user.LastLoginAt = DateTime.UtcNow;
+        _unitOfWork.Repository<User>().Update(user);
+        await _unitOfWork.SaveChangesAsync();
+
+        return ApiResponseDto<AuthResponseDto>.SuccessResponse(new AuthResponseDto
+        {
+            AccessToken = accessToken,
+            RefreshToken = refreshToken.Token,
+            ExpiresAt = refreshToken.ExpiresAt,
+            User = MapToUserDto(user)
+        }, "Kayıt başarılı");
     }
 
     /// <summary>
