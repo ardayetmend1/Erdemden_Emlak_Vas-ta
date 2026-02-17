@@ -34,6 +34,9 @@ namespace DataAcessLayer.SeedData
 
             // Admin kullanıcı oluştur
             await SeedAdminUser(context);
+
+            // Test kullanıcısı oluştur
+            await SeedTestUser(context);
         }
 
         private static async Task SeedAdminUser(Context context)
@@ -48,10 +51,32 @@ namespace DataAcessLayer.SeedData
                     PasswordHash = HashPassword("Admin123!"),
                     Role = UserRole.Admin,
                     IsActive = true,
+                    IsEmailVerified = true,
                     CreatedAt = DateTime.UtcNow
                 };
 
                 context.Users.Add(adminUser);
+                await context.SaveChangesAsync();
+            }
+        }
+
+        private static async Task SeedTestUser(Context context)
+        {
+            // Test kullanıcısı var mı kontrol et
+            if (!await context.Users.AnyAsync(u => u.Email == "test@erdemden.com"))
+            {
+                var testUser = new User
+                {
+                    Name = "Test Kullanıcı",
+                    Email = "test@erdemden.com",
+                    PasswordHash = HashPassword("Test123!"),
+                    Role = UserRole.User,
+                    IsActive = true,
+                    IsEmailVerified = true,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                context.Users.Add(testUser);
                 await context.SaveChangesAsync();
             }
         }
