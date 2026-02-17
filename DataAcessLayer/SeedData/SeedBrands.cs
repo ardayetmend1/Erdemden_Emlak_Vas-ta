@@ -127,11 +127,16 @@ namespace DataAcessLayer.SeedData
         /// </summary>
         public static async Task AddMissingModelsAsync(Context context)
         {
+            // VehicleType-aware BodyType seçimi (duplicate body type sorunu için)
+            var vehicleTypes = await context.Set<VehicleType>().ToListAsync();
+            var otomobilVT = vehicleTypes.FirstOrDefault(vt => vt.Name == "Otomobil");
+            var suvAraziVT = vehicleTypes.FirstOrDefault(vt => vt.Name == "SUV & Arazi Araçları");
+
             var bodyTypes = await context.Set<BodyType>().ToListAsync();
-            var suvBodyType = bodyTypes.FirstOrDefault(b => b.Name == "SUV");
-            var sedanBodyType = bodyTypes.FirstOrDefault(b => b.Name == "Sedan");
-            var hatchbackBodyType = bodyTypes.FirstOrDefault(b => b.Name == "Hatchback");
-            var pickupBodyType = bodyTypes.FirstOrDefault(b => b.Name == "Pickup");
+            var suvBodyType = bodyTypes.FirstOrDefault(b => b.Name == "SUV" && b.VehicleTypeId == suvAraziVT?.Id);
+            var sedanBodyType = bodyTypes.FirstOrDefault(b => b.Name == "Sedan" && b.VehicleTypeId == otomobilVT?.Id);
+            var hatchbackBodyType = bodyTypes.FirstOrDefault(b => b.Name == "Hatchback" && b.VehicleTypeId == otomobilVT?.Id);
+            var pickupBodyType = bodyTypes.FirstOrDefault(b => b.Name == "Pickup" && b.VehicleTypeId == suvAraziVT?.Id);
 
             var brandModels = new Dictionary<string, string[]>
             {

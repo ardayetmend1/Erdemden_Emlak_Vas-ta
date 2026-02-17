@@ -20,9 +20,6 @@ namespace DataAcessLayer.SeedData
             await SeedCities.SeedAsync(context);
             await SeedHousingTypes.SeedAsync(context);
 
-            // Mevcut modellere BodyTypeId ata (EnsureBodyTypesAsync sonrası tüm body type'lar garanti mevcut)
-            await SeedBrands.UpdateModelBodyTypesAsync(context);
-
             // Mevcut markalara eksik modelleri ekle
             await SeedBrands.AddMissingModelsAsync(context);
 
@@ -31,6 +28,9 @@ namespace DataAcessLayer.SeedData
 
             // Mevcut modellere eksik paketleri ekle
             await SeedPackages.AddMissingPackagesAsync(context);
+
+            // EN SON: Tüm modellere doğru BodyTypeId ata (AddMissingModels sonrası yeni modeller de düzelsin)
+            await SeedBrands.UpdateModelBodyTypesAsync(context);
 
             // Admin kullanıcı oluştur
             await SeedAdminUser(context);
