@@ -34,6 +34,9 @@ public class ListingDto
     public VehicleDto? Vehicle { get; set; }
     public RealEstateDto? RealEstate { get; set; }
 
+    // Ekspertiz Raporu
+    public string? ExpertiseReportUrl { get; set; }
+
     // Satış bilgileri (Admin için)
     public ListingSaleInfoDto? SaleInfo { get; set; }
 }

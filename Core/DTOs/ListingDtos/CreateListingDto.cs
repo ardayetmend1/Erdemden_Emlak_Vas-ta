@@ -51,4 +51,9 @@ public class CreateListingDto
     /// İlan görselleri (Base64 formatında)
     /// </summary>
     public List<UploadImageDto>? Images { get; set; }
+
+    /// <summary>
+    /// Ekspertiz raporu (Base64 PDF)
+    /// </summary>
+    public UploadImageDto? ExpertiseReport { get; set; }
 }

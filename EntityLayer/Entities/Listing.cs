@@ -54,6 +54,15 @@ public class Listing : BaseEntity
 
     public BuyerReason? BuyerReason { get; set; }
 
+    // Ekspertiz Raporu (PDF)
+    public byte[]? ExpertiseReportData { get; set; }
+
+    [MaxLength(100)]
+    public string? ExpertiseReportContentType { get; set; }
+
+    [MaxLength(255)]
+    public string? ExpertiseReportFileName { get; set; }
+
     // Navigation
     public virtual City? City { get; set; }
     public virtual District? District { get; set; }

@@ -3,8 +3,11 @@ using Core.DTOs.Common;
 using Core.DTOs.ListingDtos;
 using Core.DTOs.VehicleDtos;
 using Core.DTOs.RealEstateDtos;
+using DataAcessLayer.Abstract;
+using EntityLayer.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Erdemden.API.Controllers;
 
@@ -13,10 +16,12 @@ namespace Erdemden.API.Controllers;
 public class ListingsController : ControllerBase
 {
     private readonly IListingService _listingService;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public ListingsController(IListingService listingService)
+    public ListingsController(IListingService listingService, IUnitOfWork unitOfWork)
     {
         _listingService = listingService;
+        _unitOfWork = unitOfWork;
     }
 
     /// <summary>
@@ -179,6 +184,28 @@ public class ListingsController : ControllerBase
         }
 
         return Ok(result);
+    }
+
+    /// <summary>
+    /// Ekspertiz raporu indir (PDF)
+    /// </summary>
+    [HttpGet("{id:guid}/expertise-report")]
+    public async Task<IActionResult> DownloadExpertiseReport(Guid id)
+    {
+        var listing = await _unitOfWork.Repository<Listing>()
+            .Query()
+            .FirstOrDefaultAsync(l => l.Id == id);
+
+        if (listing?.ExpertiseReportData == null)
+        {
+            return NotFound(ApiResponseDto<object>.FailResponse("Ekspertiz raporu bulunamadı"));
+        }
+
+        return new FileContentResult(listing.ExpertiseReportData, listing.ExpertiseReportContentType ?? "application/pdf")
+        {
+            FileDownloadName = listing.ExpertiseReportFileName ?? "ekspertiz-raporu.pdf",
+            EnableRangeProcessing = true
+        };
     }
 }
 

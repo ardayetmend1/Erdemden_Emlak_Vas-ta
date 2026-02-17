@@ -47,6 +47,18 @@ public class ListingService : IListingService
                 ListingDate = DateTime.UtcNow
             };
 
+            // Ekspertiz raporu (PDF)
+            if (listingDto.ExpertiseReport != null && !string.IsNullOrEmpty(listingDto.ExpertiseReport.Base64Data))
+            {
+                var base64 = listingDto.ExpertiseReport.Base64Data;
+                if (base64.Contains(","))
+                    base64 = base64.Split(',')[1];
+
+                listing.ExpertiseReportData = Convert.FromBase64String(base64);
+                listing.ExpertiseReportContentType = "application/pdf";
+                listing.ExpertiseReportFileName = listingDto.ExpertiseReport.FileName;
+            }
+
             await _unitOfWork.Repository<Listing>().AddAsync(listing);
             await _unitOfWork.SaveChangesAsync();
 
@@ -702,6 +714,9 @@ public class ListingService : IListingService
                 IsCover = i.IsCover,
                 Order = i.Order
             }).ToList() ?? new List<ImageDto>(),
+            ExpertiseReportUrl = listing.ExpertiseReportData != null
+                ? $"/api/listings/{listing.Id}/expertise-report"
+                : null,
             Vehicle = listing.Vehicle != null ? MapToVehicleDto(listing.Vehicle) : null,
             RealEstate = listing.RealEstate != null ? MapToRealEstateDto(listing.RealEstate) : null,
             SaleInfo = new ListingSaleInfoDto
