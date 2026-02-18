@@ -28,6 +28,13 @@ public class QuoteRequestDto
     public string Phone { get; set; } = string.Empty;
     public string? Email { get; set; }
 
+    // Admin teklif bilgisi
+    public string Status { get; set; } = "Pending";
+    public decimal? OfferMinPrice { get; set; }
+    public decimal? OfferMaxPrice { get; set; }
+    public DateTime? OfferDate { get; set; }
+    public DateTime? ResponseDate { get; set; }
+
     // Ekspertiz raporları
     public List<DocumentDto> ExpertReports { get; set; } = new();
 

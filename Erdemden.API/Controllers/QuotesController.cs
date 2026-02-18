@@ -23,20 +23,11 @@ public class QuotesController : ControllerBase
     }
 
     /// <summary>
-    /// Yeni teklif talebi oluştur (E-posta doğrulaması gerekir)
+    /// Yeni teklif talebi oluştur
     /// </summary>
     [HttpPost]
     public async Task<IActionResult> CreateQuote([FromBody] CreateQuoteWithFilesDto request)
     {
-        // E-posta doğrulama kontrolü
-        var user = await _unitOfWork.Repository<User>()
-            .GetAsync(u => u.Email == request.Quote.Email);
-
-        if (user != null && !user.IsEmailVerified)
-        {
-            return BadRequest(new { success = false, message = "Teklif oluşturmak için e-posta adresinizi doğrulamanız gerekiyor.", errorCode = "EMAIL_NOT_VERIFIED" });
-        }
-
         var expertReports = request.ExpertReports?.Select(r => new FileUploadDto
         {
             FileName = r.Name,
@@ -195,6 +186,47 @@ public class QuotesController : ControllerBase
         if (!result.Success)
         {
             return NotFound(result);
+        }
+
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Teklif talebi için fiyat teklifi ver (Sadece Admin)
+    /// </summary>
+    [Authorize(Policy = "AdminOnly")]
+    [HttpPut("{id:guid}/offer")]
+    public async Task<IActionResult> SubmitOffer(Guid id, [FromBody] SubmitOfferDto dto)
+    {
+        var result = await _quoteService.SubmitOfferAsync(id, dto);
+
+        if (!result.Success)
+        {
+            return BadRequest(result);
+        }
+
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Müşteri teklif yanıtı (Kabul/Red)
+    /// </summary>
+    [Authorize]
+    [HttpPut("{id:guid}/respond")]
+    public async Task<IActionResult> RespondToOffer(Guid id, [FromBody] RespondToOfferDto dto)
+    {
+        var email = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
+
+        if (string.IsNullOrEmpty(email))
+        {
+            return BadRequest(new { success = false, message = "E-posta bilgisi bulunamadı." });
+        }
+
+        var result = await _quoteService.RespondToOfferAsync(id, email, dto);
+
+        if (!result.Success)
+        {
+            return BadRequest(result);
         }
 
         return Ok(result);

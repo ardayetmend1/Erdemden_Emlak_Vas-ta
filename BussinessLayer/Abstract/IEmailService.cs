@@ -2,5 +2,5 @@ namespace BussinessLayer.Abstract;
 
 public interface IEmailService
 {
-    Task SendVerificationEmailAsync(string toEmail, string userName, string verificationCode);
+    Task SendOfferNotificationEmailAsync(string toEmail, string customerName, string vehicleInfo, decimal minPrice, decimal maxPrice);
 }
