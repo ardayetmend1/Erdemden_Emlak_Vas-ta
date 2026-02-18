@@ -1,0 +1,62 @@
+name: Deploy Backend to Production
+
+on:
+  push:
+    branches: [master]
+
+env:
+  SSH_HOST: 85.159.64.226
+  SSH_USER: root
+  DEPLOY_PATH: /var/www/erdemden-api-prod
+  SERVICE_NAME: erdemden-api-prod
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Publish Release
+        run: dotnet publish Erdemden.API/Erdemden.API.csproj -c Release -o ./publish
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H ${{ env.SSH_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Stop service
+        run: |
+          ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "sudo systemctl stop ${{ env.SERVICE_NAME }}"
+
+      - name: Deploy via rsync
+        run: |
+          rsync -avz --delete \
+            --exclude '.env' \
+            --exclude 'appsettings.Production.json' \
+            --exclude 'logs/' \
+            publish/ ${{ env.SSH_USER }}@${{ env.SSH_HOST }}:${{ env.DEPLOY_PATH }}/
+
+      - name: Fix permissions
+        run: |
+          ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "chown -R www-data:www-data ${{ env.DEPLOY_PATH }}"
+
+      - name: Start service
+        run: |
+          ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "sudo systemctl start ${{ env.SERVICE_NAME }}"
+
+      - name: Health check
+        run: |
+          sleep 5
+          ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "systemctl is-active ${{ env.SERVICE_NAME }} && echo 'Service is running' || (journalctl -u ${{ env.SERVICE_NAME }} -n 20 --no-pager && exit 1)"
