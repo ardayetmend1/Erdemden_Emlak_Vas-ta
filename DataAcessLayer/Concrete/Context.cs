@@ -177,6 +177,7 @@ namespace DataAcessLayer.Concrete
                 entity.HasIndex(e => e.Email);
                 entity.HasIndex(e => e.IsRead);
                 entity.HasIndex(e => e.Date);
+                entity.HasIndex(e => e.Status);
             });
 
             // ==================== EXPERT REPORT (1:N with QuoteRequest) ====================

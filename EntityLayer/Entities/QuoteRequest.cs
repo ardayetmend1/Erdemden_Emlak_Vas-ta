@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EntityLayer.Entities;
 
@@ -48,6 +49,18 @@ public class QuoteRequest : BaseEntity
     public string? Email { get; set; }
 
     public bool IsRead { get; set; } = false;
+
+    // Admin teklif bilgisi
+    public QuoteStatus Status { get; set; } = QuoteStatus.Pending;
+
+    [Column(TypeName = "decimal(18,2)")]
+    public decimal? OfferMinPrice { get; set; }
+
+    [Column(TypeName = "decimal(18,2)")]
+    public decimal? OfferMaxPrice { get; set; }
+
+    public DateTime? OfferDate { get; set; }
+    public DateTime? ResponseDate { get; set; }
 
     public virtual ICollection<ExpertReport> ExpertReports { get; set; } = new List<ExpertReport>();
     public virtual ICollection<QuoteMedia> Media { get; set; } = new List<QuoteMedia>();

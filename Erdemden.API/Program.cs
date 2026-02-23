@@ -100,6 +100,7 @@ builder.Services.AddCors(options =>
             "http://localhost:3000",
             "http://localhost:5173",
             "https://erdemden.com",
+            "https://www.erdemden.com",
             "https://testerdemden.d1-tech.com"
         )
         .AllowAnyHeader()

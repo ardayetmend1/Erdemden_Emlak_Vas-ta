@@ -19,14 +19,12 @@ public class AuthService : IAuthService
     private readonly IUnitOfWork _unitOfWork;
     private readonly ITokenService _tokenService;
     private readonly JwtSettings _jwtSettings;
-    private readonly IEmailService _emailService;
 
-    public AuthService(IUnitOfWork unitOfWork, ITokenService tokenService, IOptions<JwtSettings> jwtSettings, IEmailService emailService)
+    public AuthService(IUnitOfWork unitOfWork, ITokenService tokenService, IOptions<JwtSettings> jwtSettings)
     {
         _unitOfWork = unitOfWork;
         _tokenService = tokenService;
         _jwtSettings = jwtSettings.Value;
-        _emailService = emailService;
     }
 
     /// <summary>
@@ -138,7 +136,7 @@ public class AuthService : IAuthService
             PasswordHash = HashPassword(registerDto.Password),
             Role = UserRole.User,
             IsActive = true,
-            IsEmailVerified = false
+            IsEmailVerified = true
         };
 
         await _unitOfWork.Repository<User>().AddAsync(user);
@@ -365,93 +363,7 @@ public class AuthService : IAuthService
         }
     }
 
-    public async Task<ApiResponseDto<AuthResponseDto>> VerifyEmailAsync(VerifyEmailDto verifyEmailDto)
-    {
-        var user = await _unitOfWork.Repository<User>()
-            .GetAsync(u => u.Email == verifyEmailDto.Email);
-
-        if (user == null)
-        {
-            return ApiResponseDto<AuthResponseDto>.FailResponse("Kullanıcı bulunamadı");
-        }
-
-        if (user.IsEmailVerified)
-        {
-            return ApiResponseDto<AuthResponseDto>.FailResponse("E-posta adresi zaten doğrulanmış");
-        }
-
-        if (user.EmailVerificationCode != verifyEmailDto.Code)
-        {
-            return ApiResponseDto<AuthResponseDto>.FailResponse("Doğrulama kodu hatalı");
-        }
-
-        if (user.EmailVerificationCodeExpiry < DateTime.UtcNow)
-        {
-            return ApiResponseDto<AuthResponseDto>.FailResponse("Doğrulama kodunun süresi dolmuş. Lütfen yeni kod isteyin.");
-        }
-
-        // Doğrulama başarılı
-        user.IsEmailVerified = true;
-        user.EmailVerificationCode = null;
-        user.EmailVerificationCodeExpiry = null;
-        user.LastLoginAt = DateTime.UtcNow;
-        _unitOfWork.Repository<User>().Update(user);
-
-        // Token oluştur ve giriş yap
-        var accessToken = _tokenService.GenerateAccessToken(user);
-        var refreshToken = _tokenService.GenerateRefreshToken(user.Id);
-
-        await _unitOfWork.Repository<RefreshToken>().AddAsync(refreshToken);
-        await _unitOfWork.SaveChangesAsync();
-
-        return ApiResponseDto<AuthResponseDto>.SuccessResponse(new AuthResponseDto
-        {
-            AccessToken = accessToken,
-            RefreshToken = refreshToken.Token,
-            ExpiresAt = refreshToken.ExpiresAt,
-            User = MapToUserDto(user)
-        }, "E-posta doğrulandı, giriş başarılı!");
-    }
-
-    public async Task<ApiResponseDto> ResendVerificationCodeAsync(ResendCodeDto resendCodeDto)
-    {
-        var user = await _unitOfWork.Repository<User>()
-            .GetAsync(u => u.Email == resendCodeDto.Email);
-
-        if (user == null)
-        {
-            return ApiResponseDto.FailResponse("Kullanıcı bulunamadı");
-        }
-
-        if (user.IsEmailVerified)
-        {
-            return ApiResponseDto.FailResponse("E-posta adresi zaten doğrulanmış");
-        }
-
-        var code = GenerateVerificationCode();
-        user.EmailVerificationCode = code;
-        user.EmailVerificationCodeExpiry = DateTime.UtcNow.AddMinutes(10);
-        _unitOfWork.Repository<User>().Update(user);
-        await _unitOfWork.SaveChangesAsync();
-
-        try
-        {
-            await _emailService.SendVerificationEmailAsync(user.Email, user.Name, code);
-        }
-        catch
-        {
-            return ApiResponseDto.FailResponse("E-posta gönderilemedi, lütfen tekrar deneyin");
-        }
-
-        return ApiResponseDto.SuccessResponse("Doğrulama kodu e-posta adresinize gönderildi");
-    }
-
     #region Private Methods
-
-    private static string GenerateVerificationCode()
-    {
-        return Random.Shared.Next(100000, 999999).ToString();
-    }
 
     private async Task RevokeAllUserTokens(Guid userId)
     {

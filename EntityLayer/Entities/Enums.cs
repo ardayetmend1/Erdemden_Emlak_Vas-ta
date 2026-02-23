@@ -35,3 +35,11 @@ public enum RealEstateListingType
     Satilik,
     Kiralik
 }
+
+public enum QuoteStatus
+{
+    Pending,    // Beklemede
+    OfferMade,  // Teklif Verildi
+    Accepted,   // Kabul Edildi
+    Rejected    // Reddedildi
+}

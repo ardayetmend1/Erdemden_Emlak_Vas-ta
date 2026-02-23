@@ -47,6 +47,16 @@ public interface IQuoteService
     /// Medya dosyasını getir (download için)
     /// </summary>
     Task<(byte[]? Data, string FileName, string ContentType)?> GetMediaFileAsync(Guid mediaId);
+
+    /// <summary>
+    /// Admin teklif ver (fiyat aralığı belirle)
+    /// </summary>
+    Task<ApiResponseDto<QuoteRequestDto>> SubmitOfferAsync(Guid id, SubmitOfferDto dto);
+
+    /// <summary>
+    /// Müşteri teklifi kabul/ret et
+    /// </summary>
+    Task<ApiResponseDto<QuoteRequestDto>> RespondToOfferAsync(Guid id, string customerEmail, RespondToOfferDto dto);
 }
 
 /// <summary>

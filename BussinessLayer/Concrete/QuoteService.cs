@@ -14,12 +14,14 @@ namespace BussinessLayer.Concrete;
 public class QuoteService : IQuoteService
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IEmailService _emailService;
     private const string UploadBasePath = "Uploads/QuoteMedia";
     private const int MaxBase64FileSizeMB = 20; // Maksimum dosya boyutu (MB)
 
-    public QuoteService(IUnitOfWork unitOfWork)
+    public QuoteService(IUnitOfWork unitOfWork, IEmailService emailService)
     {
         _unitOfWork = unitOfWork;
+        _emailService = emailService;
     }
 
     /// <summary>
@@ -286,6 +288,89 @@ public class QuoteService : IQuoteService
     }
 
     /// <summary>
+    /// Admin teklif ver (fiyat aralığı belirle)
+    /// </summary>
+    public async Task<ApiResponseDto<QuoteRequestDto>> SubmitOfferAsync(Guid id, SubmitOfferDto dto)
+    {
+        if (dto.MinPrice > dto.MaxPrice)
+            return ApiResponseDto<QuoteRequestDto>.FailResponse("Minimum fiyat, maksimum fiyattan büyük olamaz.");
+
+        var quote = await _unitOfWork.Repository<QuoteRequest>()
+            .Query()
+            .Include(q => q.ExpertReports)
+            .Include(q => q.Media)
+            .FirstOrDefaultAsync(q => q.Id == id);
+
+        if (quote == null)
+            return ApiResponseDto<QuoteRequestDto>.FailResponse("Teklif talebi bulunamadı.");
+
+        quote.OfferMinPrice = dto.MinPrice;
+        quote.OfferMaxPrice = dto.MaxPrice;
+        quote.OfferDate = DateTime.UtcNow;
+        quote.Status = QuoteStatus.OfferMade;
+        quote.IsRead = true;
+        quote.UpdatedAt = DateTime.UtcNow;
+
+        _unitOfWork.Repository<QuoteRequest>().Update(quote);
+        await _unitOfWork.SaveChangesAsync();
+
+        // Müşteriye e-posta bildirimi gönder
+        if (!string.IsNullOrEmpty(quote.Email))
+        {
+            try
+            {
+                var vehicleInfo = $"{quote.Year} {quote.Brand} {quote.Model} - {quote.Plate}";
+                var customerName = $"{quote.FirstName} {quote.LastName}";
+                await _emailService.SendOfferNotificationEmailAsync(
+                    quote.Email, customerName, vehicleInfo,
+                    dto.MinPrice, dto.MaxPrice);
+            }
+            catch (Exception ex)
+            {
+                // E-posta hatası teklif gönderimini engellemesin
+                Console.WriteLine($"Email gönderme hatası: {ex.Message}");
+            }
+        }
+
+        var responseDto = MapToDto(quote);
+        return ApiResponseDto<QuoteRequestDto>.SuccessResponse(responseDto, "Teklif başarıyla gönderildi.");
+    }
+
+    /// <summary>
+    /// Müşteri teklifi kabul/ret et
+    /// </summary>
+    public async Task<ApiResponseDto<QuoteRequestDto>> RespondToOfferAsync(Guid id, string customerEmail, RespondToOfferDto dto)
+    {
+        var quote = await _unitOfWork.Repository<QuoteRequest>()
+            .Query()
+            .Include(q => q.ExpertReports)
+            .Include(q => q.Media)
+            .FirstOrDefaultAsync(q => q.Id == id);
+
+        if (quote == null)
+            return ApiResponseDto<QuoteRequestDto>.FailResponse("Teklif talebi bulunamadı.");
+
+        // Teklif bu müşteriye mi ait kontrol et
+        if (string.IsNullOrEmpty(quote.Email) || !quote.Email.Equals(customerEmail, StringComparison.OrdinalIgnoreCase))
+            return ApiResponseDto<QuoteRequestDto>.FailResponse("Bu teklif size ait değil.");
+
+        // Teklif verilmiş mi kontrol et
+        if (quote.Status != QuoteStatus.OfferMade)
+            return ApiResponseDto<QuoteRequestDto>.FailResponse("Bu teklif için henüz bir fiyat teklifi verilmemiş veya zaten yanıtlanmış.");
+
+        quote.Status = dto.Accepted ? QuoteStatus.Accepted : QuoteStatus.Rejected;
+        quote.ResponseDate = DateTime.UtcNow;
+        quote.UpdatedAt = DateTime.UtcNow;
+
+        _unitOfWork.Repository<QuoteRequest>().Update(quote);
+        await _unitOfWork.SaveChangesAsync();
+
+        var statusText = dto.Accepted ? "kabul edildi" : "reddedildi";
+        var responseDto = MapToDto(quote);
+        return ApiResponseDto<QuoteRequestDto>.SuccessResponse(responseDto, $"Teklif {statusText}.");
+    }
+
+    /// <summary>
     /// Entity'yi DTO'ya map et
     /// </summary>
     private QuoteRequestDto MapToDto(QuoteRequest quote)
@@ -307,6 +392,11 @@ public class QuoteService : IQuoteService
             LastName = quote.LastName,
             Phone = quote.Phone,
             Email = quote.Email,
+            Status = quote.Status.ToString(),
+            OfferMinPrice = quote.OfferMinPrice,
+            OfferMaxPrice = quote.OfferMaxPrice,
+            OfferDate = quote.OfferDate,
+            ResponseDate = quote.ResponseDate,
             ExpertReports = quote.ExpertReports.Select(r => new DocumentDto
             {
                 Id = r.Id,

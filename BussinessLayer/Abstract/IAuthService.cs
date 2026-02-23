@@ -42,8 +42,4 @@ public interface IAuthService
     /// Google ile giriş (ID token doğrulama)
     /// </summary>
     Task<ApiResponseDto<AuthResponseDto>> GoogleLoginAsync(GoogleLoginDto googleLoginDto);
-
-    Task<ApiResponseDto<AuthResponseDto>> VerifyEmailAsync(VerifyEmailDto verifyEmailDto);
-
-    Task<ApiResponseDto> ResendVerificationCodeAsync(ResendCodeDto resendCodeDto);
 }
