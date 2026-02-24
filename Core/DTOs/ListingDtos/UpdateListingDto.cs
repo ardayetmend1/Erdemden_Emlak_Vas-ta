@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Core.DTOs.DocumentDtos;
+using Core.DTOs.ImageDtos;
 using EntityLayer.Entities;
 
 namespace Core.DTOs.ListingDtos;
@@ -50,4 +51,7 @@ public class UpdateListingDto
 
     // Noter belgeleri
     public List<UploadDocumentDto>? NotaryDocuments { get; set; }
+
+    // Görseller (güncellendiğinde mevcut görseller silinip yenileri eklenir)
+    public List<UploadImageDto>? Images { get; set; }
 }

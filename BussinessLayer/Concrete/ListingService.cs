@@ -465,6 +465,30 @@ public class ListingService : IListingService
 
         _unitOfWork.Repository<Listing>().Update(listing);
 
+        // Görselleri güncelle
+        if (updateDto.Images != null)
+        {
+            var existingImages = await _unitOfWork.Repository<ListingImage>()
+                .Query().Where(i => i.ListingId == id).ToListAsync();
+            foreach (var img in existingImages)
+                _unitOfWork.Repository<ListingImage>().Delete(img);
+
+            var newImages = updateDto.Images.Select((img, index) => new ListingImage
+            {
+                ListingId = id,
+                Base64Data = img.Base64Data,
+                FileName = img.FileName,
+                MimeType = GetMimeType(img.FileName),
+                IsCover = index == 0,
+                Order = img.Order ?? index
+            }).ToList();
+
+            foreach (var image in newImages)
+            {
+                await _unitOfWork.Repository<ListingImage>().AddAsync(image);
+            }
+        }
+
         // Noter belgeleri güncelle
         if (updateDto.NotaryDocuments != null)
         {
@@ -734,7 +758,7 @@ public class ListingService : IListingService
                 ParentId = listing.District.CityId,
                 ParentName = listing.City?.Name ?? string.Empty
             } : null,
-            Images = listing.Images?.Select(i => new ImageDto
+            Images = listing.Images?.OrderBy(i => i.Order).Select(i => new ImageDto
             {
                 Id = i.Id,
                 ImageUrl = i.GetDisplayUrl(),
