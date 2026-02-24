@@ -9,6 +9,8 @@ public class VehicleDto
 {
     public int Year { get; set; }
     public int Km { get; set; }
+    public int? EnginePower { get; set; }
+    public int? EngineDisplacement { get; set; }
     public string? Color { get; set; }
     public string? DamageStatus { get; set; }
 

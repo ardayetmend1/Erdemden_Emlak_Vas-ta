@@ -69,6 +69,8 @@ public class ListingService : IListingService
                 ListingId = listing.Id,
                 Year = vehicleDto.Year,
                 Km = vehicleDto.Km,
+                EnginePower = vehicleDto.EnginePower,
+                EngineDisplacement = vehicleDto.EngineDisplacement,
                 Color = vehicleDto.Color,
                 DamageStatus = vehicleDto.DamageStatus,
                 VehicleTypeId = vehicleDto.VehicleTypeId,
@@ -541,6 +543,8 @@ public class ListingService : IListingService
         // Güncelleme
         if (updateDto.Year.HasValue) vehicle.Year = updateDto.Year.Value;
         if (updateDto.Km.HasValue) vehicle.Km = updateDto.Km.Value;
+        if (updateDto.EnginePower.HasValue) vehicle.EnginePower = updateDto.EnginePower.Value;
+        if (updateDto.EngineDisplacement.HasValue) vehicle.EngineDisplacement = updateDto.EngineDisplacement.Value;
         if (updateDto.Color != null) vehicle.Color = updateDto.Color;
         if (updateDto.DamageStatus != null) vehicle.DamageStatus = updateDto.DamageStatus;
         if (updateDto.VehicleTypeId.HasValue) vehicle.VehicleTypeId = updateDto.VehicleTypeId.Value;
@@ -797,6 +801,8 @@ public class ListingService : IListingService
         {
             Year = vehicle.Year ?? 0,
             Km = vehicle.Km ?? 0,
+            EnginePower = vehicle.EnginePower,
+            EngineDisplacement = vehicle.EngineDisplacement,
             Color = vehicle.Color,
             DamageStatus = vehicle.DamageStatus,
             VehicleType = new LookupDto { Id = vehicle.VehicleType.Id, Name = vehicle.VehicleType.Name },

@@ -19,6 +19,12 @@ public class Vehicle : BaseEntity
     public int? Year { get; set; }
     public int? Km { get; set; }
 
+    /// <summary>Motor gücü (HP/BG)</summary>
+    public int? EnginePower { get; set; }
+
+    /// <summary>Motor hacmi (cc)</summary>
+    public int? EngineDisplacement { get; set; }
+
     [MaxLength(50)]
     public string? Color { get; set; }
 

@@ -15,6 +15,12 @@ public class CreateVehicleDto
     [Range(0, int.MaxValue, ErrorMessage = "Kilometre 0'dan büyük olmalıdır")]
     public int Km { get; set; }
 
+    [Range(0, 5000, ErrorMessage = "Motor gücü 0-5000 HP arasında olmalıdır")]
+    public int? EnginePower { get; set; }
+
+    [Range(0, 20000, ErrorMessage = "Motor hacmi 0-20000 cc arasında olmalıdır")]
+    public int? EngineDisplacement { get; set; }
+
     [StringLength(50)]
     public string? Color { get; set; }
 
