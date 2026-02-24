@@ -38,7 +38,7 @@ jobs:
 
       - name: Stop service
         run: |
-          ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "sudo systemctl stop ${{ env.SERVICE_NAME }}"
+          ssh -o ConnectTimeout=30 -o ServerAliveInterval=15 ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "sudo systemctl stop ${{ env.SERVICE_NAME }}"
 
       - name: Deploy via rsync
         run: |
@@ -46,17 +46,15 @@ jobs:
             --exclude '.env' \
             --exclude 'appsettings.Production.json' \
             --exclude 'logs/' \
+            -e "ssh -o ConnectTimeout=30 -o ServerAliveInterval=15" \
             publish/ ${{ env.SSH_USER }}@${{ env.SSH_HOST }}:${{ env.DEPLOY_PATH }}/
 
-      - name: Fix permissions
+      - name: Start service and health check
         run: |
-          ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "chown -R www-data:www-data ${{ env.DEPLOY_PATH }}"
-
-      - name: Start service
-        run: |
-          ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "sudo systemctl start ${{ env.SERVICE_NAME }}"
-
-      - name: Health check
-        run: |
-          sleep 5
-          ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "systemctl is-active ${{ env.SERVICE_NAME }} && echo 'Service is running' || (journalctl -u ${{ env.SERVICE_NAME }} -n 20 --no-pager && exit 1)"
+          sleep 3
+          ssh -o ConnectTimeout=30 -o ServerAliveInterval=15 ${{ env.SSH_USER }}@${{ env.SSH_HOST }} bash -c '
+            chown -R www-data:www-data ${{ env.DEPLOY_PATH }}
+            sudo systemctl start ${{ env.SERVICE_NAME }}
+            sleep 5
+            systemctl is-active ${{ env.SERVICE_NAME }} && echo "Service is running" || (journalctl -u ${{ env.SERVICE_NAME }} -n 20 --no-pager && exit 1)
+          '
