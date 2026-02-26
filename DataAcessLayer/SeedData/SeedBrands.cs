@@ -18,7 +18,9 @@ namespace DataAcessLayer.SeedData
             "Model Y", "Model X",                            // Tesla
             "HR-V", "CR-V",                                  // Honda
             "Puma", "Kuga", "Explorer",                      // Ford
-            "Tucson", "Kona", "Santa Fe", "Bayon", "IONIQ 5" // Hyundai
+            "Tucson", "Kona", "Santa Fe", "Bayon", "IONIQ 5", // Hyundai
+            "Captur", "Kadjar", "Austral",                      // Renault
+            "EV6", "Sportage"                                   // Kia
         };
 
         // Sedan modelleri - kasa tipi Sedan olacak
@@ -33,7 +35,8 @@ namespace DataAcessLayer.SeedData
             "Model 3", "Model S",                            // Tesla
             "Civic", "City", "Accord",                       // Honda
             "Focus", "Mondeo",                               // Ford
-            "Elantra", "Sonata"                              // Hyundai
+            "Elantra", "Sonata",                              // Hyundai
+            "Megane", "Talisman"                                // Renault
         };
 
         // Hatchback modelleri - kasa tipi Hatchback olacak
@@ -46,7 +49,8 @@ namespace DataAcessLayer.SeedData
             "Yaris",                                         // Toyota
             "Jazz",                                          // Honda
             "Fiesta",                                        // Ford
-            "i10", "i20", "i30"                              // Hyundai
+            "i10", "i20", "i30",                              // Hyundai
+            "Rio", "Ceed"                                       // Kia
         };
 
         // Pickup modelleri - kasa tipi Pickup olacak
@@ -80,7 +84,9 @@ namespace DataAcessLayer.SeedData
                 { "Tesla", new[] { "Model 3", "Model Y", "Model S", "Model X" } },
                 { "Honda", new[] { "Civic", "City", "HR-V", "CR-V", "Jazz", "Accord" } },
                 { "Ford", new[] { "Focus", "Fiesta", "Puma", "Kuga", "Ranger" } },
-                { "Hyundai", new[] { "i10", "i20", "i30", "Elantra", "Tucson", "Bayon", "IONIQ 5" } }
+                { "Hyundai", new[] { "i10", "i20", "i30", "Elantra", "Tucson", "Bayon", "IONIQ 5" } },
+                { "Renault", new[] { "Megane", "Talisman", "Captur", "Kadjar", "Austral" } },
+                { "Kia", new[] { "Rio", "Ceed", "EV6", "Sportage" } }
             };
 
             foreach (var brandData in brandModels)
@@ -144,7 +150,9 @@ namespace DataAcessLayer.SeedData
                 { "Mercedes", new[] { "A Serisi" } },
                 { "Audi", new[] { "A1" } },
                 { "Honda", new[] { "Jazz", "Accord" } },
-                { "Hyundai", new[] { "i30" } }
+                { "Hyundai", new[] { "i30" } },
+                { "Renault", new[] { "Megane", "Talisman", "Captur", "Kadjar", "Austral" } },
+                { "Kia", new[] { "Rio", "Ceed", "EV6", "Sportage" } }
             };
 
             var existingBrands = await context.Set<Brand>()
@@ -156,9 +164,20 @@ namespace DataAcessLayer.SeedData
             foreach (var entry in brandModels)
             {
                 var brand = existingBrands.FirstOrDefault(b => b.Name == entry.Key);
-                if (brand == null) continue;
+                if (brand == null)
+                {
+                    // Yeni marka oluştur
+                    brand = new Brand
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = entry.Key,
+                        CreatedAt = DateTime.UtcNow
+                    };
+                    context.Set<Brand>().Add(brand);
+                    added = true;
+                }
 
-                var existingModelNames = brand.Models.Select(m => m.Name).ToHashSet();
+                var existingModelNames = brand.Models?.Select(m => m.Name).ToHashSet() ?? new HashSet<string>();
 
                 foreach (var modelName in entry.Value)
                 {

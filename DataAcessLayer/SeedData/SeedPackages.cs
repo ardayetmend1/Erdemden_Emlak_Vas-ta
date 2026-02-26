@@ -336,6 +336,50 @@ namespace DataAcessLayer.SeedData
                     "Style", "Prime", "N Line", "Vertex",
                     "Edition", "Top", "Inspiration",
                     "Long Range", "Standard Range"
+                } },
+
+                // ==================== Renault ====================
+                { "Megane", new[] {
+                    "Joy", "Touch", "Icon", "Bose",
+                    "R.S. Line", "Intens", "Zen", "Life",
+                    "Techno", "Equilibre", "Evolution", "Iconic"
+                } },
+                { "Talisman", new[] {
+                    "Joy", "Touch", "Icon", "Initiale Paris",
+                    "Intens", "Zen", "Life", "Techno"
+                } },
+                { "Captur", new[] {
+                    "Joy", "Touch", "Icon", "Bose",
+                    "R.S. Line", "Intens", "Zen", "Life",
+                    "Techno", "Equilibre", "Evolution", "Iconic"
+                } },
+                { "Kadjar", new[] {
+                    "Joy", "Touch", "Icon", "Bose",
+                    "Intens", "Zen", "Life", "Techno"
+                } },
+                { "Austral", new[] {
+                    "Equilibre", "Techno", "Iconic", "Esprit Alpine",
+                    "Evolution", "Techno Esprit Alpine"
+                } },
+
+                // ==================== Kia ====================
+                { "Rio", new[] {
+                    "Cool", "Comfort", "Elegance", "Premium",
+                    "Concept", "Concept Plus", "Dream", "Style"
+                } },
+                { "Ceed", new[] {
+                    "Cool", "Comfort", "Elegance", "Premium",
+                    "Concept", "Concept Plus", "Dream", "GT-Line",
+                    "Style", "Business Line"
+                } },
+                { "EV6", new[] {
+                    "Air", "Wind", "Earth", "GT-Line",
+                    "GT", "Long Range", "Standard Range"
+                } },
+                { "Sportage", new[] {
+                    "Cool", "Comfort", "Elegance", "Premium",
+                    "Concept", "Concept Plus", "Dream", "GT-Line",
+                    "Style", "Business Line"
                 } }
             };
 
@@ -469,7 +513,20 @@ namespace DataAcessLayer.SeedData
                 ("Hyundai", "Elantra", new[] { "Style", "Style Plus", "Prime", "Elite", "N Line", "Comfort", "Team", "Jump", "Design" }),
                 ("Hyundai", "Tucson", new[] { "Style", "Style Plus", "Prime", "Elite", "N Line", "Comfort", "Jump", "Design", "Premium", "Executive", "Adventure" }),
                 ("Hyundai", "Bayon", new[] { "Style", "Style Plus", "Prime", "Elite", "N Line", "Comfort", "Jump", "Team", "Design" }),
-                ("Hyundai", "IONIQ 5", new[] { "Style", "Prime", "N Line", "Vertex", "Edition", "Top", "Inspiration", "Long Range", "Standard Range" })
+                ("Hyundai", "IONIQ 5", new[] { "Style", "Prime", "N Line", "Vertex", "Edition", "Top", "Inspiration", "Long Range", "Standard Range" }),
+
+                // Renault
+                ("Renault", "Megane", new[] { "Joy", "Touch", "Icon", "Bose", "R.S. Line", "Intens", "Zen", "Life", "Techno", "Equilibre", "Evolution", "Iconic" }),
+                ("Renault", "Talisman", new[] { "Joy", "Touch", "Icon", "Initiale Paris", "Intens", "Zen", "Life", "Techno" }),
+                ("Renault", "Captur", new[] { "Joy", "Touch", "Icon", "Bose", "R.S. Line", "Intens", "Zen", "Life", "Techno", "Equilibre", "Evolution", "Iconic" }),
+                ("Renault", "Kadjar", new[] { "Joy", "Touch", "Icon", "Bose", "Intens", "Zen", "Life", "Techno" }),
+                ("Renault", "Austral", new[] { "Equilibre", "Techno", "Iconic", "Esprit Alpine", "Evolution", "Techno Esprit Alpine" }),
+
+                // Kia
+                ("Kia", "Rio", new[] { "Cool", "Comfort", "Elegance", "Premium", "Concept", "Concept Plus", "Dream", "Style" }),
+                ("Kia", "Ceed", new[] { "Cool", "Comfort", "Elegance", "Premium", "Concept", "Concept Plus", "Dream", "GT-Line", "Style", "Business Line" }),
+                ("Kia", "EV6", new[] { "Air", "Wind", "Earth", "GT-Line", "GT", "Long Range", "Standard Range" }),
+                ("Kia", "Sportage", new[] { "Cool", "Comfort", "Elegance", "Premium", "Concept", "Concept Plus", "Dream", "GT-Line", "Style", "Business Line" })
             };
 
             var added = false;
