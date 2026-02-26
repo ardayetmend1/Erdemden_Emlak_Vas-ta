@@ -25,6 +25,8 @@ public class UpdateListingDto
     [EnumDataType(typeof(ListingStatus), ErrorMessage = "Geçersiz durum değeri")]
     public ListingStatus? Status { get; set; }
 
+    public DateTime? ListingDate { get; set; }
+
     public Guid? CityId { get; set; }
 
     public Guid? DistrictId { get; set; }

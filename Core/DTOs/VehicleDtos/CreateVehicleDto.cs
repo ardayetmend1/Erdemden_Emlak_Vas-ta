@@ -27,6 +27,13 @@ public class CreateVehicleDto
     [StringLength(255)]
     public string? DamageStatus { get; set; }
 
+    /// <summary>Tramer durumu: 0=Bilmiyorum, 1=Tramer Yok, 2=Tramer Var, 3=Ağır Hasarlı</summary>
+    public int TramerStatus { get; set; } = 0;
+
+    /// <summary>Tramer tutarı (TL)</summary>
+    [Range(0, (double)decimal.MaxValue)]
+    public decimal? TramerAmount { get; set; }
+
     [Required(ErrorMessage = "Araç tipi gereklidir")]
     public Guid VehicleTypeId { get; set; }
 
@@ -56,8 +63,18 @@ public class CreateVehicleDto
     public bool HasCentralLock { get; set; }
     public bool HasImmobilizer { get; set; }
     public bool HasIsofix { get; set; }
+    public bool HasAEB { get; set; }
+    public bool HasBAS { get; set; }
+    public bool HasDistronic { get; set; }
+    public bool HasNightVision { get; set; }
+    public bool HasDriverAirbag { get; set; }
+    public bool HasPassengerAirbag { get; set; }
+    public bool HasChildLock { get; set; }
+    public bool HasHillAssist { get; set; }
+    public bool HasFatigueDetection { get; set; }
+    public bool HasArmoredVehicle { get; set; }
 
-    // ==================== KONFOR ====================
+    // ==================== İÇ DONANIM ====================
     public bool HasAirConditioning { get; set; }
     public bool HasDigitalAC { get; set; }
     public bool HasLeatherSeats { get; set; }
@@ -68,6 +85,37 @@ public class CreateVehicleDto
     public bool HasCruiseControl { get; set; }
     public bool HasSteeringWheelHeating { get; set; }
     public bool HasStartStop { get; set; }
+    public bool HasAdaptiveCruiseControl { get; set; }
+    public bool HasKeylessEntry { get; set; }
+    public bool HasFunctionalSteering { get; set; }
+    public bool HasHeatedSteering { get; set; }
+    public bool HasHydraulicSteering { get; set; }
+    public bool HasHeadUpDisplay { get; set; }
+    public bool HasSpeedLimiter { get; set; }
+    public bool HasMemorySeats { get; set; }
+    public bool HasSeatCooling { get; set; }
+    public bool HasFabricSeats { get; set; }
+    public bool HasElectricSeats { get; set; }
+    public bool HasAutoDimmingMirror { get; set; }
+    public bool HasFrontCamera { get; set; }
+    public bool HasArmrest { get; set; }
+    public bool HasCooledGlovebox { get; set; }
+    public bool HasThirdRowSeats { get; set; }
+    public bool HasTripComputer { get; set; }
+
+    // ==================== DIŞ DONANIM ====================
+    public bool HasFootTrunkOpener { get; set; }
+    public bool HasHardtop { get; set; }
+    public bool HasAdaptiveLights { get; set; }
+    public bool HasElectricFoldMirrors { get; set; }
+    public bool HasHeatedMirrors { get; set; }
+    public bool HasMemoryMirrors { get; set; }
+    public bool HasRearParkSensor { get; set; }
+    public bool HasFrontParkSensor { get; set; }
+    public bool HasParkAssist { get; set; }
+    public bool HasSmartTrunk { get; set; }
+    public bool HasPanoramicRoof { get; set; }
+    public bool HasTowBar { get; set; }
 
     // ==================== MULTİMEDYA ====================
     public bool HasBluetooth { get; set; }
@@ -78,4 +126,5 @@ public class CreateVehicleDto
     public bool HasCarPlay { get; set; }
     public bool HasRearEntertainment { get; set; }
     public bool HasPremiumSound { get; set; }
+    public bool HasAndroidAuto { get; set; }
 }

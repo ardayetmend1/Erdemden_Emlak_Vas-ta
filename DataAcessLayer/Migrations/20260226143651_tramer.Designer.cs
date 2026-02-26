@@ -3,6 +3,7 @@ using System;
 using DataAcessLayer.Concrete;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAcessLayer.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20260226143651_tramer")]
+    partial class tramer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -903,37 +906,13 @@ namespace DataAcessLayer.Migrations
                     b.Property<bool>("HasABS")
                         .HasColumnType("boolean");
 
-                    b.Property<bool>("HasAEB")
-                        .HasColumnType("boolean");
-
                     b.Property<bool>("HasAUX")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("HasAdaptiveCruiseControl")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("HasAdaptiveLights")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("HasAirConditioning")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("HasAirbag")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("HasAndroidAuto")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("HasArmoredVehicle")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("HasArmrest")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("HasAutoDimmingMirror")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("HasBAS")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("HasBlindSpotWarning")
@@ -948,73 +927,19 @@ namespace DataAcessLayer.Migrations
                     b.Property<bool>("HasCentralLock")
                         .HasColumnType("boolean");
 
-                    b.Property<bool>("HasChildLock")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("HasCooledGlovebox")
-                        .HasColumnType("boolean");
-
                     b.Property<bool>("HasCruiseControl")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("HasDigitalAC")
                         .HasColumnType("boolean");
 
-                    b.Property<bool>("HasDistronic")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("HasDriverAirbag")
-                        .HasColumnType("boolean");
-
                     b.Property<bool>("HasESP")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("HasElectricFoldMirrors")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("HasElectricMirrors")
                         .HasColumnType("boolean");
 
-                    b.Property<bool>("HasElectricSeats")
-                        .HasColumnType("boolean");
-
                     b.Property<bool>("HasElectricWindows")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("HasFabricSeats")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("HasFatigueDetection")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("HasFootTrunkOpener")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("HasFrontCamera")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("HasFrontParkSensor")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("HasFunctionalSteering")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("HasHardtop")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("HasHeadUpDisplay")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("HasHeatedMirrors")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("HasHeatedSteering")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("HasHillAssist")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("HasHydraulicSteering")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("HasImmobilizer")
@@ -1023,37 +948,16 @@ namespace DataAcessLayer.Migrations
                     b.Property<bool>("HasIsofix")
                         .HasColumnType("boolean");
 
-                    b.Property<bool>("HasKeylessEntry")
-                        .HasColumnType("boolean");
-
                     b.Property<bool>("HasLaneAssist")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("HasLeatherSeats")
                         .HasColumnType("boolean");
 
-                    b.Property<bool>("HasMemoryMirrors")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("HasMemorySeats")
-                        .HasColumnType("boolean");
-
                     b.Property<bool>("HasNavigation")
                         .HasColumnType("boolean");
 
-                    b.Property<bool>("HasNightVision")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("HasPanoramicRoof")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("HasParkAssist")
-                        .HasColumnType("boolean");
-
                     b.Property<bool>("HasParkingSensor")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("HasPassengerAirbag")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("HasPremiumSound")
@@ -1065,19 +969,7 @@ namespace DataAcessLayer.Migrations
                     b.Property<bool>("HasRearEntertainment")
                         .HasColumnType("boolean");
 
-                    b.Property<bool>("HasRearParkSensor")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("HasSeatCooling")
-                        .HasColumnType("boolean");
-
                     b.Property<bool>("HasSeatHeating")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("HasSmartTrunk")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("HasSpeedLimiter")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("HasStartStop")
@@ -1089,16 +981,7 @@ namespace DataAcessLayer.Migrations
                     b.Property<bool>("HasSunroof")
                         .HasColumnType("boolean");
 
-                    b.Property<bool>("HasThirdRowSeats")
-                        .HasColumnType("boolean");
-
                     b.Property<bool>("HasTouchScreen")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("HasTowBar")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("HasTripComputer")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("HasUSB")
