@@ -430,15 +430,17 @@ public class ListingService : IListingService
 
         // Sadece kapak resmi ID'lerini çek (base64 HARİÇ - performans için)
         var listingIds = listings.Select(l => l.Id).ToList();
-        var allFirstImages = await _unitOfWork.Repository<ListingImage>()
+        var allImages = await _unitOfWork.Repository<ListingImage>()
             .Query()
             .AsNoTracking()
             .Where(i => listingIds.Contains(i.ListingId))
-            .GroupBy(i => i.ListingId)
-            .Select(g => g.OrderByDescending(i => i.IsCover).ThenBy(i => i.Order).First())
             .Select(i => new { i.Id, i.ListingId, i.Order, i.IsCover })
             .ToListAsync();
-        var coverImages = allFirstImages;
+        // Her ilan için: önce isCover olanı, yoksa ilk resmi seç
+        var coverImages = allImages
+            .GroupBy(i => i.ListingId)
+            .Select(g => g.OrderByDescending(i => i.IsCover).ThenBy(i => i.Order).First())
+            .ToList();
 
         var listingDtos = listings.Select(l =>
         {
