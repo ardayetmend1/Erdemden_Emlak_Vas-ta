@@ -430,12 +430,15 @@ public class ListingService : IListingService
 
         // Sadece kapak resmi ID'lerini çek (base64 HARİÇ - performans için)
         var listingIds = listings.Select(l => l.Id).ToList();
-        var coverImages = await _unitOfWork.Repository<ListingImage>()
+        var allFirstImages = await _unitOfWork.Repository<ListingImage>()
             .Query()
             .AsNoTracking()
-            .Where(i => listingIds.Contains(i.ListingId) && i.IsCover)
-            .Select(i => new { i.Id, i.ListingId, i.Order })
+            .Where(i => listingIds.Contains(i.ListingId))
+            .GroupBy(i => i.ListingId)
+            .Select(g => g.OrderByDescending(i => i.IsCover).ThenBy(i => i.Order).First())
+            .Select(i => new { i.Id, i.ListingId, i.Order, i.IsCover })
             .ToListAsync();
+        var coverImages = allFirstImages;
 
         var listingDtos = listings.Select(l =>
         {
@@ -444,9 +447,11 @@ public class ListingService : IListingService
             var cover = coverImages.FirstOrDefault(c => c.ListingId == l.Id);
             if (cover != null)
             {
+                var coverUrl = $"/api/listings/{l.Id}/images/{cover.Id}";
+                dto.ImageUrl = coverUrl;
                 dto.Images = new List<Core.DTOs.ImageDtos.ImageDto>
                 {
-                    new() { Id = cover.Id, ImageUrl = $"/api/listings/{l.Id}/images/{cover.Id}", IsCover = true, Order = cover.Order }
+                    new() { Id = cover.Id, ImageUrl = coverUrl, IsCover = true, Order = cover.Order }
                 };
             }
             return dto;
