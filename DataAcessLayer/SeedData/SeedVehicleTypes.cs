@@ -14,7 +14,7 @@ namespace DataAcessLayer.SeedData
             var vehicleTypeBodyMap = new Dictionary<string, string[]>
             {
                 { "Otomobil", new[] { "Sedan", "Hatchback", "Station Wagon", "Coupe", "Cabrio", "Roadster" } },
-                { "SUV & Arazi Araçları", new[] { "SUV", "Pickup", "Crossover", "Arazi Aracı" } }
+                { "SUV & Arazi Araçları", new[] { "SUV", "Pickup", "Crossover", "Arazi Aracı", "Minivan & Panelvan" } }
             };
 
             foreach (var vehicleTypeData in vehicleTypeBodyMap)
@@ -56,7 +56,7 @@ namespace DataAcessLayer.SeedData
             var requiredBodyTypes = new Dictionary<string, string[]>
             {
                 { "Otomobil", new[] { "Sedan", "Hatchback", "Station Wagon", "Coupe", "Cabrio", "Roadster" } },
-                { "SUV & Arazi Araçları", new[] { "SUV", "Pickup", "Crossover", "Arazi Aracı" } }
+                { "SUV & Arazi Araçları", new[] { "SUV", "Pickup", "Crossover", "Arazi Aracı", "Minivan & Panelvan" } }
             };
 
             var added = false;

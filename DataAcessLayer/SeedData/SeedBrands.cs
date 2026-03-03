@@ -61,6 +61,12 @@ namespace DataAcessLayer.SeedData
             "Ranger"                                         // Ford
         };
 
+        // Minivan & Panelvan modelleri
+        private static readonly HashSet<string> MinivanPanelvanModels = new()
+        {
+            "Boxer"                                          // Peugeot
+        };
+
         public static async Task SeedAsync(Context context)
         {
             if (await context.Set<Brand>().AnyAsync())
@@ -72,6 +78,7 @@ namespace DataAcessLayer.SeedData
             var sedanBodyType = bodyTypes.FirstOrDefault(b => b.Name == "Sedan");
             var hatchbackBodyType = bodyTypes.FirstOrDefault(b => b.Name == "Hatchback");
             var pickupBodyType = bodyTypes.FirstOrDefault(b => b.Name == "Pickup");
+            var minivanPanelvanBodyType2 = bodyTypes.FirstOrDefault(b => b.Name == "Minivan & Panelvan");
 
             var brandModels = new Dictionary<string, string[]>
             {
@@ -86,7 +93,8 @@ namespace DataAcessLayer.SeedData
                 { "Ford", new[] { "Focus", "Fiesta", "Puma", "Kuga", "Ranger" } },
                 { "Hyundai", new[] { "i10", "i20", "i30", "Elantra", "Tucson", "Bayon", "IONIQ 5" } },
                 { "Renault", new[] { "Megane", "Talisman", "Captur", "Kadjar", "Austral" } },
-                { "Kia", new[] { "Rio", "Ceed", "EV6", "Sportage" } }
+                { "Kia", new[] { "Rio", "Ceed", "EV6", "Sportage" } },
+                { "Peugeot", new[] { "Boxer" } }
             };
 
             foreach (var brandData in brandModels)
@@ -111,6 +119,8 @@ namespace DataAcessLayer.SeedData
                         bodyTypeId = hatchbackBodyType?.Id;
                     else if (PickupModels.Contains(modelName))
                         bodyTypeId = pickupBodyType?.Id;
+                    else if (MinivanPanelvanModels.Contains(modelName))
+                        bodyTypeId = minivanPanelvanBodyType2?.Id;
 
                     var model = new Model
                     {
@@ -143,6 +153,7 @@ namespace DataAcessLayer.SeedData
             var sedanBodyType = bodyTypes.FirstOrDefault(b => b.Name == "Sedan" && b.VehicleTypeId == otomobilVT?.Id);
             var hatchbackBodyType = bodyTypes.FirstOrDefault(b => b.Name == "Hatchback" && b.VehicleTypeId == otomobilVT?.Id);
             var pickupBodyType = bodyTypes.FirstOrDefault(b => b.Name == "Pickup" && b.VehicleTypeId == suvAraziVT?.Id);
+            var minivanPanelvanBodyType = bodyTypes.FirstOrDefault(b => b.Name == "Minivan & Panelvan" && b.VehicleTypeId == suvAraziVT?.Id);
 
             var brandModels = new Dictionary<string, string[]>
             {
@@ -152,7 +163,8 @@ namespace DataAcessLayer.SeedData
                 { "Honda", new[] { "Jazz", "Accord" } },
                 { "Hyundai", new[] { "i30" } },
                 { "Renault", new[] { "Megane", "Talisman", "Captur", "Kadjar", "Austral" } },
-                { "Kia", new[] { "Rio", "Ceed", "EV6", "Sportage" } }
+                { "Kia", new[] { "Rio", "Ceed", "EV6", "Sportage" } },
+                { "Peugeot", new[] { "Boxer" } }
             };
 
             var existingBrands = await context.Set<Brand>()
@@ -192,6 +204,8 @@ namespace DataAcessLayer.SeedData
                         bodyTypeId = hatchbackBodyType?.Id;
                     else if (PickupModels.Contains(modelName))
                         bodyTypeId = pickupBodyType?.Id;
+                    else if (MinivanPanelvanModels.Contains(modelName))
+                        bodyTypeId = minivanPanelvanBodyType?.Id;
 
                     context.Set<Model>().Add(new Model
                     {
@@ -234,15 +248,17 @@ namespace DataAcessLayer.SeedData
             var hatchbackBT = bodyTypes.FirstOrDefault(bt => bt.Name == "Hatchback" && bt.VehicleTypeId == otomobilVT?.Id);
             var suvBT = bodyTypes.FirstOrDefault(bt => bt.Name == "SUV" && bt.VehicleTypeId == suvAraziVT?.Id);
             var pickupBT = bodyTypes.FirstOrDefault(bt => bt.Name == "Pickup" && bt.VehicleTypeId == suvAraziVT?.Id);
+            var minivanPanelvanBT = bodyTypes.FirstOrDefault(bt => bt.Name == "Minivan & Panelvan" && bt.VehicleTypeId == suvAraziVT?.Id);
 
-            Console.WriteLine($"[Seed] Correct BodyTypes -> Sedan: {sedanBT?.Id}, Hatchback: {hatchbackBT?.Id}, SUV: {suvBT?.Id}, Pickup: {pickupBT?.Id}");
+            Console.WriteLine($"[Seed] Correct BodyTypes -> Sedan: {sedanBT?.Id}, Hatchback: {hatchbackBT?.Id}, SUV: {suvBT?.Id}, Pickup: {pickupBT?.Id}, Minivan & Panelvan: {minivanPanelvanBT?.Id}");
 
             var updates = new Dictionary<string, (BodyType? bodyType, HashSet<string> models)>
             {
                 { "Sedan", (sedanBT, SedanModels) },
                 { "Hatchback", (hatchbackBT, HatchbackModels) },
                 { "SUV", (suvBT, SuvModels) },
-                { "Pickup", (pickupBT, PickupModels) }
+                { "Pickup", (pickupBT, PickupModels) },
+                { "Minivan & Panelvan", (minivanPanelvanBT, MinivanPanelvanModels) }
             };
 
             var totalUpdated = 0;
