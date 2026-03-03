@@ -19,12 +19,14 @@ public class AuthService : IAuthService
     private readonly IUnitOfWork _unitOfWork;
     private readonly ITokenService _tokenService;
     private readonly JwtSettings _jwtSettings;
+    private readonly IEmailService _emailService;
 
-    public AuthService(IUnitOfWork unitOfWork, ITokenService tokenService, IOptions<JwtSettings> jwtSettings)
+    public AuthService(IUnitOfWork unitOfWork, ITokenService tokenService, IOptions<JwtSettings> jwtSettings, IEmailService emailService)
     {
         _unitOfWork = unitOfWork;
         _tokenService = tokenService;
         _jwtSettings = jwtSettings.Value;
+        _emailService = emailService;
     }
 
     /// <summary>
@@ -361,6 +363,103 @@ public class AuthService : IAuthService
         {
             return ApiResponseDto<AuthResponseDto>.FailResponse("Geçersiz Google token");
         }
+    }
+
+    /// <summary>
+    /// Şifremi unuttum - e-posta ile şifre sıfırlama kodu gönderir
+    /// </summary>
+    public async Task<ApiResponseDto> ForgotPasswordAsync(ForgotPasswordDto forgotPasswordDto)
+    {
+        var user = await _unitOfWork.Repository<User>()
+            .GetAsync(u => u.Email == forgotPasswordDto.Email);
+
+        // Güvenlik: Kullanıcı bulunamasa bile başarılı mesajı dön (email enumeration önleme)
+        if (user == null)
+        {
+            return ApiResponseDto.SuccessResponse(
+                "Eğer bu e-posta adresi kayıtlıysa, şifre sıfırlama kodu gönderildi.");
+        }
+
+        // Google-only hesaplar için şifre sıfırlama yapılmaz
+        if (string.IsNullOrEmpty(user.PasswordHash))
+        {
+            return ApiResponseDto.SuccessResponse(
+                "Eğer bu e-posta adresi kayıtlıysa, şifre sıfırlama kodu gönderildi.");
+        }
+
+        // 6 haneli rastgele kod oluştur
+        var random = new Random();
+        var resetCode = random.Next(100000, 999999).ToString();
+
+        // Mevcut alanları kullan
+        user.EmailVerificationCode = resetCode;
+        user.EmailVerificationCodeExpiry = DateTime.UtcNow.AddMinutes(15);
+
+        _unitOfWork.Repository<User>().Update(user);
+        await _unitOfWork.SaveChangesAsync();
+
+        // E-posta gönder
+        try
+        {
+            await _emailService.SendPasswordResetCodeEmailAsync(
+                user.Email, user.Name, resetCode);
+        }
+        catch
+        {
+            // E-posta gönderilemese bile hata verme (güvenlik)
+        }
+
+        return ApiResponseDto.SuccessResponse(
+            "Eğer bu e-posta adresi kayıtlıysa, şifre sıfırlama kodu gönderildi.");
+    }
+
+    /// <summary>
+    /// Şifre sıfırlama - kod ile doğrulama
+    /// </summary>
+    public async Task<ApiResponseDto> ResetPasswordAsync(ResetPasswordDto resetPasswordDto)
+    {
+        var user = await _unitOfWork.Repository<User>()
+            .GetAsync(u => u.Email == resetPasswordDto.Email);
+
+        if (user == null)
+        {
+            return ApiResponseDto.FailResponse("Geçersiz veya süresi dolmuş kod.");
+        }
+
+        // Kod kontrolü
+        if (user.EmailVerificationCode != resetPasswordDto.Code)
+        {
+            return ApiResponseDto.FailResponse("Geçersiz veya süresi dolmuş kod.");
+        }
+
+        // Süre kontrolü
+        if (user.EmailVerificationCodeExpiry == null ||
+            user.EmailVerificationCodeExpiry < DateTime.UtcNow)
+        {
+            // Süresi dolmuş kodu temizle
+            user.EmailVerificationCode = null;
+            user.EmailVerificationCodeExpiry = null;
+            _unitOfWork.Repository<User>().Update(user);
+            await _unitOfWork.SaveChangesAsync();
+
+            return ApiResponseDto.FailResponse("Kodun süresi dolmuş. Lütfen yeni kod talep edin.");
+        }
+
+        // Şifre güncelle
+        user.PasswordHash = HashPassword(resetPasswordDto.NewPassword);
+
+        // Kodu temizle (tek kullanımlık)
+        user.EmailVerificationCode = null;
+        user.EmailVerificationCodeExpiry = null;
+
+        _unitOfWork.Repository<User>().Update(user);
+
+        // Tüm refresh tokenları iptal et (güvenlik için)
+        await RevokeAllUserTokens(user.Id);
+
+        await _unitOfWork.SaveChangesAsync();
+
+        return ApiResponseDto.SuccessResponse("Şifreniz başarıyla sıfırlandı. Yeni şifrenizle giriş yapabilirsiniz.");
     }
 
     #region Private Methods

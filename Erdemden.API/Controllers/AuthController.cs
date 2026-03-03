@@ -175,6 +175,32 @@ public class AuthController : ControllerBase
     }
 
     /// <summary>
+    /// Şifremi unuttum - e-posta ile kod gönderir
+    /// </summary>
+    [HttpPost("forgot-password")]
+    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto forgotPasswordDto)
+    {
+        var result = await _authService.ForgotPasswordAsync(forgotPasswordDto);
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Şifre sıfırlama - kod ile yeni şifre belirlenir
+    /// </summary>
+    [HttpPost("reset-password")]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto resetPasswordDto)
+    {
+        var result = await _authService.ResetPasswordAsync(resetPasswordDto);
+
+        if (!result.Success)
+        {
+            return BadRequest(result);
+        }
+
+        return Ok(result);
+    }
+
+    /// <summary>
     /// Mevcut kullanıcı bilgisi
     /// </summary>
     [Authorize]

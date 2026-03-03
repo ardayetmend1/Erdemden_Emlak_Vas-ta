@@ -42,4 +42,14 @@ public interface IAuthService
     /// Google ile giriş (ID token doğrulama)
     /// </summary>
     Task<ApiResponseDto<AuthResponseDto>> GoogleLoginAsync(GoogleLoginDto googleLoginDto);
+
+    /// <summary>
+    /// Şifremi unuttum - e-posta ile şifre sıfırlama kodu gönderir
+    /// </summary>
+    Task<ApiResponseDto> ForgotPasswordAsync(ForgotPasswordDto forgotPasswordDto);
+
+    /// <summary>
+    /// Şifre sıfırlama - kod ile yeni şifre belirlenir
+    /// </summary>
+    Task<ApiResponseDto> ResetPasswordAsync(ResetPasswordDto resetPasswordDto);
 }

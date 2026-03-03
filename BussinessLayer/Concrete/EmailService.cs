@@ -161,4 +161,43 @@ public class EmailService : IEmailService
         mailMessage.To.Add(adminEmail);
         await client.SendMailAsync(mailMessage);
     }
+
+    public async Task SendPasswordResetCodeEmailAsync(
+        string toEmail, string customerName, string resetCode)
+    {
+        using var client = new SmtpClient(_emailSettings.SmtpServer, _emailSettings.SmtpPort)
+        {
+            Credentials = new NetworkCredential(_emailSettings.SenderEmail, _emailSettings.SenderPassword),
+            EnableSsl = true
+        };
+
+        var mailMessage = new MailMessage
+        {
+            From = new MailAddress(_emailSettings.SenderEmail, _emailSettings.SenderName),
+            Subject = "Şifre Sıfırlama Kodu - Erdem Otomotiv",
+            IsBodyHtml = true,
+            Body = $@"
+                <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; background: #f8f9fa; border-radius: 12px;'>
+                    <div style='text-align: center; margin-bottom: 24px;'>
+                        <h2 style='color: #1B3C87; margin: 0;'>Erdem Otomotiv - Emlak</h2>
+                    </div>
+                    <div style='background: white; padding: 24px; border-radius: 8px; border: 1px solid #e5e7eb;'>
+                        <p style='color: #374151; font-size: 16px;'>Sayın <strong>{customerName}</strong>,</p>
+                        <p style='color: #6b7280; font-size: 14px;'>Şifre sıfırlama talebiniz alınmıştır. Aşağıdaki kodu kullanarak şifrenizi sıfırlayabilirsiniz:</p>
+
+                        <div style='background: #eff6ff; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0;'>
+                            <p style='color: #1e40af; font-size: 12px; margin: 0 0 8px 0; font-weight: bold; text-transform: uppercase;'>Şifre Sıfırlama Kodu</p>
+                            <p style='color: #1B3C87; font-size: 36px; font-weight: bold; margin: 0; letter-spacing: 8px;'>{resetCode}</p>
+                        </div>
+
+                        <p style='color: #dc2626; font-size: 13px;'>⚠️ Bu kodu kimseyle paylaşmayın. Kod 15 dakika içinde geçersiz olacaktır.</p>
+                        <p style='color: #6b7280; font-size: 13px; margin-top: 16px;'>Eğer bu talebi siz yapmadıysanız, bu e-postayı görmezden gelebilirsiniz.</p>
+                    </div>
+                    <p style='color: #9ca3af; font-size: 11px; text-align: center; margin-top: 16px;'>Erdem Otomotiv - Emlak | Bu e-posta otomatik olarak gönderilmiştir.</p>
+                </div>"
+        };
+
+        mailMessage.To.Add(toEmail);
+        await client.SendMailAsync(mailMessage);
+    }
 }
