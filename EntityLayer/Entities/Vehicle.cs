@@ -38,6 +38,12 @@ public class Vehicle : BaseEntity
     [Column(TypeName = "decimal(18,2)")]
     public decimal? TramerAmount { get; set; }
 
+    /// <summary>Hızlı şarj süresi (dakika) - %80'e ulaşma süresi, sadece elektrikli araçlar için</summary>
+    public int? FastChargeTime { get; set; }
+
+    /// <summary>Menzil (km) - sadece elektrikli araçlar için</summary>
+    public int? Range { get; set; }
+
     // ==================== GÜVENLİK ====================
     public bool HasABS { get; set; }
     public bool HasESP { get; set; }

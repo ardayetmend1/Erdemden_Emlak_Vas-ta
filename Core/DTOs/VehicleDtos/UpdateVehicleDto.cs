@@ -30,6 +30,12 @@ public class UpdateVehicleDto
     [Range(0, (double)decimal.MaxValue)]
     public decimal? TramerAmount { get; set; }
 
+    [Range(0, 1440, ErrorMessage = "Şarj süresi 0-1440 dakika arasında olmalıdır")]
+    public int? FastChargeTime { get; set; }
+
+    [Range(0, 5000, ErrorMessage = "Menzil 0-5000 km arasında olmalıdır")]
+    public int? Range { get; set; }
+
     public Guid? VehicleTypeId { get; set; }
     public Guid? BrandId { get; set; }
     public Guid? ModelId { get; set; }

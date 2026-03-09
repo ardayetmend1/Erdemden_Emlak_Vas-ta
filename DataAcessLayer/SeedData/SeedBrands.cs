@@ -9,48 +9,78 @@ namespace DataAcessLayer.SeedData
         // SUV modelleri - kasa tipi SUV olacak
         private static readonly HashSet<string> SuvModels = new()
         {
-            "X1", "X3", "X5", "X7", "iX",                    // BMW
-            "GLA", "GLB", "GLC", "GLE", "GLS", "G Serisi",   // Mercedes
-            "Q3", "Q5", "Q7", "Q8", "e-tron",                // Audi
+            "X1", "X3", "X4", "X5", "X6", "X7",                // BMW SUV
+            "iX", "iX1", "iX3",                                 // BMW Elektrikli SUV
+            "GLA", "GLB", "GLC", "GLE", "GLS", "G Serisi",   // Mercedes SUV
+            "GLC Coupe", "GLE Coupe",                            // Mercedes SUV Coupe
+            "EQA", "EQB", "EQC",                                 // Mercedes Elektrikli SUV
+            "Q2", "Q3", "Q3 Sportback", "Q5", "Q5 Sportback", // Audi SUV
+            "Q7", "Q8", "Q8 e-tron",                            // Audi SUV
+            "e-tron", "e-tron GT",                               // Audi Elektrikli
             "Tiguan", "Touareg", "T-Roc",                    // VW
             "C-HR", "RAV4", "Land Cruiser",                  // Toyota
             "XC40", "XC60", "XC90",                          // Volvo
             "Model Y", "Model X",                            // Tesla
-            "HR-V", "CR-V",                                  // Honda
+            "HR-V", "CR-V", "ZR-V", "e:Ny1",                   // Honda SUV
             "Puma", "Kuga", "Explorer",                      // Ford
-            "Tucson", "Kona", "Santa Fe", "Bayon", "IONIQ 5", // Hyundai
-            "Captur", "Kadjar", "Austral",                      // Renault
-            "EV6", "Sportage"                                   // Kia
+            "Tucson", "Kona", "Kona Electric", "Santa Fe",      // Hyundai SUV
+            "Bayon", "IONIQ 5", "ix35", "Venue",                  // Hyundai SUV
+            "Captur", "Kadjar", "Austral", "Koleos",             // Renault SUV
+            "Sportage", "Sorento", "Niro", "Stonic",            // Kia SUV
+            "EV6", "EV9", "Niro EV",                             // Kia Elektrikli SUV
+            "Range Rover", "Range Rover Sport", "Range Rover Velar",   // Land Rover
+            "Range Rover Evoque", "Discovery", "Discovery Sport",       // Land Rover
+            "Defender", "Freelander 2",                                  // Land Rover
+            "Atto 3", "Seal U", "Tang",                                  // BYD SUV
+            "Tiggo 4 Pro", "Tiggo 7 Pro", "Tiggo 8 Pro",                // Chery SUV
+            "Omoda 5",                                                   // Chery SUV
+            "Qashqai", "X-Trail",                                        // Nissan SUV
+            "500X", "Freemont"                                           // Fiat SUV
         };
 
         // Sedan modelleri - kasa tipi Sedan olacak
         private static readonly HashSet<string> SedanModels = new()
         {
-            "3 Serisi", "5 Serisi", "7 Serisi",              // BMW
-            "C Serisi", "E Serisi", "S Serisi", "CLA", "EQE", "EQS", // Mercedes
-            "A4", "A6", "A8",                                // Audi
+            "2 Serisi Gran Coupe", "3 Serisi", "4 Serisi Gran Coupe", // BMW Sedan/Gran Coupe
+            "5 Serisi", "7 Serisi", "8 Serisi Gran Coupe",  // BMW Sedan/Gran Coupe
+            "i4", "i5", "i7",                                // BMW Elektrikli Sedan
+            "C Serisi", "E Serisi", "S Serisi", "CLA", "EQE", "EQS", // Mercedes Sedan
+            "CLS", "AMG GT 4 Kapı",                              // Mercedes Sedan
+            "A4", "A5 Sportback", "A6", "A7 Sportback", "A8", // Audi Sedan
             "Passat", "Jetta", "Arteon",                     // VW
             "Corolla", "Camry",                              // Toyota
             "S60", "S90",                                    // Volvo
             "Model 3", "Model S",                            // Tesla
-            "Civic", "City", "Accord",                       // Honda
+            "Civic Sedan", "City", "Accord",                   // Honda Sedan
             "Focus", "Mondeo",                               // Ford
-            "Elantra", "Sonata",                              // Hyundai
-            "Megane", "Talisman"                                // Renault
+            "Elantra", "Sonata", "Accent", "Accent Blue",      // Hyundai Sedan
+            "IONIQ 6",                                           // Hyundai Elektrikli Sedan
+            "Megane Sedan", "Fluence", "Talisman",               // Renault Sedan
+            "Symbol", "Latitude",                                // Renault Sedan
+            "Cerato", "Stinger", "K5",                           // Kia Sedan
+            "Seal", "Han",                                        // BYD Sedan
+            "Arrizo 5",                                           // Chery Sedan
+            "Linea", "Albea", "Tipo Sedan", "Marea"              // Fiat Sedan
         };
 
         // Hatchback modelleri - kasa tipi Hatchback olacak
         private static readonly HashSet<string> HatchbackModels = new()
         {
-            "1 Serisi",                                      // BMW
-            "A Serisi",                                      // Mercedes
+            "1 Serisi", "2 Serisi Active Tourer",               // BMW
+            "A Serisi", "B Serisi",                              // Mercedes Hatchback
             "A1", "A3",                                      // Audi
             "Golf", "Polo",                                  // VW
             "Yaris",                                         // Toyota
-            "Jazz",                                          // Honda
+            "Civic HB", "Jazz", "Honda e",                       // Honda Hatchback
             "Fiesta",                                        // Ford
-            "i10", "i20", "i30",                              // Hyundai
-            "Rio", "Ceed"                                       // Kia
+            "i10", "i20", "i30", "IONIQ HB",                   // Hyundai Hatchback
+            "Clio", "Megane HB", "Zoe",                          // Renault Hatchback
+            "Picanto", "Rio", "Ceed", "ProCeed",                 // Kia Hatchback
+            "Dolphin",                                            // BYD Hatchback
+            "Micra", "Note", "Pulsar", "Leaf",                   // Nissan Hatchback
+            "Punto", "Grande Punto", "Punto Evo", "Bravo",       // Fiat Hatchback
+            "Tipo HB", "Palio", "Stilo",                         // Fiat Hatchback
+            "500", "500e", "Fiat 600e"                            // Fiat Hatchback/Mini
         };
 
         // Pickup modelleri - kasa tipi Pickup olacak
@@ -58,13 +88,70 @@ namespace DataAcessLayer.SeedData
         {
             "Amarok",                                        // VW
             "Hilux",                                         // Toyota
-            "Ranger"                                         // Ford
+            "Ranger",                                        // Ford
+            "Navara",                                        // Nissan Pickup
+            "Fullback"                                       // Fiat Pickup
+        };
+
+        // Coupe modelleri - kasa tipi Coupe olacak
+        private static readonly HashSet<string> CoupeModels = new()
+        {
+            "2 Serisi Coupe", "4 Serisi Coupe", "8 Serisi Coupe", "M2", "M4", // BMW
+            "CLA Coupe",                                     // Mercedes
+            "C Serisi Coupe", "E Serisi Coupe", "S Serisi Coupe", // Mercedes Coupe
+            "AMG GT Coupe",                                       // Mercedes AMG
+            "A5 Coupe", "TT Coupe", "R8 Coupe"                   // Audi Coupe
+        };
+
+        // Cabrio modelleri - kasa tipi Cabrio olacak
+        private static readonly HashSet<string> CabrioModels = new()
+        {
+            "4 Serisi Cabrio",                               // BMW
+            "C Serisi Cabrio", "E Serisi Cabrio", "S Serisi Cabrio", // Mercedes Cabrio
+            "A5 Cabrio", "A3 Cabrio",                             // Audi Cabrio
+            "500C"                                                // Fiat Cabrio
+        };
+
+        // Roadster modelleri - kasa tipi Roadster olacak
+        private static readonly HashSet<string> RoadsterModels = new()
+        {
+            "Z4",                                            // BMW
+            "SL", "SLC", "SLK", "AMG GT Roadster",              // Mercedes Roadster
+            "TT Roadster", "R8 Spyder"                            // Audi Roadster
+        };
+
+        // Station Wagon modelleri - kasa tipi Station Wagon olacak
+        private static readonly HashSet<string> StationWagonModels = new()
+        {
+            "Megane Sport Tourer",                           // Renault
+            "Ceed SW",                                           // Kia
+            "C Serisi Estate", "E Serisi Estate",                // Mercedes Station Wagon
+            "A4 Avant", "A6 Avant",                               // Audi Station Wagon
+            "Tipo Station Wagon", "Marea Weekend"                 // Fiat Station Wagon
+        };
+
+        // Crossover modelleri - kasa tipi Crossover olacak
+        private static readonly HashSet<string> CrossoverModels = new()
+        {
+            "X2", "iX2",                                     // BMW
+            "Arkana",                                            // Renault
+            "XCeed",                                             // Kia
+            "i20 Active",                                            // Hyundai
+            "Juke",                                                  // Nissan Crossover
+            "500X Cross"                                                 // Fiat Crossover
         };
 
         // Minivan & Panelvan modelleri
         private static readonly HashSet<string> MinivanPanelvanModels = new()
         {
-            "Boxer"                                          // Peugeot
+            "Boxer",                                         // Peugeot
+            "Kangoo", "Scenic", "Grand Scenic",                  // Renault Minivan
+            "Kangoo Express", "Master", "Trafic",                // Renault Panelvan/Ticari
+            "Staria", "H-1",                                         // Hyundai Minivan
+            "Vito", "V Serisi", "Sprinter",                          // Mercedes Minivan/Ticari
+            "NV300", "NV400",                                            // Nissan Ticari
+            "Doblo", "Fiorino", "Ducato", "Scudo",                      // Fiat Ticari/Minivan
+            "Doblo Combi", "Fiorino Combi", "Egea MultiWagon"           // Fiat Minivan/SW
         };
 
         public static async Task SeedAsync(Context context)
@@ -77,24 +164,180 @@ namespace DataAcessLayer.SeedData
             var suvBodyType = bodyTypes.FirstOrDefault(b => b.Name == "SUV");
             var sedanBodyType = bodyTypes.FirstOrDefault(b => b.Name == "Sedan");
             var hatchbackBodyType = bodyTypes.FirstOrDefault(b => b.Name == "Hatchback");
+            var coupeBodyType = bodyTypes.FirstOrDefault(b => b.Name == "Coupe");
+            var cabrioBodyType = bodyTypes.FirstOrDefault(b => b.Name == "Cabrio");
+            var roadsterBodyType = bodyTypes.FirstOrDefault(b => b.Name == "Roadster");
+            var stationWagonBodyType = bodyTypes.FirstOrDefault(b => b.Name == "Station Wagon");
+            var crossoverBodyType = bodyTypes.FirstOrDefault(b => b.Name == "Crossover");
             var pickupBodyType = bodyTypes.FirstOrDefault(b => b.Name == "Pickup");
             var minivanPanelvanBodyType2 = bodyTypes.FirstOrDefault(b => b.Name == "Minivan & Panelvan");
 
             var brandModels = new Dictionary<string, string[]>
             {
-                { "BMW", new[] { "1 Serisi", "3 Serisi", "5 Serisi", "X1", "X3", "X5", "iX" } },
-                { "Mercedes", new[] { "A Serisi", "C Serisi", "E Serisi", "S Serisi", "CLA", "G Serisi", "EQE", "EQS" } },
-                { "Audi", new[] { "A1", "A3", "A4", "A6", "Q3", "Q5", "Q7", "Q8", "e-tron" } },
+                { "BMW", new[] {
+                    // Hatchback
+                    "1 Serisi", "2 Serisi Active Tourer",
+                    // Sedan / Gran Coupe
+                    "2 Serisi Gran Coupe", "3 Serisi", "4 Serisi Gran Coupe",
+                    "5 Serisi", "7 Serisi", "8 Serisi Gran Coupe",
+                    // Coupe
+                    "2 Serisi Coupe", "4 Serisi Coupe", "8 Serisi Coupe", "M2", "M4",
+                    // Cabrio
+                    "4 Serisi Cabrio",
+                    // Roadster
+                    "Z4",
+                    // Crossover
+                    "X2", "iX2",
+                    // SUV
+                    "X1", "X3", "X4", "X5", "X6", "X7",
+                    // Elektrikli
+                    "i4", "i5", "i7", "iX", "iX1", "iX3"
+                } },
+                { "Mercedes", new[] {
+                    // Hatchback
+                    "A Serisi", "B Serisi",
+                    // Sedan
+                    "C Serisi", "E Serisi", "S Serisi", "CLA", "CLS", "AMG GT 4 Kapı", "EQE", "EQS",
+                    // Coupe
+                    "CLA Coupe", "C Serisi Coupe", "E Serisi Coupe", "S Serisi Coupe", "AMG GT Coupe",
+                    // Cabrio
+                    "C Serisi Cabrio", "E Serisi Cabrio", "S Serisi Cabrio",
+                    // Roadster
+                    "SL", "SLC", "SLK", "AMG GT Roadster",
+                    // Station Wagon
+                    "C Serisi Estate", "E Serisi Estate",
+                    // SUV
+                    "GLA", "GLB", "GLC", "GLC Coupe", "GLE", "GLE Coupe", "GLS", "G Serisi",
+                    "EQA", "EQB", "EQC",
+                    // Minivan & Ticari
+                    "Vito", "V Serisi", "Sprinter"
+                } },
+                { "Audi", new[] {
+                    // Hatchback
+                    "A1", "A3",
+                    // Sedan
+                    "A4", "A5 Sportback", "A6", "A7 Sportback", "A8",
+                    // Coupe
+                    "A5 Coupe", "TT Coupe", "R8 Coupe",
+                    // Cabrio
+                    "A5 Cabrio", "A3 Cabrio",
+                    // Roadster
+                    "TT Roadster", "R8 Spyder",
+                    // Station Wagon
+                    "A4 Avant", "A6 Avant",
+                    // SUV
+                    "Q2", "Q3", "Q3 Sportback", "Q5", "Q5 Sportback",
+                    "Q7", "Q8", "Q8 e-tron", "e-tron", "e-tron GT"
+                } },
                 { "Volkswagen", new[] { "Golf", "Polo", "Passat", "Tiguan", "Touareg", "Amarok" } },
                 { "Toyota", new[] { "Corolla", "Yaris", "C-HR", "RAV4", "Hilux", "Land Cruiser" } },
                 { "Volvo", new[] { "S60", "S90", "XC40", "XC60", "XC90" } },
                 { "Tesla", new[] { "Model 3", "Model Y", "Model S", "Model X" } },
-                { "Honda", new[] { "Civic", "City", "HR-V", "CR-V", "Jazz", "Accord" } },
+                { "Honda", new[] {
+                    // Hatchback
+                    "Civic HB", "Jazz", "Honda e",
+                    // Sedan
+                    "Civic Sedan", "City", "Accord",
+                    // SUV
+                    "HR-V", "CR-V", "ZR-V", "e:Ny1"
+                } },
                 { "Ford", new[] { "Focus", "Fiesta", "Puma", "Kuga", "Ranger" } },
-                { "Hyundai", new[] { "i10", "i20", "i30", "Elantra", "Tucson", "Bayon", "IONIQ 5" } },
-                { "Renault", new[] { "Megane", "Talisman", "Captur", "Kadjar", "Austral" } },
-                { "Kia", new[] { "Rio", "Ceed", "EV6", "Sportage" } },
-                { "Peugeot", new[] { "Boxer" } }
+                { "Hyundai", new[] {
+                    // Hatchback
+                    "i10", "i20", "i30", "IONIQ HB",
+                    // Sedan
+                    "Elantra", "Sonata", "Accent", "Accent Blue", "IONIQ 6",
+                    // Crossover
+                    "i20 Active",
+                    // SUV
+                    "Tucson", "Kona", "Kona Electric", "Santa Fe", "Bayon", "IONIQ 5", "ix35", "Venue",
+                    // Minivan
+                    "Staria", "H-1"
+                } },
+                { "Renault", new[] {
+                    // Hatchback
+                    "Clio", "Megane HB", "Zoe",
+                    // Sedan
+                    "Megane Sedan", "Fluence", "Talisman", "Symbol", "Latitude",
+                    // Station Wagon
+                    "Megane Sport Tourer",
+                    // Crossover
+                    "Arkana",
+                    // SUV
+                    "Captur", "Kadjar", "Austral", "Koleos",
+                    // Minivan & Panelvan
+                    "Kangoo", "Scenic", "Grand Scenic",
+                    "Kangoo Express", "Master", "Trafic"
+                } },
+                { "Kia", new[] {
+                    // Hatchback
+                    "Picanto", "Rio", "Ceed", "ProCeed",
+                    // Sedan
+                    "Cerato", "Stinger", "K5",
+                    // Station Wagon
+                    "Ceed SW",
+                    // Crossover
+                    "XCeed",
+                    // SUV
+                    "Sportage", "Sorento", "Niro", "Stonic",
+                    // Elektrikli SUV
+                    "EV6", "EV9", "Niro EV"
+                } },
+                { "Peugeot", new[] { "Boxer" } },
+                { "Land Rover", new[] {
+                    // SUV
+                    "Range Rover", "Range Rover Sport", "Range Rover Velar",
+                    "Range Rover Evoque", "Discovery", "Discovery Sport",
+                    "Defender", "Freelander 2"
+                } },
+                { "BYD", new[] {
+                    // Hatchback
+                    "Dolphin",
+                    // Sedan
+                    "Seal", "Han",
+                    // SUV
+                    "Atto 3", "Seal U", "Tang"
+                } },
+                { "Chery", new[] {
+                    // Sedan
+                    "Arrizo 5",
+                    // SUV
+                    "Tiggo 4 Pro", "Tiggo 7 Pro", "Tiggo 8 Pro",
+                    "Omoda 5"
+                } },
+                { "Nissan", new[] {
+                    // Hatchback
+                    "Micra", "Note", "Pulsar", "Leaf",
+                    // Crossover
+                    "Juke",
+                    // SUV
+                    "Qashqai", "X-Trail",
+                    // Pickup
+                    "Navara",
+                    // Minivan/Ticari
+                    "NV300", "NV400"
+                } },
+                { "Fiat", new[] {
+                    // Hatchback
+                    "Punto", "Grande Punto", "Punto Evo", "Bravo",
+                    "Tipo HB", "Palio", "Stilo",
+                    "500", "500e", "Fiat 600e",
+                    // Sedan
+                    "Linea", "Albea", "Tipo Sedan", "Marea",
+                    // Cabrio
+                    "500C",
+                    // Station Wagon
+                    "Tipo Station Wagon", "Marea Weekend",
+                    // Crossover
+                    "500X Cross",
+                    // SUV
+                    "500X", "Freemont",
+                    // Pickup
+                    "Fullback",
+                    // Minivan/Ticari
+                    "Doblo", "Fiorino", "Ducato", "Scudo",
+                    "Doblo Combi", "Fiorino Combi", "Egea MultiWagon"
+                } }
             };
 
             foreach (var brandData in brandModels)
@@ -117,6 +360,16 @@ namespace DataAcessLayer.SeedData
                         bodyTypeId = sedanBodyType?.Id;
                     else if (HatchbackModels.Contains(modelName))
                         bodyTypeId = hatchbackBodyType?.Id;
+                    else if (CoupeModels.Contains(modelName))
+                        bodyTypeId = coupeBodyType?.Id;
+                    else if (CabrioModels.Contains(modelName))
+                        bodyTypeId = cabrioBodyType?.Id;
+                    else if (RoadsterModels.Contains(modelName))
+                        bodyTypeId = roadsterBodyType?.Id;
+                    else if (StationWagonModels.Contains(modelName))
+                        bodyTypeId = stationWagonBodyType?.Id;
+                    else if (CrossoverModels.Contains(modelName))
+                        bodyTypeId = crossoverBodyType?.Id;
                     else if (PickupModels.Contains(modelName))
                         bodyTypeId = pickupBodyType?.Id;
                     else if (MinivanPanelvanModels.Contains(modelName))
@@ -152,19 +405,157 @@ namespace DataAcessLayer.SeedData
             var suvBodyType = bodyTypes.FirstOrDefault(b => b.Name == "SUV" && b.VehicleTypeId == suvAraziVT?.Id);
             var sedanBodyType = bodyTypes.FirstOrDefault(b => b.Name == "Sedan" && b.VehicleTypeId == otomobilVT?.Id);
             var hatchbackBodyType = bodyTypes.FirstOrDefault(b => b.Name == "Hatchback" && b.VehicleTypeId == otomobilVT?.Id);
+            var coupeBodyType = bodyTypes.FirstOrDefault(b => b.Name == "Coupe" && b.VehicleTypeId == otomobilVT?.Id);
+            var cabrioBodyType = bodyTypes.FirstOrDefault(b => b.Name == "Cabrio" && b.VehicleTypeId == otomobilVT?.Id);
+            var roadsterBodyType = bodyTypes.FirstOrDefault(b => b.Name == "Roadster" && b.VehicleTypeId == otomobilVT?.Id);
+            var stationWagonBodyType = bodyTypes.FirstOrDefault(b => b.Name == "Station Wagon" && b.VehicleTypeId == otomobilVT?.Id);
+            var crossoverBodyType = bodyTypes.FirstOrDefault(b => b.Name == "Crossover" && b.VehicleTypeId == suvAraziVT?.Id);
             var pickupBodyType = bodyTypes.FirstOrDefault(b => b.Name == "Pickup" && b.VehicleTypeId == suvAraziVT?.Id);
             var minivanPanelvanBodyType = bodyTypes.FirstOrDefault(b => b.Name == "Minivan & Panelvan" && b.VehicleTypeId == suvAraziVT?.Id);
 
             var brandModels = new Dictionary<string, string[]>
             {
-                { "BMW", new[] { "1 Serisi" } },
-                { "Mercedes", new[] { "A Serisi" } },
-                { "Audi", new[] { "A1" } },
+                { "BMW", new[] {
+                    "1 Serisi", "2 Serisi Active Tourer",
+                    "2 Serisi Gran Coupe", "7 Serisi", "4 Serisi Gran Coupe",
+                    "8 Serisi Gran Coupe", "i4", "i5", "i7",
+                    "2 Serisi Coupe", "4 Serisi Coupe", "8 Serisi Coupe", "M2", "M4",
+                    "4 Serisi Cabrio", "Z4",
+                    "X2", "iX2", "X4", "X6", "X7", "iX1", "iX3"
+                } },
+                { "Mercedes", new[] {
+                    // Hatchback
+                    "A Serisi", "B Serisi",
+                    // Sedan
+                    "C Serisi", "E Serisi", "S Serisi", "CLA", "CLS", "AMG GT 4 Kapı", "EQE", "EQS",
+                    // Coupe
+                    "CLA Coupe", "C Serisi Coupe", "E Serisi Coupe", "S Serisi Coupe", "AMG GT Coupe",
+                    // Cabrio
+                    "C Serisi Cabrio", "E Serisi Cabrio", "S Serisi Cabrio",
+                    // Roadster
+                    "SL", "SLC", "SLK", "AMG GT Roadster",
+                    // Station Wagon
+                    "C Serisi Estate", "E Serisi Estate",
+                    // SUV
+                    "GLA", "GLB", "GLC", "GLC Coupe", "GLE", "GLE Coupe", "GLS", "G Serisi",
+                    "EQA", "EQB", "EQC",
+                    // Minivan & Ticari
+                    "Vito", "V Serisi", "Sprinter"
+                } },
+                { "Audi", new[] {
+                    // Hatchback
+                    "A1", "A3",
+                    // Sedan
+                    "A4", "A5 Sportback", "A6", "A7 Sportback", "A8",
+                    // Coupe
+                    "A5 Coupe", "TT Coupe", "R8 Coupe",
+                    // Cabrio
+                    "A5 Cabrio", "A3 Cabrio",
+                    // Roadster
+                    "TT Roadster", "R8 Spyder",
+                    // Station Wagon
+                    "A4 Avant", "A6 Avant",
+                    // SUV
+                    "Q2", "Q3", "Q3 Sportback", "Q5", "Q5 Sportback",
+                    "Q7", "Q8", "Q8 e-tron", "e-tron", "e-tron GT"
+                } },
                 { "Honda", new[] { "Jazz", "Accord" } },
-                { "Hyundai", new[] { "i30" } },
-                { "Renault", new[] { "Megane", "Talisman", "Captur", "Kadjar", "Austral" } },
-                { "Kia", new[] { "Rio", "Ceed", "EV6", "Sportage" } },
-                { "Peugeot", new[] { "Boxer" } }
+                { "Hyundai", new[] {
+                    // Hatchback
+                    "i10", "i20", "i30", "IONIQ HB",
+                    // Sedan
+                    "Elantra", "Sonata", "Accent", "Accent Blue", "IONIQ 6",
+                    // Crossover
+                    "i20 Active",
+                    // SUV
+                    "Tucson", "Kona", "Kona Electric", "Santa Fe", "Bayon", "IONIQ 5", "ix35", "Venue",
+                    // Minivan
+                    "Staria", "H-1"
+                } },
+                { "Renault", new[] {
+                    // Hatchback
+                    "Clio", "Megane HB", "Zoe",
+                    // Sedan
+                    "Megane Sedan", "Fluence", "Talisman", "Symbol", "Latitude",
+                    // Station Wagon
+                    "Megane Sport Tourer",
+                    // Crossover
+                    "Arkana",
+                    // SUV
+                    "Captur", "Kadjar", "Austral", "Koleos",
+                    // Minivan & Panelvan
+                    "Kangoo", "Scenic", "Grand Scenic",
+                    "Kangoo Express", "Master", "Trafic"
+                } },
+                { "Kia", new[] {
+                    // Hatchback
+                    "Picanto", "Rio", "Ceed", "ProCeed",
+                    // Sedan
+                    "Cerato", "Stinger", "K5",
+                    // Station Wagon
+                    "Ceed SW",
+                    // Crossover
+                    "XCeed",
+                    // SUV
+                    "Sportage", "Sorento", "Niro", "Stonic",
+                    // Elektrikli SUV
+                    "EV6", "EV9", "Niro EV"
+                } },
+                { "Peugeot", new[] { "Boxer" } },
+                { "Land Rover", new[] {
+                    // SUV
+                    "Range Rover", "Range Rover Sport", "Range Rover Velar",
+                    "Range Rover Evoque", "Discovery", "Discovery Sport",
+                    "Defender", "Freelander 2"
+                } },
+                { "BYD", new[] {
+                    // Hatchback
+                    "Dolphin",
+                    // Sedan
+                    "Seal", "Han",
+                    // SUV
+                    "Atto 3", "Seal U", "Tang"
+                } },
+                { "Chery", new[] {
+                    // Sedan
+                    "Arrizo 5",
+                    // SUV
+                    "Tiggo 4 Pro", "Tiggo 7 Pro", "Tiggo 8 Pro",
+                    "Omoda 5"
+                } },
+                { "Nissan", new[] {
+                    // Hatchback
+                    "Micra", "Note", "Pulsar", "Leaf",
+                    // Crossover
+                    "Juke",
+                    // SUV
+                    "Qashqai", "X-Trail",
+                    // Pickup
+                    "Navara",
+                    // Minivan/Ticari
+                    "NV300", "NV400"
+                } },
+                { "Fiat", new[] {
+                    // Hatchback
+                    "Punto", "Grande Punto", "Punto Evo", "Bravo",
+                    "Tipo HB", "Palio", "Stilo",
+                    "500", "500e", "Fiat 600e",
+                    // Sedan
+                    "Linea", "Albea", "Tipo Sedan", "Marea",
+                    // Cabrio
+                    "500C",
+                    // Station Wagon
+                    "Tipo Station Wagon", "Marea Weekend",
+                    // Crossover
+                    "500X Cross",
+                    // SUV
+                    "500X", "Freemont",
+                    // Pickup
+                    "Fullback",
+                    // Minivan/Ticari
+                    "Doblo", "Fiorino", "Ducato", "Scudo",
+                    "Doblo Combi", "Fiorino Combi", "Egea MultiWagon"
+                } }
             };
 
             var existingBrands = await context.Set<Brand>()
@@ -202,6 +593,16 @@ namespace DataAcessLayer.SeedData
                         bodyTypeId = sedanBodyType?.Id;
                     else if (HatchbackModels.Contains(modelName))
                         bodyTypeId = hatchbackBodyType?.Id;
+                    else if (CoupeModels.Contains(modelName))
+                        bodyTypeId = coupeBodyType?.Id;
+                    else if (CabrioModels.Contains(modelName))
+                        bodyTypeId = cabrioBodyType?.Id;
+                    else if (RoadsterModels.Contains(modelName))
+                        bodyTypeId = roadsterBodyType?.Id;
+                    else if (StationWagonModels.Contains(modelName))
+                        bodyTypeId = stationWagonBodyType?.Id;
+                    else if (CrossoverModels.Contains(modelName))
+                        bodyTypeId = crossoverBodyType?.Id;
                     else if (PickupModels.Contains(modelName))
                         bodyTypeId = pickupBodyType?.Id;
                     else if (MinivanPanelvanModels.Contains(modelName))
@@ -252,10 +653,21 @@ namespace DataAcessLayer.SeedData
 
             Console.WriteLine($"[Seed] Correct BodyTypes -> Sedan: {sedanBT?.Id}, Hatchback: {hatchbackBT?.Id}, SUV: {suvBT?.Id}, Pickup: {pickupBT?.Id}, Minivan & Panelvan: {minivanPanelvanBT?.Id}");
 
+            var coupeBT = bodyTypes.FirstOrDefault(bt => bt.Name == "Coupe" && bt.VehicleTypeId == otomobilVT?.Id);
+            var cabrioBT = bodyTypes.FirstOrDefault(bt => bt.Name == "Cabrio" && bt.VehicleTypeId == otomobilVT?.Id);
+            var roadsterBT = bodyTypes.FirstOrDefault(bt => bt.Name == "Roadster" && bt.VehicleTypeId == otomobilVT?.Id);
+            var stationWagonBT = bodyTypes.FirstOrDefault(bt => bt.Name == "Station Wagon" && bt.VehicleTypeId == otomobilVT?.Id);
+            var crossoverBT = bodyTypes.FirstOrDefault(bt => bt.Name == "Crossover" && bt.VehicleTypeId == suvAraziVT?.Id);
+
             var updates = new Dictionary<string, (BodyType? bodyType, HashSet<string> models)>
             {
                 { "Sedan", (sedanBT, SedanModels) },
                 { "Hatchback", (hatchbackBT, HatchbackModels) },
+                { "Coupe", (coupeBT, CoupeModels) },
+                { "Cabrio", (cabrioBT, CabrioModels) },
+                { "Roadster", (roadsterBT, RoadsterModels) },
+                { "Station Wagon", (stationWagonBT, StationWagonModels) },
+                { "Crossover", (crossoverBT, CrossoverModels) },
                 { "SUV", (suvBT, SuvModels) },
                 { "Pickup", (pickupBT, PickupModels) },
                 { "Minivan & Panelvan", (minivanPanelvanBT, MinivanPanelvanModels) }

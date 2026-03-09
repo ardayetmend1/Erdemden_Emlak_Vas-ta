@@ -15,6 +15,8 @@ public class VehicleDto
     public string? DamageStatus { get; set; }
     public int TramerStatus { get; set; }
     public decimal? TramerAmount { get; set; }
+    public int? FastChargeTime { get; set; }
+    public int? Range { get; set; }
 
     // Lookup bilgileri (Id ve Name)
     public LookupDto VehicleType { get; set; } = null!;
