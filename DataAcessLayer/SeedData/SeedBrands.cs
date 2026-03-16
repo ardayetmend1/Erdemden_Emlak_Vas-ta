@@ -35,7 +35,9 @@ namespace DataAcessLayer.SeedData
             "Tiggo 4 Pro", "Tiggo 7 Pro", "Tiggo 8 Pro",                // Chery SUV
             "Omoda 5",                                                   // Chery SUV
             "Qashqai", "X-Trail",                                        // Nissan SUV
-            "500X", "Freemont"                                           // Fiat SUV
+            "500X", "Freemont",                                          // Fiat SUV
+            "Karoq", "Kodiaq",                                           // Skoda SUV
+            "Mokka", "Mokka-e", "Grandland", "Crossland"                 // Opel SUV
         };
 
         // Sedan modelleri - kasa tipi Sedan olacak
@@ -60,7 +62,9 @@ namespace DataAcessLayer.SeedData
             "Cerato", "Stinger", "K5",                           // Kia Sedan
             "Seal", "Han",                                        // BYD Sedan
             "Arrizo 5",                                           // Chery Sedan
-            "Linea", "Albea", "Tipo Sedan", "Marea"              // Fiat Sedan
+            "Linea", "Albea", "Tipo Sedan", "Marea",             // Fiat Sedan
+            "Octavia", "Superb",                                     // Skoda Sedan
+            "Insignia", "Astra Sedan"                                // Opel Sedan
         };
 
         // Hatchback modelleri - kasa tipi Hatchback olacak
@@ -80,7 +84,9 @@ namespace DataAcessLayer.SeedData
             "Micra", "Note", "Pulsar", "Leaf",                   // Nissan Hatchback
             "Punto", "Grande Punto", "Punto Evo", "Bravo",       // Fiat Hatchback
             "Tipo HB", "Palio", "Stilo",                         // Fiat Hatchback
-            "500", "500e", "Fiat 600e"                            // Fiat Hatchback/Mini
+            "500", "500e", "Fiat 600e",                           // Fiat Hatchback/Mini
+            "Fabia", "Scala", "Rapid",                            // Skoda Hatchback
+            "Corsa", "Corsa-e", "Astra", "Astra HB"              // Opel Hatchback
         };
 
         // Pickup modelleri - kasa tipi Pickup olacak
@@ -127,7 +133,9 @@ namespace DataAcessLayer.SeedData
             "Ceed SW",                                           // Kia
             "C Serisi Estate", "E Serisi Estate",                // Mercedes Station Wagon
             "A4 Avant", "A6 Avant",                               // Audi Station Wagon
-            "Tipo Station Wagon", "Marea Weekend"                 // Fiat Station Wagon
+            "Tipo Station Wagon", "Marea Weekend",                // Fiat Station Wagon
+            "Octavia Combi", "Superb Combi",                      // Skoda Station Wagon
+            "Astra Sports Tourer", "Insignia Sports Tourer"       // Opel Station Wagon
         };
 
         // Crossover modelleri - kasa tipi Crossover olacak
@@ -138,7 +146,8 @@ namespace DataAcessLayer.SeedData
             "XCeed",                                             // Kia
             "i20 Active",                                            // Hyundai
             "Juke",                                                  // Nissan Crossover
-            "500X Cross"                                                 // Fiat Crossover
+            "500X Cross",                                                // Fiat Crossover
+            "Kamiq"                                                      // Skoda Crossover
         };
 
         // Minivan & Panelvan modelleri
@@ -151,7 +160,8 @@ namespace DataAcessLayer.SeedData
             "Vito", "V Serisi", "Sprinter",                          // Mercedes Minivan/Ticari
             "NV300", "NV400",                                            // Nissan Ticari
             "Doblo", "Fiorino", "Ducato", "Scudo",                      // Fiat Ticari/Minivan
-            "Doblo Combi", "Fiorino Combi", "Egea MultiWagon"           // Fiat Minivan/SW
+            "Doblo Combi", "Fiorino Combi", "Egea MultiWagon",          // Fiat Minivan/SW
+            "Combo", "Combo Life", "Vivaro", "Movano"                    // Opel Ticari
         };
 
         public static async Task SeedAsync(Context context)
@@ -337,6 +347,30 @@ namespace DataAcessLayer.SeedData
                     // Minivan/Ticari
                     "Doblo", "Fiorino", "Ducato", "Scudo",
                     "Doblo Combi", "Fiorino Combi", "Egea MultiWagon"
+                } },
+                { "Skoda", new[] {
+                    // Hatchback
+                    "Fabia", "Scala", "Rapid",
+                    // Sedan
+                    "Octavia", "Superb",
+                    // Station Wagon
+                    "Octavia Combi", "Superb Combi",
+                    // Crossover
+                    "Kamiq",
+                    // SUV
+                    "Karoq", "Kodiaq"
+                } },
+                { "Opel", new[] {
+                    // Hatchback
+                    "Corsa", "Corsa-e", "Astra", "Astra HB",
+                    // Sedan
+                    "Insignia", "Astra Sedan",
+                    // Station Wagon
+                    "Astra Sports Tourer", "Insignia Sports Tourer",
+                    // SUV
+                    "Mokka", "Mokka-e", "Grandland", "Crossland",
+                    // Minivan/Ticari
+                    "Combo", "Combo Life", "Vivaro", "Movano"
                 } }
             };
 
@@ -555,6 +589,20 @@ namespace DataAcessLayer.SeedData
                     // Minivan/Ticari
                     "Doblo", "Fiorino", "Ducato", "Scudo",
                     "Doblo Combi", "Fiorino Combi", "Egea MultiWagon"
+                } },
+                { "Skoda", new[] {
+                    "Fabia", "Scala", "Rapid",
+                    "Octavia", "Superb",
+                    "Octavia Combi", "Superb Combi",
+                    "Kamiq",
+                    "Karoq", "Kodiaq"
+                } },
+                { "Opel", new[] {
+                    "Corsa", "Corsa-e", "Astra", "Astra HB",
+                    "Insignia", "Astra Sedan",
+                    "Astra Sports Tourer", "Insignia Sports Tourer",
+                    "Mokka", "Mokka-e", "Grandland", "Crossland",
+                    "Combo", "Combo Life", "Vivaro", "Movano"
                 } }
             };
 

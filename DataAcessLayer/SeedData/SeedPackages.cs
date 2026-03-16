@@ -1204,7 +1204,37 @@ namespace DataAcessLayer.SeedData
                     "City Life", "Life", "Club",
                     "1.4", "1.3 Multijet", "1.6 Multijet",
                     "Mirror", "S-Design"
-                } }
+                } },
+
+                // ==================== SKODA ====================
+                { "Fabia", new[] { "Active", "Ambition", "Style", "Monte Carlo", "Comfort", "1.0 MPI", "1.0 TSI", "1.5 TSI" } },
+                { "Scala", new[] { "Active", "Ambition", "Style", "Monte Carlo", "1.0 TSI", "1.5 TSI" } },
+                { "Rapid", new[] { "Active", "Ambition", "Style", "Monte Carlo", "Elegance", "Joy", "1.0 TSI", "1.4 TSI", "1.6 TDI" } },
+                { "Octavia", new[] { "Active", "Ambition", "Style", "Elegance", "L&K", "RS", "Scout", "Joy", "Premium", "1.0 TSI", "1.4 TSI", "1.5 TSI", "2.0 TSI", "1.6 TDI", "2.0 TDI" } },
+                { "Superb", new[] { "Active", "Ambition", "Style", "Elegance", "L&K", "SportLine", "Scout", "Premium", "1.5 TSI", "2.0 TSI", "1.6 TDI", "2.0 TDI" } },
+                { "Octavia Combi", new[] { "Active", "Ambition", "Style", "Elegance", "L&K", "RS", "Scout", "Premium", "1.0 TSI", "1.5 TSI", "2.0 TSI", "1.6 TDI", "2.0 TDI" } },
+                { "Superb Combi", new[] { "Active", "Ambition", "Style", "Elegance", "L&K", "SportLine", "Scout", "Premium", "1.5 TSI", "2.0 TSI", "1.6 TDI", "2.0 TDI" } },
+                { "Kamiq", new[] { "Active", "Ambition", "Style", "Monte Carlo", "1.0 TSI", "1.5 TSI" } },
+                { "Karoq", new[] { "Active", "Ambition", "Style", "SportLine", "Scout", "1.0 TSI", "1.5 TSI", "2.0 TSI", "1.6 TDI", "2.0 TDI" } },
+                { "Kodiaq", new[] { "Active", "Ambition", "Style", "L&K", "SportLine", "Scout", "RS", "1.5 TSI", "2.0 TSI", "2.0 TDI" } },
+
+                // ==================== OPEL ====================
+                { "Corsa", new[] { "Essentia", "Edition", "Elegance", "GS Line", "Ultimate", "1.2", "1.2 Turbo", "1.5 Dizel", "1.4", "1.4 Turbo" } },
+                { "Corsa-e", new[] { "Edition", "Elegance", "GS Line", "Ultimate" } },
+                { "Astra", new[] { "Essentia", "Edition", "Elegance", "GS Line", "Ultimate", "1.2 Turbo", "1.4 Turbo", "1.5 Dizel", "1.6 Turbo" } },
+                { "Astra HB", new[] { "Essentia", "Edition", "Elegance", "GS Line", "Ultimate", "1.2 Turbo", "1.4 Turbo", "1.5 Dizel" } },
+                { "Astra Sedan", new[] { "Essentia", "Edition", "Elegance", "Design", "Sport", "Cosmo", "1.4", "1.4 Turbo", "1.6", "1.6 CDTI" } },
+                { "Insignia", new[] { "Essentia", "Edition", "Elegance", "GS Line", "Ultimate", "Sport", "Cosmo", "1.5 Turbo", "1.6 CDTI", "2.0 CDTI", "2.0 Turbo" } },
+                { "Astra Sports Tourer", new[] { "Essentia", "Edition", "Elegance", "GS Line", "Ultimate", "1.2 Turbo", "1.5 Dizel" } },
+                { "Insignia Sports Tourer", new[] { "Essentia", "Edition", "Elegance", "GS Line", "Ultimate", "1.5 Turbo", "1.6 CDTI", "2.0 CDTI" } },
+                { "Mokka", new[] { "Essentia", "Edition", "Elegance", "GS Line", "Ultimate", "1.2 Turbo", "1.5 Dizel" } },
+                { "Mokka-e", new[] { "Edition", "Elegance", "GS Line", "Ultimate" } },
+                { "Grandland", new[] { "Essentia", "Edition", "Elegance", "GS Line", "Ultimate", "1.2 Turbo", "1.5 Dizel", "1.6 Turbo", "Hybrid" } },
+                { "Crossland", new[] { "Essentia", "Edition", "Elegance", "GS Line", "Ultimate", "1.2 Turbo", "1.5 Dizel" } },
+                { "Combo", new[] { "Essentia", "Edition", "Elegance", "Cargo", "L1", "L2", "1.5 Dizel" } },
+                { "Combo Life", new[] { "Essentia", "Edition", "Elegance", "1.2 Turbo", "1.5 Dizel" } },
+                { "Vivaro", new[] { "Essentia", "Edition", "Cargo", "Kombi", "L1H1", "L2H1", "1.5 Dizel", "2.0 Dizel" } },
+                { "Movano", new[] { "Essentia", "Edition", "Cargo", "Kamyonet", "L2H2", "L3H2", "L4H3", "2.2 Dizel" } }
             };
 
             foreach (var model in models)
@@ -1551,7 +1581,37 @@ namespace DataAcessLayer.SeedData
                 ("Fiat", "Scudo", new[] { "Cargo", "Panorama", "Kombi", "L1H1", "L2H1", "1.6 Multijet", "2.0 Multijet" }),
                 ("Fiat", "Doblo Combi", new[] { "Active", "Dynamic", "Emotion", "Easy", "Lounge", "Safeline", "Premio", "1.3 Multijet", "1.6 Multijet" }),
                 ("Fiat", "Fiorino Combi", new[] { "Pop", "Easy", "Premio", "Safeline", "Combi", "1.3 Multijet", "1.4" }),
-                ("Fiat", "Egea MultiWagon", new[] { "Easy", "Lounge", "Cross", "Sport", "City Life", "Life", "Club", "1.4", "1.3 Multijet", "1.6 Multijet", "Mirror", "S-Design" })
+                ("Fiat", "Egea MultiWagon", new[] { "Easy", "Lounge", "Cross", "Sport", "City Life", "Life", "Club", "1.4", "1.3 Multijet", "1.6 Multijet", "Mirror", "S-Design" }),
+
+                // ==================== SKODA ====================
+                ("Skoda", "Fabia", new[] { "Active", "Ambition", "Style", "Monte Carlo", "Comfort", "1.0 MPI", "1.0 TSI", "1.5 TSI" }),
+                ("Skoda", "Scala", new[] { "Active", "Ambition", "Style", "Monte Carlo", "1.0 TSI", "1.5 TSI" }),
+                ("Skoda", "Rapid", new[] { "Active", "Ambition", "Style", "Monte Carlo", "Elegance", "Joy", "1.0 TSI", "1.4 TSI", "1.6 TDI" }),
+                ("Skoda", "Octavia", new[] { "Active", "Ambition", "Style", "Elegance", "L&K", "RS", "Scout", "Joy", "Premium", "1.0 TSI", "1.4 TSI", "1.5 TSI", "2.0 TSI", "1.6 TDI", "2.0 TDI" }),
+                ("Skoda", "Superb", new[] { "Active", "Ambition", "Style", "Elegance", "L&K", "SportLine", "Scout", "Premium", "1.5 TSI", "2.0 TSI", "1.6 TDI", "2.0 TDI" }),
+                ("Skoda", "Octavia Combi", new[] { "Active", "Ambition", "Style", "Elegance", "L&K", "RS", "Scout", "Premium", "1.0 TSI", "1.5 TSI", "2.0 TSI", "1.6 TDI", "2.0 TDI" }),
+                ("Skoda", "Superb Combi", new[] { "Active", "Ambition", "Style", "Elegance", "L&K", "SportLine", "Scout", "Premium", "1.5 TSI", "2.0 TSI", "1.6 TDI", "2.0 TDI" }),
+                ("Skoda", "Kamiq", new[] { "Active", "Ambition", "Style", "Monte Carlo", "1.0 TSI", "1.5 TSI" }),
+                ("Skoda", "Karoq", new[] { "Active", "Ambition", "Style", "SportLine", "Scout", "1.0 TSI", "1.5 TSI", "2.0 TSI", "1.6 TDI", "2.0 TDI" }),
+                ("Skoda", "Kodiaq", new[] { "Active", "Ambition", "Style", "L&K", "SportLine", "Scout", "RS", "1.5 TSI", "2.0 TSI", "2.0 TDI" }),
+
+                // ==================== OPEL ====================
+                ("Opel", "Corsa", new[] { "Essentia", "Edition", "Elegance", "GS Line", "Ultimate", "1.2", "1.2 Turbo", "1.5 Dizel", "1.4", "1.4 Turbo" }),
+                ("Opel", "Corsa-e", new[] { "Edition", "Elegance", "GS Line", "Ultimate" }),
+                ("Opel", "Astra", new[] { "Essentia", "Edition", "Elegance", "GS Line", "Ultimate", "1.2 Turbo", "1.4 Turbo", "1.5 Dizel", "1.6 Turbo" }),
+                ("Opel", "Astra HB", new[] { "Essentia", "Edition", "Elegance", "GS Line", "Ultimate", "1.2 Turbo", "1.4 Turbo", "1.5 Dizel" }),
+                ("Opel", "Astra Sedan", new[] { "Essentia", "Edition", "Elegance", "Design", "Sport", "Cosmo", "1.4", "1.4 Turbo", "1.6", "1.6 CDTI" }),
+                ("Opel", "Insignia", new[] { "Essentia", "Edition", "Elegance", "GS Line", "Ultimate", "Sport", "Cosmo", "1.5 Turbo", "1.6 CDTI", "2.0 CDTI", "2.0 Turbo" }),
+                ("Opel", "Astra Sports Tourer", new[] { "Essentia", "Edition", "Elegance", "GS Line", "Ultimate", "1.2 Turbo", "1.5 Dizel" }),
+                ("Opel", "Insignia Sports Tourer", new[] { "Essentia", "Edition", "Elegance", "GS Line", "Ultimate", "1.5 Turbo", "1.6 CDTI", "2.0 CDTI" }),
+                ("Opel", "Mokka", new[] { "Essentia", "Edition", "Elegance", "GS Line", "Ultimate", "1.2 Turbo", "1.5 Dizel" }),
+                ("Opel", "Mokka-e", new[] { "Edition", "Elegance", "GS Line", "Ultimate" }),
+                ("Opel", "Grandland", new[] { "Essentia", "Edition", "Elegance", "GS Line", "Ultimate", "1.2 Turbo", "1.5 Dizel", "1.6 Turbo", "Hybrid" }),
+                ("Opel", "Crossland", new[] { "Essentia", "Edition", "Elegance", "GS Line", "Ultimate", "1.2 Turbo", "1.5 Dizel" }),
+                ("Opel", "Combo", new[] { "Essentia", "Edition", "Elegance", "Cargo", "L1", "L2", "1.5 Dizel" }),
+                ("Opel", "Combo Life", new[] { "Essentia", "Edition", "Elegance", "1.2 Turbo", "1.5 Dizel" }),
+                ("Opel", "Vivaro", new[] { "Essentia", "Edition", "Cargo", "Kombi", "L1H1", "L2H1", "1.5 Dizel", "2.0 Dizel" }),
+                ("Opel", "Movano", new[] { "Essentia", "Edition", "Cargo", "Kamyonet", "L2H2", "L3H2", "L4H3", "2.2 Dizel" })
             };
 
             var added = false;
