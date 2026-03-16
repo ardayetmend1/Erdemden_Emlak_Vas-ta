@@ -34,6 +34,14 @@ public class CreateVehicleDto
     [Range(0, (double)decimal.MaxValue)]
     public decimal? TramerAmount { get; set; }
 
+    /// <summary>Hızlı şarj süresi (dakika) - %80'e ulaşma süresi</summary>
+    [Range(0, 1440, ErrorMessage = "Şarj süresi 0-1440 dakika arasında olmalıdır")]
+    public int? FastChargeTime { get; set; }
+
+    /// <summary>Menzil (km)</summary>
+    [Range(0, 5000, ErrorMessage = "Menzil 0-5000 km arasında olmalıdır")]
+    public int? Range { get; set; }
+
     [Required(ErrorMessage = "Araç tipi gereklidir")]
     public Guid VehicleTypeId { get; set; }
 

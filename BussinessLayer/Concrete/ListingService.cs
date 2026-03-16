@@ -75,6 +75,8 @@ public class ListingService : IListingService
                 DamageStatus = vehicleDto.DamageStatus,
                 TramerStatus = vehicleDto.TramerStatus,
                 TramerAmount = vehicleDto.TramerAmount,
+                FastChargeTime = vehicleDto.FastChargeTime,
+                Range = vehicleDto.Range,
                 VehicleTypeId = vehicleDto.VehicleTypeId,
                 BrandId = vehicleDto.BrandId,
                 ModelId = vehicleDto.ModelId,
@@ -611,6 +613,8 @@ public class ListingService : IListingService
         if (updateDto.DamageStatus != null) vehicle.DamageStatus = updateDto.DamageStatus;
         if (updateDto.TramerStatus.HasValue) vehicle.TramerStatus = updateDto.TramerStatus.Value;
         if (updateDto.TramerAmount.HasValue) vehicle.TramerAmount = updateDto.TramerAmount;
+        if (updateDto.FastChargeTime.HasValue) vehicle.FastChargeTime = updateDto.FastChargeTime;
+        if (updateDto.Range.HasValue) vehicle.Range = updateDto.Range;
         if (updateDto.VehicleTypeId.HasValue) vehicle.VehicleTypeId = updateDto.VehicleTypeId.Value;
         if (updateDto.BrandId.HasValue) vehicle.BrandId = updateDto.BrandId.Value;
         if (updateDto.ModelId.HasValue) vehicle.ModelId = updateDto.ModelId.Value;
@@ -913,6 +917,8 @@ public class ListingService : IListingService
             DamageStatus = vehicle.DamageStatus,
             TramerStatus = vehicle.TramerStatus,
             TramerAmount = vehicle.TramerAmount,
+            FastChargeTime = vehicle.FastChargeTime,
+            Range = vehicle.Range,
             VehicleType = new LookupDto { Id = vehicle.VehicleType.Id, Name = vehicle.VehicleType.Name },
             Brand = new LookupDto { Id = vehicle.Brand.Id, Name = vehicle.Brand.Name },
             Model = new LookupWithParentDto
