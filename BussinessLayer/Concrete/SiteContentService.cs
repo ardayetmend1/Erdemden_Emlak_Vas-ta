@@ -13,10 +13,12 @@ namespace BussinessLayer.Concrete;
 public class SiteContentService : ISiteContentService
 {
     private readonly Context _context;
+    private readonly IImageService _imageService;
 
-    public SiteContentService(Context context)
+    public SiteContentService(Context context, IImageService imageService)
     {
         _context = context;
+        _imageService = imageService;
     }
 
     /// <summary>
@@ -58,13 +60,20 @@ public class SiteContentService : ISiteContentService
         var content = await _context.SiteContents
             .FirstOrDefaultAsync(c => c.Key == key);
 
+        // Image alanı Base64 ise dosyaya kaydet
+        var imageValue = dto.Image;
+        if (!string.IsNullOrEmpty(imageValue) && IsBase64Image(imageValue))
+        {
+            imageValue = await _imageService.SaveImageAsync(imageValue);
+        }
+
         if (content == null)
         {
             // Yeni kayıt oluştur
             content = new SiteContent
             {
                 Key = key,
-                Image = dto.Image,
+                Image = imageValue,
                 Title = dto.Title,
                 Description = dto.Description
             };
@@ -73,8 +82,15 @@ public class SiteContentService : ISiteContentService
         }
         else
         {
+            // Eski görseli sil (dosya sistemindeyse)
+            if (imageValue != null && !string.IsNullOrEmpty(content.Image)
+                && content.Image.StartsWith("/uploads/"))
+            {
+                _imageService.DeleteImage(content.Image);
+            }
+
             // Mevcut kaydı güncelle
-            if (dto.Image != null) content.Image = dto.Image;
+            if (imageValue != null) content.Image = imageValue;
             if (dto.Title != null) content.Title = dto.Title;
             if (dto.Description != null) content.Description = dto.Description;
             content.UpdatedAt = DateTime.UtcNow;
@@ -83,6 +99,14 @@ public class SiteContentService : ISiteContentService
         await _context.SaveChangesAsync();
 
         return ApiResponseDto<SiteContentDto>.SuccessResponse(MapToDto(content), "İçerik kaydedildi.");
+    }
+
+    /// <summary>
+    /// Base64 data URI mi kontrol et
+    /// </summary>
+    private static bool IsBase64Image(string value)
+    {
+        return value.StartsWith("data:image/") || (value.Length > 500 && !value.StartsWith("/") && !value.StartsWith("http"));
     }
 
     /// <summary>

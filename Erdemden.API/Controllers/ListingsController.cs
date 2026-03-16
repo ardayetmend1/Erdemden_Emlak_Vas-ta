@@ -210,7 +210,8 @@ public class ListingsController : ControllerBase
     }
 
     /// <summary>
-    /// İlan görseli serve et (binary)
+    /// İlan görseli serve et (binary) - Eski Base64 görseller için geriye dönük uyumluluk
+    /// Yeni görseller /uploads/images/ üzerinden static files ile sunulur
     /// </summary>
     [HttpGet("{id:guid}/images/{imageId:guid}")]
     [ResponseCache(Duration = 86400, Location = ResponseCacheLocation.Any)]
@@ -227,14 +228,20 @@ public class ListingsController : ControllerBase
             return NotFound();
         }
 
-        // Base64 varsa binary olarak döndür
+        // Dosya sistemi URL'i varsa redirect et (yeni görseller)
+        if (!string.IsNullOrEmpty(image.ImageUrl) && image.ImageUrl.StartsWith("/uploads/"))
+        {
+            return Redirect(image.ImageUrl);
+        }
+
+        // Base64 varsa binary olarak döndür (eski görseller - geriye dönük uyumluluk)
         if (!string.IsNullOrEmpty(image.Base64Data) && !string.IsNullOrEmpty(image.MimeType))
         {
             var bytes = Convert.FromBase64String(image.Base64Data);
             return File(bytes, image.MimeType);
         }
 
-        // Base64 yoksa URL'e redirect
+        // Harici URL'e redirect
         if (!string.IsNullOrEmpty(image.ImageUrl))
         {
             return Redirect(image.ImageUrl);

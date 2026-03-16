@@ -17,10 +17,12 @@ namespace BussinessLayer.Concrete;
 public class ListingService : IListingService
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IImageService _imageService;
 
-    public ListingService(IUnitOfWork unitOfWork)
+    public ListingService(IUnitOfWork unitOfWork, IImageService imageService)
     {
         _unitOfWork = unitOfWork;
+        _imageService = imageService;
     }
 
     /// <summary>
@@ -130,21 +132,24 @@ public class ListingService : IListingService
             await _unitOfWork.Repository<Vehicle>().AddAsync(vehicle);
             await _unitOfWork.SaveChangesAsync();
 
-            // Görselleri ekle
+            // Görselleri ekle (dosya sistemine kaydet)
             if (listingDto.Images != null && listingDto.Images.Any())
             {
-                var images = listingDto.Images.Select((img, index) => new ListingImage
+                for (int index = 0; index < listingDto.Images.Count; index++)
                 {
-                    ListingId = listing.Id,
-                    Base64Data = img.Base64Data,
-                    FileName = img.FileName,
-                    MimeType = GetMimeType(img.FileName),
-                    IsCover = index == 0, // İlk görsel kapak
-                    Order = img.Order ?? index
-                }).ToList();
+                    var img = listingDto.Images[index];
+                    if (string.IsNullOrEmpty(img.Base64Data)) continue;
 
-                foreach (var image in images)
-                {
+                    var imageUrl = await _imageService.SaveImageAsync(img.Base64Data, img.FileName);
+                    var image = new ListingImage
+                    {
+                        ListingId = listing.Id,
+                        ImageUrl = imageUrl,
+                        FileName = img.FileName,
+                        MimeType = GetMimeType(img.FileName),
+                        IsCover = index == 0,
+                        Order = img.Order ?? index
+                    };
                     await _unitOfWork.Repository<ListingImage>().AddAsync(image);
                 }
                 await _unitOfWork.SaveChangesAsync();
@@ -239,21 +244,24 @@ public class ListingService : IListingService
                Repository<RealEstate>().AddAsync(realEstate);
             await _unitOfWork.SaveChangesAsync();
 
-            // Görselleri ekle
+            // Görselleri ekle (dosya sistemine kaydet)
             if (listingDto.Images != null && listingDto.Images.Any())
             {
-                var images = listingDto.Images.Select((img, index) => new ListingImage
+                for (int index = 0; index < listingDto.Images.Count; index++)
                 {
-                    ListingId = listing.Id,
-                    Base64Data = img.Base64Data,
-                    FileName = img.FileName,
-                    MimeType = GetMimeType(img.FileName),
-                    IsCover = index == 0,
-                    Order = img.Order ?? index
-                }).ToList();
+                    var img = listingDto.Images[index];
+                    if (string.IsNullOrEmpty(img.Base64Data)) continue;
 
-                foreach (var image in images)
-                {
+                    var imageUrl = await _imageService.SaveImageAsync(img.Base64Data, img.FileName);
+                    var image = new ListingImage
+                    {
+                        ListingId = listing.Id,
+                        ImageUrl = imageUrl,
+                        FileName = img.FileName,
+                        MimeType = GetMimeType(img.FileName),
+                        IsCover = index == 0,
+                        Order = img.Order ?? index
+                    };
                     await _unitOfWork.Repository<ListingImage>().AddAsync(image);
                 }
                 await _unitOfWork.SaveChangesAsync();
@@ -430,13 +438,13 @@ public class ListingService : IListingService
             .Take(filter.PageSize)
             .ToListAsync();
 
-        // Sadece kapak resmi ID'lerini çek (base64 HARİÇ - performans için)
+        // Sadece kapak resmi bilgilerini çek (base64 HARİÇ - performans için)
         var listingIds = listings.Select(l => l.Id).ToList();
         var allImages = await _unitOfWork.Repository<ListingImage>()
             .Query()
             .AsNoTracking()
             .Where(i => listingIds.Contains(i.ListingId))
-            .Select(i => new { i.Id, i.ListingId, i.Order, i.IsCover })
+            .Select(i => new { i.Id, i.ListingId, i.Order, i.IsCover, i.ImageUrl, i.Base64Data })
             .ToListAsync();
         // Her ilan için: önce isCover olanı, yoksa ilk resmi seç
         var coverImages = allImages
@@ -451,11 +459,16 @@ public class ListingService : IListingService
             var cover = coverImages.FirstOrDefault(c => c.ListingId == l.Id);
             if (cover != null)
             {
-                var coverUrl = $"/api/listings/{l.Id}/images/{cover.Id}";
+                // Dosya sistemi URL'i varsa onu kullan, yoksa eski API endpoint'i
+                var coverUrl = !string.IsNullOrEmpty(cover.ImageUrl)
+                    ? cover.ImageUrl
+                    : !string.IsNullOrEmpty(cover.Base64Data)
+                        ? $"/api/listings/{l.Id}/images/{cover.Id}"
+                        : null;
                 dto.ImageUrl = coverUrl;
                 dto.Images = new List<Core.DTOs.ImageDtos.ImageDto>
                 {
-                    new() { Id = cover.Id, ImageUrl = coverUrl, IsCover = true, Order = cover.Order }
+                    new() { Id = cover.Id, ImageUrl = coverUrl ?? "", IsCover = true, Order = cover.Order }
                 };
             }
             return dto;
@@ -519,9 +532,13 @@ public class ListingService : IListingService
                 .Select(i => i.ExistingImageId!.Value)
                 .ToHashSet();
 
-            // Korunmayacak mevcut resimleri sil
+            // Korunmayacak mevcut resimleri sil (dosyayı da sil)
             foreach (var img in existingImages.Where(i => !keepImageIds.Contains(i.Id)))
+            {
+                if (!string.IsNullOrEmpty(img.ImageUrl))
+                    _imageService.DeleteImage(img.ImageUrl);
                 _unitOfWork.Repository<ListingImage>().Delete(img);
+            }
 
             // Korunan resimlerin order ve isCover değerlerini güncelle
             foreach (var uploadImg in updateDto.Images.Where(i => i.ExistingImageId.HasValue))
@@ -536,15 +553,16 @@ public class ListingService : IListingService
                 }
             }
 
-            // Yeni resimleri ekle (base64 olanlar)
+            // Yeni resimleri ekle (dosya sistemine kaydet)
             foreach (var item in updateDto.Images.Select((img, index) => new { img, index }))
             {
                 if (!item.img.ExistingImageId.HasValue && !string.IsNullOrEmpty(item.img.Base64Data))
                 {
+                    var imageUrl = await _imageService.SaveImageAsync(item.img.Base64Data, item.img.FileName);
                     var newImage = new ListingImage
                     {
                         ListingId = id,
-                        Base64Data = item.img.Base64Data,
+                        ImageUrl = imageUrl,
                         FileName = item.img.FileName ?? $"image_{item.index + 1}.jpg",
                         MimeType = GetMimeType(item.img.FileName ?? "image.jpg"),
                         IsCover = item.index == 0 && !keepImageIds.Any(),
@@ -849,7 +867,7 @@ public class ListingService : IListingService
     {
         // Kapak görseli veya ilk görseli al
         var coverImage = listing.Images?.FirstOrDefault(i => i.IsCover) ?? listing.Images?.FirstOrDefault();
-        var coverImageUrl = coverImage != null ? $"/api/listings/{listing.Id}/images/{coverImage.Id}" : null;
+        var coverImageUrl = coverImage != null ? GetImageUrl(listing.Id, coverImage) : null;
 
         return new ListingDto
         {
@@ -875,7 +893,7 @@ public class ListingService : IListingService
             Images = listing.Images?.OrderBy(i => i.Order).Select(i => new ImageDto
             {
                 Id = i.Id,
-                ImageUrl = $"/api/listings/{listing.Id}/images/{i.Id}",
+                ImageUrl = GetImageUrl(listing.Id, i),
                 IsCover = i.IsCover,
                 Order = i.Order
             }).ToList() ?? new List<ImageDto>(),
@@ -1029,6 +1047,17 @@ public class ListingService : IListingService
             HasGenerator = realEstate.HasGenerator ?? false,
             HasNaturalGas = realEstate.HasNaturalGas ?? false
         };
+    }
+
+    /// <summary>
+    /// Görsel URL'ini belirle: dosya sistemi varsa onu, yoksa eski API endpoint'ini döndür
+    /// </summary>
+    private static string GetImageUrl(Guid listingId, ListingImage image)
+    {
+        if (!string.IsNullOrEmpty(image.ImageUrl))
+            return image.ImageUrl;
+        // Eski Base64 görseller için geriye dönük uyumluluk
+        return $"/api/listings/{listingId}/images/{image.Id}";
     }
 
     /// <summary>
