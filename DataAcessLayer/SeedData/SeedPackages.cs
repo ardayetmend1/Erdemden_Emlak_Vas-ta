@@ -1234,7 +1234,157 @@ namespace DataAcessLayer.SeedData
                 { "Combo", new[] { "Essentia", "Edition", "Elegance", "Cargo", "L1", "L2", "1.5 Dizel" } },
                 { "Combo Life", new[] { "Essentia", "Edition", "Elegance", "1.2 Turbo", "1.5 Dizel" } },
                 { "Vivaro", new[] { "Essentia", "Edition", "Cargo", "Kombi", "L1H1", "L2H1", "1.5 Dizel", "2.0 Dizel" } },
-                { "Movano", new[] { "Essentia", "Edition", "Cargo", "Kamyonet", "L2H2", "L3H2", "L4H3", "2.2 Dizel" } }
+                { "Movano", new[] { "Essentia", "Edition", "Cargo", "Kamyonet", "L2H2", "L3H2", "L4H3", "2.2 Dizel" } },
+
+                // ==================== PEUGEOT ====================
+                // Hatchback
+                { "208", new[] { "Active", "Allure", "Allure Pack", "GT", "GT Pack", "Style", "Like", "Roadtrip", "e-208", "1.2 PureTech", "1.5 BlueHDi" } },
+                { "308", new[] { "Active", "Allure", "Allure Pack", "GT", "GT Pack", "Style", "Roadtrip", "1.2 PureTech", "1.5 BlueHDi", "PHEV" } },
+                // Sedan
+                { "301", new[] { "Active", "Allure", "Access", "1.2 PureTech", "1.5 BlueHDi", "1.6 HDi", "1.6 VTi" } },
+                { "508", new[] { "Active", "Allure", "Allure Pack", "GT", "GT Pack", "First Edition", "1.5 BlueHDi", "1.6 PureTech", "2.0 BlueHDi", "PHEV" } },
+                // Station Wagon
+                { "308 SW", new[] { "Active", "Allure", "Allure Pack", "GT", "GT Pack", "1.2 PureTech", "1.5 BlueHDi", "PHEV" } },
+                { "508 SW", new[] { "Active", "Allure", "Allure Pack", "GT", "GT Pack", "First Edition", "1.5 BlueHDi", "1.6 PureTech", "2.0 BlueHDi", "PHEV" } },
+                // SUV
+                { "2008", new[] { "Active", "Allure", "Allure Pack", "GT", "GT Pack", "Style", "Roadtrip", "e-2008", "1.2 PureTech", "1.5 BlueHDi" } },
+                { "3008", new[] { "Active", "Allure", "Allure Pack", "GT", "GT Pack", "Style", "Roadtrip", "1.2 PureTech", "1.5 BlueHDi", "1.6 PureTech", "PHEV", "PHEV4" } },
+                { "5008", new[] { "Active", "Allure", "Allure Pack", "GT", "GT Pack", "Style", "1.2 PureTech", "1.5 BlueHDi", "1.6 PureTech", "PHEV" } },
+                // Minivan/Ticari
+                { "Boxer", new[] { "Premium", "Pro", "Avantage", "L1H1", "L2H2", "L3H2", "L4H3", "2.2 BlueHDi", "Kamyonet", "Cargo" } },
+                { "Rifter", new[] { "Active", "Allure", "GT Line", "Style", "1.2 PureTech", "1.5 BlueHDi", "Long" } },
+                { "Partner", new[] { "Active", "Allure", "Premium", "Tepee", "1.6 HDi", "1.6 VTi", "Cargo" } },
+                { "Expert", new[] { "Premium", "Pro", "Avantage", "L1", "L2", "L3", "1.5 BlueHDi", "2.0 BlueHDi", "Cargo", "Kombi" } },
+                { "Traveller", new[] { "Active", "Allure", "Business", "VIP", "L2", "L3", "1.5 BlueHDi", "2.0 BlueHDi" } },
+
+                // ==================== SEAT ====================
+                // Hatchback
+                { "Ibiza", new[] { "Reference", "Style", "Xcellence", "FR", "FR Sport", "Cupra", "1.0 TSI", "1.0 EcoTSI", "1.5 TSI", "1.6 TDI" } },
+                { "Leon", new[] { "Reference", "Style", "Xcellence", "FR", "FR Sport", "Cupra", "1.0 TSI", "1.4 TSI", "1.5 TSI", "2.0 TSI", "1.6 TDI", "2.0 TDI", "e-Hybrid" } },
+                { "Leon HB", new[] { "Reference", "Style", "Xcellence", "FR", "FR Sport", "1.0 TSI", "1.5 TSI", "2.0 TSI", "1.6 TDI" } },
+                // Sedan
+                { "Toledo", new[] { "Reference", "Style", "Xcellence", "1.0 TSI", "1.4 TSI", "1.6 TDI", "1.2 TSI" } },
+                // Station Wagon
+                { "Leon ST", new[] { "Reference", "Style", "Xcellence", "FR", "FR Sport", "Cupra", "1.0 TSI", "1.5 TSI", "2.0 TSI", "1.6 TDI", "2.0 TDI" } },
+                // Crossover
+                { "Arona", new[] { "Reference", "Style", "Xcellence", "FR", "FR Sport", "1.0 TSI", "1.0 EcoTSI", "1.5 TSI", "1.6 TDI" } },
+                // SUV
+                { "Ateca", new[] { "Reference", "Style", "Xcellence", "FR", "FR Sport", "Cupra", "1.0 TSI", "1.5 TSI", "2.0 TSI", "1.6 TDI", "2.0 TDI" } },
+                { "Tarraco", new[] { "Reference", "Style", "Xcellence", "FR", "FR Sport", "1.5 TSI", "2.0 TSI", "2.0 TDI", "e-Hybrid" } },
+                // Minivan
+                { "Alhambra", new[] { "Reference", "Style", "Xcellence", "FR", "1.4 TSI", "2.0 TSI", "2.0 TDI" } },
+
+                // ==================== CUPRA ====================
+                { "Born", new[] { "V1", "V2", "V3", "VZ", "58 kWh", "77 kWh", "e-Boost" } },
+                { "Leon Sportstourer", new[] { "VZ", "VZe", "1.4 e-Hybrid", "1.5 TSI", "2.0 TSI" } },
+                { "Formentor", new[] { "V1", "V2", "VZ", "VZe", "VZ5", "1.5 TSI", "2.0 TSI", "1.4 e-Hybrid", "2.5 TSI" } },
+                { "Terramar", new[] { "V1", "V2", "VZ", "VZe", "1.5 TSI", "2.0 TSI", "1.4 e-Hybrid" } },
+
+                // ==================== TOGG ====================
+                { "T10F", new[] { "Standart Menzil", "Uzun Menzil" } },
+                { "T10X", new[] { "Standart Menzil", "Uzun Menzil" } },
+
+                // ==================== CITROEN ====================
+                // Hatchback
+                { "C3", new[] { "Live", "Feel", "Feel Pack", "Shine", "Shine Pack", "C-Series", "You!", "Max", "1.2 PureTech", "1.5 BlueHDi" } },
+                { "C4", new[] { "Live", "Feel", "Feel Pack", "Shine", "Shine Pack", "C-Series", "e-C4", "1.2 PureTech", "1.5 BlueHDi" } },
+                { "C4 X", new[] { "Feel", "Feel Pack", "Shine", "Shine Pack", "e-C4 X", "1.2 PureTech", "1.5 BlueHDi" } },
+                // Sedan
+                { "C-Elysee", new[] { "Live", "Feel", "Shine", "Exclusive", "1.2 PureTech", "1.5 BlueHDi", "1.6 HDi", "1.6 VTi" } },
+                { "C4 Sedan", new[] { "Live", "Feel", "Shine", "Exclusive", "1.6 HDi", "1.6 VTi", "1.6 THP" } },
+                // Station Wagon
+                { "C5 Tourer", new[] { "Attraction", "Confort", "Exclusive", "1.6 HDi", "1.6 THP", "2.0 HDi", "2.0 BlueHDi" } },
+                // SUV
+                { "C3 Aircross", new[] { "Live", "Feel", "Feel Pack", "Shine", "Shine Pack", "C-Series", "1.2 PureTech", "1.5 BlueHDi" } },
+                { "C5 Aircross", new[] { "Live", "Feel", "Feel Pack", "Shine", "Shine Pack", "C-Series", "1.2 PureTech", "1.5 BlueHDi", "1.6 PureTech", "Hybrid", "Plug-in Hybrid" } },
+                // Minivan/Ticari
+                { "Berlingo", new[] { "Live", "Feel", "Shine", "XL", "M", "1.2 PureTech", "1.5 BlueHDi", "Cargo" } },
+                { "SpaceTourer", new[] { "Live", "Feel", "Shine", "Business", "M", "XL", "1.5 BlueHDi", "2.0 BlueHDi" } },
+                { "Jumpy", new[] { "Pro", "Business", "Club", "M", "XL", "XS", "1.5 BlueHDi", "2.0 BlueHDi", "Cargo", "Kombi" } },
+                { "Jumper", new[] { "Pro", "Business", "Club", "L1H1", "L2H2", "L3H2", "L4H3", "2.2 BlueHDi", "Cargo", "Kamyonet" } },
+
+                // ==================== JAGUAR ====================
+                { "XE", new[] { "S", "SE", "HSE", "R-Dynamic S", "R-Dynamic SE", "R-Dynamic HSE", "R-Sport", "Portfolio", "P250", "P300", "D200" } },
+                { "XF", new[] { "S", "SE", "HSE", "R-Dynamic S", "R-Dynamic SE", "R-Dynamic HSE", "R-Sport", "Portfolio", "P250", "P300", "D200" } },
+                { "F-Type Coupe", new[] { "S", "R", "R-Dynamic", "SVR", "P300", "P380", "P450", "P575", "First Edition", "75" } },
+                { "F-Type Cabrio", new[] { "S", "R", "R-Dynamic", "SVR", "P300", "P380", "P450", "P575", "First Edition", "75" } },
+                { "F-Type Roadster", new[] { "S", "R", "R-Dynamic", "SVR", "P300", "P380", "P450", "P575", "First Edition" } },
+                { "F-Pace", new[] { "S", "SE", "HSE", "R-Dynamic S", "R-Dynamic SE", "R-Dynamic HSE", "SVR", "P250", "P400", "P400e", "D200" } },
+                { "E-Pace", new[] { "S", "SE", "HSE", "R-Dynamic S", "R-Dynamic SE", "R-Dynamic HSE", "P200", "P250", "P300", "D165", "D200" } },
+                { "I-Pace", new[] { "S", "SE", "HSE", "R-Dynamic S", "R-Dynamic SE", "R-Dynamic HSE", "EV320", "EV400", "Black", "First Edition" } },
+
+                // ==================== LEXUS ====================
+                { "CT", new[] { "Executive", "Luxury", "F Sport", "200h" } },
+                { "IS", new[] { "Executive", "Luxury", "F Sport", "300h", "350", "500 F" } },
+                { "ES", new[] { "Executive", "Luxury", "F Sport", "250", "300h", "350" } },
+                { "GS", new[] { "Executive", "Luxury", "F Sport", "300h", "350", "450h" } },
+                { "LS", new[] { "Executive", "Luxury", "F Sport", "500h", "350" } },
+                { "RC", new[] { "Luxury", "F Sport", "300h", "350", "F" } },
+                { "LC", new[] { "Luxury", "Sport", "Sport+", "500", "500h" } },
+                { "LC Cabrio", new[] { "Luxury", "Sport", "Sport+", "500" } },
+                { "NX", new[] { "Executive", "Luxury", "F Sport", "250", "300h", "350h", "450h+" } },
+                { "RX", new[] { "Executive", "Luxury", "F Sport", "350", "350h", "450h", "450h+", "500h" } },
+                { "UX", new[] { "Executive", "Luxury", "F Sport", "250h", "300e" } },
+                { "LX", new[] { "Executive", "Luxury", "F Sport", "600" } },
+
+                // ==================== MASERATI ====================
+                { "Ghibli", new[] { "GT", "Modena", "Trofeo", "S", "S Q4", "Diesel", "GranSport", "GranLusso", "Ribelle", "F Tributo" } },
+                { "Quattroporte", new[] { "GT", "Modena", "Trofeo", "S", "S Q4", "GranSport", "GranLusso", "Diesel" } },
+                { "MC20", new[] { "Cielo", "GT2", "Icona", "Leggera" } },
+                { "GranTurismo", new[] { "Modena", "Trofeo", "Folgore", "Sport", "S", "MC" } },
+                { "GranCabrio", new[] { "Modena", "Trofeo", "Folgore", "Sport", "MC" } },
+                { "MC20 Cielo", new[] { "Standart", "PrimaSerie", "Icona" } },
+                { "Levante", new[] { "GT", "Modena", "Trofeo", "S", "GranSport", "GranLusso", "Diesel", "Hybrid" } },
+                { "Grecale", new[] { "GT", "Modena", "Trofeo", "Folgore", "PrimaSerie" } },
+
+                // ==================== PORSCHE ====================
+                { "Panamera", new[] { "4", "4S", "GTS", "Turbo", "Turbo S", "4 E-Hybrid", "4S E-Hybrid", "Turbo S E-Hybrid", "Executive", "Sport Turismo" } },
+                { "Taycan", new[] { "4S", "GTS", "Turbo", "Turbo S", "Cross Turismo", "Sport Turismo", "Base", "Performance Battery", "Performance Battery Plus" } },
+                { "911", new[] { "Carrera", "Carrera S", "Carrera 4", "Carrera 4S", "Carrera T", "GTS", "GT3", "GT3 RS", "GT3 Touring", "Turbo", "Turbo S", "Sport Classic", "Dakar" } },
+                { "718 Cayman", new[] { "Base", "S", "T", "GTS 4.0", "GT4", "GT4 RS" } },
+                { "911 Cabrio", new[] { "Carrera", "Carrera S", "Carrera 4", "Carrera 4S", "GTS", "Turbo", "Turbo S", "Speedster" } },
+                { "718 Boxster", new[] { "Base", "S", "T", "GTS 4.0", "Spyder", "25 Years" } },
+                { "911 Targa", new[] { "4", "4S", "4 GTS", "Heritage Design Edition" } },
+                { "Cayenne", new[] { "Base", "S", "GTS", "Turbo", "Turbo GT", "E-Hybrid", "S E-Hybrid", "Turbo S E-Hybrid", "Coupe", "Coupe GTS", "Coupe Turbo GT" } },
+                { "Macan", new[] { "Base", "S", "GTS", "Turbo", "T", "Electric", "4 Electric", "Turbo Electric" } },
+
+                // ==================== MINI ====================
+                { "Cooper", new[] { "Classic", "Salt", "Pepper", "Chili", "Yours", "John Cooper Works", "One", "1.5", "2.0", "Electric" } },
+                { "Cooper S", new[] { "Classic", "Salt", "Pepper", "Chili", "Yours", "John Cooper Works", "2.0" } },
+                { "Cooper SE", new[] { "Classic", "Yours", "Electric Collection" } },
+                { "Cooper Cabrio", new[] { "Classic", "Salt", "Pepper", "Chili", "Yours", "John Cooper Works", "Sidewalk" } },
+                { "Cooper S Cabrio", new[] { "Classic", "Salt", "Pepper", "Chili", "Yours", "John Cooper Works", "Sidewalk" } },
+                { "Clubman", new[] { "Classic", "Salt", "Pepper", "Chili", "Yours", "John Cooper Works", "One", "Cooper", "Cooper S", "Cooper D" } },
+                { "Countryman", new[] { "Classic", "Salt", "Pepper", "Chili", "Yours", "John Cooper Works", "One", "Cooper", "Cooper S", "Cooper D", "Cooper SD" } },
+                { "Countryman SE", new[] { "Classic", "Yours", "John Cooper Works", "ALL4" } },
+
+                // ==================== SUZUKI ====================
+                { "Swift", new[] { "GL", "GLX", "GLS", "Sport", "Hybrid", "1.2", "1.0 Boosterjet", "1.4 Boosterjet" } },
+                { "Baleno", new[] { "GL", "GLX", "1.0 Boosterjet", "1.2 DualJet", "Hybrid" } },
+                { "Celerio", new[] { "GL", "GLX", "1.0" } },
+                { "Ignis", new[] { "GL", "GLX", "1.2 DualJet", "Hybrid", "AllGrip" } },
+                { "Vitara", new[] { "GL", "GLX", "GL+", "GLX+", "1.4 Boosterjet", "1.5", "Hybrid", "AllGrip" } },
+                { "S-Cross", new[] { "GL", "GLX", "GL+", "GLX+", "1.4 Boosterjet", "1.5", "Hybrid", "AllGrip" } },
+                { "Jimny", new[] { "GL", "GLX", "1.5", "AllGrip", "Sierra" } },
+
+                // ==================== DS ====================
+                { "DS 3", new[] { "Chic", "So Chic", "Performance", "Sport Chic", "Connected Chic", "Cafe Racer", "1.2 PureTech", "1.6 THP", "1.6 BlueHDi" } },
+                { "DS 4", new[] { "Chic", "So Chic", "Performance Line", "Rivoli", "Cross", "1.2 PureTech", "1.5 BlueHDi", "1.6 PureTech", "PHEV" } },
+                { "DS 9", new[] { "Performance Line", "Rivoli", "Opera", "1.6 PureTech", "E-Tense", "PHEV" } },
+                { "DS 3 Crossback", new[] { "Chic", "So Chic", "Performance Line", "Grand Chic", "Rivoli", "E-Tense", "1.2 PureTech", "1.5 BlueHDi" } },
+                { "DS 7", new[] { "Performance Line", "Rivoli", "Opera", "La Premiere", "1.5 BlueHDi", "1.6 PureTech", "E-Tense", "E-Tense 4x4" } },
+                { "DS 7 Crossback", new[] { "Chic", "So Chic", "Performance Line", "Grand Chic", "Rivoli", "Opera", "La Premiere", "1.5 BlueHDi", "1.6 PureTech", "2.0 BlueHDi", "E-Tense" } },
+
+                // ==================== CHEVROLET ====================
+                { "Aveo", new[] { "LS", "LT", "LTZ", "1.2", "1.4", "1.3D" } },
+                { "Cruze HB", new[] { "LS", "LT", "LTZ", "Sport", "1.4 Turbo", "1.6", "1.6D", "2.0D" } },
+                { "Spark", new[] { "LS", "LT", "LTZ", "1.0", "1.2", "Activ" } },
+                { "Cruze", new[] { "LS", "LT", "LTZ", "Sport", "1.4 Turbo", "1.6", "1.6D", "2.0D" } },
+                { "Malibu", new[] { "LS", "LT", "LTZ", "1.5 Turbo", "2.0 Turbo", "Hybrid" } },
+                { "Lacetti", new[] { "SE", "SX", "CDX", "1.4", "1.6", "1.8", "2.0D" } },
+                { "Captiva", new[] { "LS", "LT", "LTZ", "High", "2.0D", "2.4", "AWD" } },
+                { "Trax", new[] { "LS", "LT", "LTZ", "1.4 Turbo", "1.6", "1.7D" } },
+                { "Trailblazer", new[] { "LS", "LT", "LTZ", "Premier", "1.2 Turbo", "1.3 Turbo", "Activ" } }
             };
 
             foreach (var model in models)
@@ -1611,7 +1761,141 @@ namespace DataAcessLayer.SeedData
                 ("Opel", "Combo", new[] { "Essentia", "Edition", "Elegance", "Cargo", "L1", "L2", "1.5 Dizel" }),
                 ("Opel", "Combo Life", new[] { "Essentia", "Edition", "Elegance", "1.2 Turbo", "1.5 Dizel" }),
                 ("Opel", "Vivaro", new[] { "Essentia", "Edition", "Cargo", "Kombi", "L1H1", "L2H1", "1.5 Dizel", "2.0 Dizel" }),
-                ("Opel", "Movano", new[] { "Essentia", "Edition", "Cargo", "Kamyonet", "L2H2", "L3H2", "L4H3", "2.2 Dizel" })
+                ("Opel", "Movano", new[] { "Essentia", "Edition", "Cargo", "Kamyonet", "L2H2", "L3H2", "L4H3", "2.2 Dizel" }),
+
+                // ==================== PEUGEOT ====================
+                ("Peugeot", "208", new[] { "Active", "Allure", "Allure Pack", "GT", "GT Pack", "Style", "Like", "Roadtrip", "e-208", "1.2 PureTech", "1.5 BlueHDi" }),
+                ("Peugeot", "308", new[] { "Active", "Allure", "Allure Pack", "GT", "GT Pack", "Style", "Roadtrip", "1.2 PureTech", "1.5 BlueHDi", "PHEV" }),
+                ("Peugeot", "301", new[] { "Active", "Allure", "Access", "1.2 PureTech", "1.5 BlueHDi", "1.6 HDi", "1.6 VTi" }),
+                ("Peugeot", "508", new[] { "Active", "Allure", "Allure Pack", "GT", "GT Pack", "First Edition", "1.5 BlueHDi", "1.6 PureTech", "2.0 BlueHDi", "PHEV" }),
+                ("Peugeot", "308 SW", new[] { "Active", "Allure", "Allure Pack", "GT", "GT Pack", "1.2 PureTech", "1.5 BlueHDi", "PHEV" }),
+                ("Peugeot", "508 SW", new[] { "Active", "Allure", "Allure Pack", "GT", "GT Pack", "First Edition", "1.5 BlueHDi", "1.6 PureTech", "2.0 BlueHDi", "PHEV" }),
+                ("Peugeot", "2008", new[] { "Active", "Allure", "Allure Pack", "GT", "GT Pack", "Style", "Roadtrip", "e-2008", "1.2 PureTech", "1.5 BlueHDi" }),
+                ("Peugeot", "3008", new[] { "Active", "Allure", "Allure Pack", "GT", "GT Pack", "Style", "Roadtrip", "1.2 PureTech", "1.5 BlueHDi", "1.6 PureTech", "PHEV", "PHEV4" }),
+                ("Peugeot", "5008", new[] { "Active", "Allure", "Allure Pack", "GT", "GT Pack", "Style", "1.2 PureTech", "1.5 BlueHDi", "1.6 PureTech", "PHEV" }),
+                ("Peugeot", "Boxer", new[] { "Premium", "Pro", "Avantage", "L1H1", "L2H2", "L3H2", "L4H3", "2.2 BlueHDi", "Kamyonet", "Cargo" }),
+                ("Peugeot", "Rifter", new[] { "Active", "Allure", "GT Line", "Style", "1.2 PureTech", "1.5 BlueHDi", "Long" }),
+                ("Peugeot", "Partner", new[] { "Active", "Allure", "Premium", "Tepee", "1.6 HDi", "1.6 VTi", "Cargo" }),
+                ("Peugeot", "Expert", new[] { "Premium", "Pro", "Avantage", "L1", "L2", "L3", "1.5 BlueHDi", "2.0 BlueHDi", "Cargo", "Kombi" }),
+                ("Peugeot", "Traveller", new[] { "Active", "Allure", "Business", "VIP", "L2", "L3", "1.5 BlueHDi", "2.0 BlueHDi" }),
+
+                // ==================== SEAT ====================
+                ("Seat", "Ibiza", new[] { "Reference", "Style", "Xcellence", "FR", "FR Sport", "Cupra", "1.0 TSI", "1.0 EcoTSI", "1.5 TSI", "1.6 TDI" }),
+                ("Seat", "Leon", new[] { "Reference", "Style", "Xcellence", "FR", "FR Sport", "Cupra", "1.0 TSI", "1.4 TSI", "1.5 TSI", "2.0 TSI", "1.6 TDI", "2.0 TDI", "e-Hybrid" }),
+                ("Seat", "Leon HB", new[] { "Reference", "Style", "Xcellence", "FR", "FR Sport", "1.0 TSI", "1.5 TSI", "2.0 TSI", "1.6 TDI" }),
+                ("Seat", "Toledo", new[] { "Reference", "Style", "Xcellence", "1.0 TSI", "1.4 TSI", "1.6 TDI", "1.2 TSI" }),
+                ("Seat", "Leon ST", new[] { "Reference", "Style", "Xcellence", "FR", "FR Sport", "Cupra", "1.0 TSI", "1.5 TSI", "2.0 TSI", "1.6 TDI", "2.0 TDI" }),
+                ("Seat", "Arona", new[] { "Reference", "Style", "Xcellence", "FR", "FR Sport", "1.0 TSI", "1.0 EcoTSI", "1.5 TSI", "1.6 TDI" }),
+                ("Seat", "Ateca", new[] { "Reference", "Style", "Xcellence", "FR", "FR Sport", "Cupra", "1.0 TSI", "1.5 TSI", "2.0 TSI", "1.6 TDI", "2.0 TDI" }),
+                ("Seat", "Tarraco", new[] { "Reference", "Style", "Xcellence", "FR", "FR Sport", "1.5 TSI", "2.0 TSI", "2.0 TDI", "e-Hybrid" }),
+                ("Seat", "Alhambra", new[] { "Reference", "Style", "Xcellence", "FR", "1.4 TSI", "2.0 TSI", "2.0 TDI" }),
+
+                // ==================== CUPRA ====================
+                ("Cupra", "Born", new[] { "V1", "V2", "V3", "VZ", "58 kWh", "77 kWh", "e-Boost" }),
+                ("Cupra", "Leon Sportstourer", new[] { "VZ", "VZe", "1.4 e-Hybrid", "1.5 TSI", "2.0 TSI" }),
+                ("Cupra", "Formentor", new[] { "V1", "V2", "VZ", "VZe", "VZ5", "1.5 TSI", "2.0 TSI", "1.4 e-Hybrid", "2.5 TSI" }),
+                ("Cupra", "Terramar", new[] { "V1", "V2", "VZ", "VZe", "1.5 TSI", "2.0 TSI", "1.4 e-Hybrid" }),
+
+                // ==================== TOGG ====================
+                ("Togg", "T10F", new[] { "Standart Menzil", "Uzun Menzil" }),
+                ("Togg", "T10X", new[] { "Standart Menzil", "Uzun Menzil" }),
+
+                // ==================== CITROEN ====================
+                ("Citroen", "C3", new[] { "Live", "Feel", "Feel Pack", "Shine", "Shine Pack", "C-Series", "You!", "Max", "1.2 PureTech", "1.5 BlueHDi" }),
+                ("Citroen", "C4", new[] { "Live", "Feel", "Feel Pack", "Shine", "Shine Pack", "C-Series", "e-C4", "1.2 PureTech", "1.5 BlueHDi" }),
+                ("Citroen", "C4 X", new[] { "Feel", "Feel Pack", "Shine", "Shine Pack", "e-C4 X", "1.2 PureTech", "1.5 BlueHDi" }),
+                ("Citroen", "C-Elysee", new[] { "Live", "Feel", "Shine", "Exclusive", "1.2 PureTech", "1.5 BlueHDi", "1.6 HDi", "1.6 VTi" }),
+                ("Citroen", "C4 Sedan", new[] { "Live", "Feel", "Shine", "Exclusive", "1.6 HDi", "1.6 VTi", "1.6 THP" }),
+                ("Citroen", "C5 Tourer", new[] { "Attraction", "Confort", "Exclusive", "1.6 HDi", "1.6 THP", "2.0 HDi", "2.0 BlueHDi" }),
+                ("Citroen", "C3 Aircross", new[] { "Live", "Feel", "Feel Pack", "Shine", "Shine Pack", "C-Series", "1.2 PureTech", "1.5 BlueHDi" }),
+                ("Citroen", "C5 Aircross", new[] { "Live", "Feel", "Feel Pack", "Shine", "Shine Pack", "C-Series", "1.2 PureTech", "1.5 BlueHDi", "1.6 PureTech", "Hybrid", "Plug-in Hybrid" }),
+                ("Citroen", "Berlingo", new[] { "Live", "Feel", "Shine", "XL", "M", "1.2 PureTech", "1.5 BlueHDi", "Cargo" }),
+                ("Citroen", "SpaceTourer", new[] { "Live", "Feel", "Shine", "Business", "M", "XL", "1.5 BlueHDi", "2.0 BlueHDi" }),
+                ("Citroen", "Jumpy", new[] { "Pro", "Business", "Club", "M", "XL", "XS", "1.5 BlueHDi", "2.0 BlueHDi", "Cargo", "Kombi" }),
+                ("Citroen", "Jumper", new[] { "Pro", "Business", "Club", "L1H1", "L2H2", "L3H2", "L4H3", "2.2 BlueHDi", "Cargo", "Kamyonet" }),
+
+                // ==================== JAGUAR ====================
+                ("Jaguar", "XE", new[] { "S", "SE", "HSE", "R-Dynamic S", "R-Dynamic SE", "R-Dynamic HSE", "R-Sport", "Portfolio", "P250", "P300", "D200" }),
+                ("Jaguar", "XF", new[] { "S", "SE", "HSE", "R-Dynamic S", "R-Dynamic SE", "R-Dynamic HSE", "R-Sport", "Portfolio", "P250", "P300", "D200" }),
+                ("Jaguar", "F-Type Coupe", new[] { "S", "R", "R-Dynamic", "SVR", "P300", "P380", "P450", "P575", "First Edition", "75" }),
+                ("Jaguar", "F-Type Cabrio", new[] { "S", "R", "R-Dynamic", "SVR", "P300", "P380", "P450", "P575", "First Edition", "75" }),
+                ("Jaguar", "F-Type Roadster", new[] { "S", "R", "R-Dynamic", "SVR", "P300", "P380", "P450", "P575", "First Edition" }),
+                ("Jaguar", "F-Pace", new[] { "S", "SE", "HSE", "R-Dynamic S", "R-Dynamic SE", "R-Dynamic HSE", "SVR", "P250", "P400", "P400e", "D200" }),
+                ("Jaguar", "E-Pace", new[] { "S", "SE", "HSE", "R-Dynamic S", "R-Dynamic SE", "R-Dynamic HSE", "P200", "P250", "P300", "D165", "D200" }),
+                ("Jaguar", "I-Pace", new[] { "S", "SE", "HSE", "R-Dynamic S", "R-Dynamic SE", "R-Dynamic HSE", "EV320", "EV400", "Black", "First Edition" }),
+
+                // ==================== LEXUS ====================
+                ("Lexus", "CT", new[] { "Executive", "Luxury", "F Sport", "200h" }),
+                ("Lexus", "IS", new[] { "Executive", "Luxury", "F Sport", "300h", "350", "500 F" }),
+                ("Lexus", "ES", new[] { "Executive", "Luxury", "F Sport", "250", "300h", "350" }),
+                ("Lexus", "GS", new[] { "Executive", "Luxury", "F Sport", "300h", "350", "450h" }),
+                ("Lexus", "LS", new[] { "Executive", "Luxury", "F Sport", "500h", "350" }),
+                ("Lexus", "RC", new[] { "Luxury", "F Sport", "300h", "350", "F" }),
+                ("Lexus", "LC", new[] { "Luxury", "Sport", "Sport+", "500", "500h" }),
+                ("Lexus", "LC Cabrio", new[] { "Luxury", "Sport", "Sport+", "500" }),
+                ("Lexus", "NX", new[] { "Executive", "Luxury", "F Sport", "250", "300h", "350h", "450h+" }),
+                ("Lexus", "RX", new[] { "Executive", "Luxury", "F Sport", "350", "350h", "450h", "450h+", "500h" }),
+                ("Lexus", "UX", new[] { "Executive", "Luxury", "F Sport", "250h", "300e" }),
+                ("Lexus", "LX", new[] { "Executive", "Luxury", "F Sport", "600" }),
+
+                // ==================== MASERATI ====================
+                ("Maserati", "Ghibli", new[] { "GT", "Modena", "Trofeo", "S", "S Q4", "Diesel", "GranSport", "GranLusso", "Ribelle", "F Tributo" }),
+                ("Maserati", "Quattroporte", new[] { "GT", "Modena", "Trofeo", "S", "S Q4", "GranSport", "GranLusso", "Diesel" }),
+                ("Maserati", "MC20", new[] { "Cielo", "GT2", "Icona", "Leggera" }),
+                ("Maserati", "GranTurismo", new[] { "Modena", "Trofeo", "Folgore", "Sport", "S", "MC" }),
+                ("Maserati", "GranCabrio", new[] { "Modena", "Trofeo", "Folgore", "Sport", "MC" }),
+                ("Maserati", "MC20 Cielo", new[] { "Standart", "PrimaSerie", "Icona" }),
+                ("Maserati", "Levante", new[] { "GT", "Modena", "Trofeo", "S", "GranSport", "GranLusso", "Diesel", "Hybrid" }),
+                ("Maserati", "Grecale", new[] { "GT", "Modena", "Trofeo", "Folgore", "PrimaSerie" }),
+
+                // ==================== PORSCHE ====================
+                ("Porsche", "Panamera", new[] { "4", "4S", "GTS", "Turbo", "Turbo S", "4 E-Hybrid", "4S E-Hybrid", "Turbo S E-Hybrid", "Executive", "Sport Turismo" }),
+                ("Porsche", "Taycan", new[] { "4S", "GTS", "Turbo", "Turbo S", "Cross Turismo", "Sport Turismo", "Base", "Performance Battery", "Performance Battery Plus" }),
+                ("Porsche", "911", new[] { "Carrera", "Carrera S", "Carrera 4", "Carrera 4S", "Carrera T", "GTS", "GT3", "GT3 RS", "GT3 Touring", "Turbo", "Turbo S", "Sport Classic", "Dakar" }),
+                ("Porsche", "718 Cayman", new[] { "Base", "S", "T", "GTS 4.0", "GT4", "GT4 RS" }),
+                ("Porsche", "911 Cabrio", new[] { "Carrera", "Carrera S", "Carrera 4", "Carrera 4S", "GTS", "Turbo", "Turbo S", "Speedster" }),
+                ("Porsche", "718 Boxster", new[] { "Base", "S", "T", "GTS 4.0", "Spyder", "25 Years" }),
+                ("Porsche", "911 Targa", new[] { "4", "4S", "4 GTS", "Heritage Design Edition" }),
+                ("Porsche", "Cayenne", new[] { "Base", "S", "GTS", "Turbo", "Turbo GT", "E-Hybrid", "S E-Hybrid", "Turbo S E-Hybrid", "Coupe", "Coupe GTS", "Coupe Turbo GT" }),
+                ("Porsche", "Macan", new[] { "Base", "S", "GTS", "Turbo", "T", "Electric", "4 Electric", "Turbo Electric" }),
+
+                // ==================== MINI ====================
+                ("Mini", "Cooper", new[] { "Classic", "Salt", "Pepper", "Chili", "Yours", "John Cooper Works", "One", "1.5", "2.0", "Electric" }),
+                ("Mini", "Cooper S", new[] { "Classic", "Salt", "Pepper", "Chili", "Yours", "John Cooper Works", "2.0" }),
+                ("Mini", "Cooper SE", new[] { "Classic", "Yours", "Electric Collection" }),
+                ("Mini", "Cooper Cabrio", new[] { "Classic", "Salt", "Pepper", "Chili", "Yours", "John Cooper Works", "Sidewalk" }),
+                ("Mini", "Cooper S Cabrio", new[] { "Classic", "Salt", "Pepper", "Chili", "Yours", "John Cooper Works", "Sidewalk" }),
+                ("Mini", "Clubman", new[] { "Classic", "Salt", "Pepper", "Chili", "Yours", "John Cooper Works", "One", "Cooper", "Cooper S", "Cooper D" }),
+                ("Mini", "Countryman", new[] { "Classic", "Salt", "Pepper", "Chili", "Yours", "John Cooper Works", "One", "Cooper", "Cooper S", "Cooper D", "Cooper SD" }),
+                ("Mini", "Countryman SE", new[] { "Classic", "Yours", "John Cooper Works", "ALL4" }),
+
+                // ==================== SUZUKI ====================
+                ("Suzuki", "Swift", new[] { "GL", "GLX", "GLS", "Sport", "Hybrid", "1.2", "1.0 Boosterjet", "1.4 Boosterjet" }),
+                ("Suzuki", "Baleno", new[] { "GL", "GLX", "1.0 Boosterjet", "1.2 DualJet", "Hybrid" }),
+                ("Suzuki", "Celerio", new[] { "GL", "GLX", "1.0" }),
+                ("Suzuki", "Ignis", new[] { "GL", "GLX", "1.2 DualJet", "Hybrid", "AllGrip" }),
+                ("Suzuki", "Vitara", new[] { "GL", "GLX", "GL+", "GLX+", "1.4 Boosterjet", "1.5", "Hybrid", "AllGrip" }),
+                ("Suzuki", "S-Cross", new[] { "GL", "GLX", "GL+", "GLX+", "1.4 Boosterjet", "1.5", "Hybrid", "AllGrip" }),
+                ("Suzuki", "Jimny", new[] { "GL", "GLX", "1.5", "AllGrip", "Sierra" }),
+
+                // ==================== DS ====================
+                ("DS", "DS 3", new[] { "Chic", "So Chic", "Performance", "Sport Chic", "Connected Chic", "Cafe Racer", "1.2 PureTech", "1.6 THP", "1.6 BlueHDi" }),
+                ("DS", "DS 4", new[] { "Chic", "So Chic", "Performance Line", "Rivoli", "Cross", "1.2 PureTech", "1.5 BlueHDi", "1.6 PureTech", "PHEV" }),
+                ("DS", "DS 9", new[] { "Performance Line", "Rivoli", "Opera", "1.6 PureTech", "E-Tense", "PHEV" }),
+                ("DS", "DS 3 Crossback", new[] { "Chic", "So Chic", "Performance Line", "Grand Chic", "Rivoli", "E-Tense", "1.2 PureTech", "1.5 BlueHDi" }),
+                ("DS", "DS 7", new[] { "Performance Line", "Rivoli", "Opera", "La Premiere", "1.5 BlueHDi", "1.6 PureTech", "E-Tense", "E-Tense 4x4" }),
+                ("DS", "DS 7 Crossback", new[] { "Chic", "So Chic", "Performance Line", "Grand Chic", "Rivoli", "Opera", "La Premiere", "1.5 BlueHDi", "1.6 PureTech", "2.0 BlueHDi", "E-Tense" }),
+
+                // ==================== CHEVROLET ====================
+                ("Chevrolet", "Aveo", new[] { "LS", "LT", "LTZ", "1.2", "1.4", "1.3D" }),
+                ("Chevrolet", "Cruze HB", new[] { "LS", "LT", "LTZ", "Sport", "1.4 Turbo", "1.6", "1.6D", "2.0D" }),
+                ("Chevrolet", "Spark", new[] { "LS", "LT", "LTZ", "1.0", "1.2", "Activ" }),
+                ("Chevrolet", "Cruze", new[] { "LS", "LT", "LTZ", "Sport", "1.4 Turbo", "1.6", "1.6D", "2.0D" }),
+                ("Chevrolet", "Malibu", new[] { "LS", "LT", "LTZ", "1.5 Turbo", "2.0 Turbo", "Hybrid" }),
+                ("Chevrolet", "Lacetti", new[] { "SE", "SX", "CDX", "1.4", "1.6", "1.8", "2.0D" }),
+                ("Chevrolet", "Captiva", new[] { "LS", "LT", "LTZ", "High", "2.0D", "2.4", "AWD" }),
+                ("Chevrolet", "Trax", new[] { "LS", "LT", "LTZ", "1.4 Turbo", "1.6", "1.7D" }),
+                ("Chevrolet", "Trailblazer", new[] { "LS", "LT", "LTZ", "Premier", "1.2 Turbo", "1.3 Turbo", "Activ" })
             };
 
             var added = false;

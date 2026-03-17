@@ -37,7 +37,20 @@ namespace DataAcessLayer.SeedData
             "Qashqai", "X-Trail",                                        // Nissan SUV
             "500X", "Freemont",                                          // Fiat SUV
             "Karoq", "Kodiaq",                                           // Skoda SUV
-            "Mokka", "Mokka-e", "Grandland", "Crossland"                 // Opel SUV
+            "Mokka", "Mokka-e", "Grandland", "Crossland",               // Opel SUV
+            "2008", "3008", "5008",                                      // Peugeot SUV
+            "Ateca", "Tarraco",                                          // Seat SUV
+            "Formentor", "Terramar",                                     // Cupra SUV
+            "T10X",                                                      // Togg SUV
+            "C3 Aircross", "C5 Aircross",                               // Citroen SUV
+            "F-Pace", "E-Pace", "I-Pace",                               // Jaguar SUV
+            "NX", "RX", "UX", "LX",                                     // Lexus SUV
+            "Levante", "Grecale",                                        // Maserati SUV
+            "Cayenne", "Macan",                                          // Porsche SUV
+            "Countryman", "Countryman SE",                               // Mini SUV
+            "Vitara", "S-Cross", "Jimny",                                // Suzuki SUV
+            "DS 3 Crossback", "DS 7", "DS 7 Crossback",                 // DS SUV
+            "Captiva", "Trax", "Trailblazer"                             // Chevrolet SUV
         };
 
         // Sedan modelleri - kasa tipi Sedan olacak
@@ -64,7 +77,16 @@ namespace DataAcessLayer.SeedData
             "Arrizo 5",                                           // Chery Sedan
             "Linea", "Albea", "Tipo Sedan", "Marea",             // Fiat Sedan
             "Octavia", "Superb",                                     // Skoda Sedan
-            "Insignia", "Astra Sedan"                                // Opel Sedan
+            "Insignia", "Astra Sedan",                              // Opel Sedan
+            "301", "508",                                           // Peugeot Sedan
+            "Toledo",                                               // Seat Sedan
+            "C-Elysee", "C4 Sedan",                                // Citroen Sedan
+            "XE", "XF",                                            // Jaguar Sedan
+            "IS", "ES", "GS", "LS",                                // Lexus Sedan
+            "Ghibli", "Quattroporte",                              // Maserati Sedan
+            "Panamera", "Taycan",                                  // Porsche Sedan
+            "DS 9",                                                // DS Sedan
+            "Cruze", "Malibu", "Lacetti"                           // Chevrolet Sedan
         };
 
         // Hatchback modelleri - kasa tipi Hatchback olacak
@@ -86,7 +108,17 @@ namespace DataAcessLayer.SeedData
             "Tipo HB", "Palio", "Stilo",                         // Fiat Hatchback
             "500", "500e", "Fiat 600e",                           // Fiat Hatchback/Mini
             "Fabia", "Scala", "Rapid",                            // Skoda Hatchback
-            "Corsa", "Corsa-e", "Astra", "Astra HB"              // Opel Hatchback
+            "Corsa", "Corsa-e", "Astra", "Astra HB",             // Opel Hatchback
+            "208", "308",                                         // Peugeot Hatchback
+            "Ibiza", "Leon", "Leon HB",                           // Seat Hatchback
+            "Born",                                                // Cupra Hatchback
+            "T10F",                                                // Togg Hatchback/Fastback
+            "C3", "C4", "C4 X",                                   // Citroen Hatchback
+            "CT",                                                  // Lexus Hatchback
+            "Cooper", "Cooper S", "Cooper SE",                     // Mini Hatchback
+            "Swift", "Baleno", "Celerio", "Ignis",                 // Suzuki Hatchback
+            "DS 3", "DS 4",                                        // DS Hatchback
+            "Aveo", "Cruze HB", "Spark"                            // Chevrolet Hatchback
         };
 
         // Pickup modelleri - kasa tipi Pickup olacak
@@ -106,7 +138,11 @@ namespace DataAcessLayer.SeedData
             "CLA Coupe",                                     // Mercedes
             "C Serisi Coupe", "E Serisi Coupe", "S Serisi Coupe", // Mercedes Coupe
             "AMG GT Coupe",                                       // Mercedes AMG
-            "A5 Coupe", "TT Coupe", "R8 Coupe"                   // Audi Coupe
+            "A5 Coupe", "TT Coupe", "R8 Coupe",                  // Audi Coupe
+            "F-Type Coupe",                                        // Jaguar Coupe
+            "RC", "LC",                                            // Lexus Coupe
+            "MC20", "GranTurismo",                                 // Maserati Coupe
+            "911", "718 Cayman"                                    // Porsche Coupe
         };
 
         // Cabrio modelleri - kasa tipi Cabrio olacak
@@ -115,7 +151,12 @@ namespace DataAcessLayer.SeedData
             "4 Serisi Cabrio",                               // BMW
             "C Serisi Cabrio", "E Serisi Cabrio", "S Serisi Cabrio", // Mercedes Cabrio
             "A5 Cabrio", "A3 Cabrio",                             // Audi Cabrio
-            "500C"                                                // Fiat Cabrio
+            "500C",                                               // Fiat Cabrio
+            "F-Type Cabrio",                                       // Jaguar Cabrio
+            "LC Cabrio",                                           // Lexus Cabrio
+            "GranCabrio",                                          // Maserati Cabrio
+            "911 Cabrio",                                          // Porsche Cabrio
+            "Cooper Cabrio", "Cooper S Cabrio"                     // Mini Cabrio
         };
 
         // Roadster modelleri - kasa tipi Roadster olacak
@@ -123,7 +164,10 @@ namespace DataAcessLayer.SeedData
         {
             "Z4",                                            // BMW
             "SL", "SLC", "SLK", "AMG GT Roadster",              // Mercedes Roadster
-            "TT Roadster", "R8 Spyder"                            // Audi Roadster
+            "TT Roadster", "R8 Spyder",                           // Audi Roadster
+            "F-Type Roadster",                                     // Jaguar Roadster
+            "MC20 Cielo",                                          // Maserati Roadster
+            "718 Boxster", "911 Targa"                             // Porsche Roadster
         };
 
         // Station Wagon modelleri - kasa tipi Station Wagon olacak
@@ -135,7 +179,12 @@ namespace DataAcessLayer.SeedData
             "A4 Avant", "A6 Avant",                               // Audi Station Wagon
             "Tipo Station Wagon", "Marea Weekend",                // Fiat Station Wagon
             "Octavia Combi", "Superb Combi",                      // Skoda Station Wagon
-            "Astra Sports Tourer", "Insignia Sports Tourer"       // Opel Station Wagon
+            "Astra Sports Tourer", "Insignia Sports Tourer",      // Opel Station Wagon
+            "308 SW", "508 SW",                                   // Peugeot Station Wagon
+            "Leon ST",                                            // Seat Station Wagon
+            "Leon Sportstourer",                                  // Cupra Station Wagon
+            "C5 Tourer",                                          // Citroen Station Wagon
+            "Clubman"                                              // Mini Station Wagon
         };
 
         // Crossover modelleri - kasa tipi Crossover olacak
@@ -147,13 +196,17 @@ namespace DataAcessLayer.SeedData
             "i20 Active",                                            // Hyundai
             "Juke",                                                  // Nissan Crossover
             "500X Cross",                                                // Fiat Crossover
-            "Kamiq"                                                      // Skoda Crossover
+            "Kamiq",                                                     // Skoda Crossover
+            "Arona",                                                     // Seat Crossover
+            "C3 Aircross Crossover"                                      // Citroen Crossover
         };
 
         // Minivan & Panelvan modelleri
         private static readonly HashSet<string> MinivanPanelvanModels = new()
         {
-            "Boxer",                                         // Peugeot
+            "Boxer", "Rifter", "Partner", "Expert", "Traveller", // Peugeot Ticari/Minivan
+            "Berlingo", "SpaceTourer", "Jumpy", "Jumper",        // Citroen Ticari/Minivan
+            "Alhambra",                                           // Seat Minivan
             "Kangoo", "Scenic", "Grand Scenic",                  // Renault Minivan
             "Kangoo Express", "Master", "Trafic",                // Renault Panelvan/Ticari
             "Staria", "H-1",                                         // Hyundai Minivan
@@ -293,7 +346,18 @@ namespace DataAcessLayer.SeedData
                     // Elektrikli SUV
                     "EV6", "EV9", "Niro EV"
                 } },
-                { "Peugeot", new[] { "Boxer" } },
+                { "Peugeot", new[] {
+                    // Hatchback
+                    "208", "308",
+                    // Sedan
+                    "301", "508",
+                    // Station Wagon
+                    "308 SW", "508 SW",
+                    // SUV
+                    "2008", "3008", "5008",
+                    // Minivan/Ticari
+                    "Boxer", "Rifter", "Partner", "Expert", "Traveller"
+                } },
                 { "Land Rover", new[] {
                     // SUV
                     "Range Rover", "Range Rover Sport", "Range Rover Velar",
@@ -371,6 +435,126 @@ namespace DataAcessLayer.SeedData
                     "Mokka", "Mokka-e", "Grandland", "Crossland",
                     // Minivan/Ticari
                     "Combo", "Combo Life", "Vivaro", "Movano"
+                } },
+                { "Seat", new[] {
+                    // Hatchback
+                    "Ibiza", "Leon", "Leon HB",
+                    // Sedan
+                    "Toledo",
+                    // Station Wagon
+                    "Leon ST",
+                    // Crossover
+                    "Arona",
+                    // SUV
+                    "Ateca", "Tarraco",
+                    // Minivan
+                    "Alhambra"
+                } },
+                { "Cupra", new[] {
+                    // Hatchback
+                    "Born",
+                    // Station Wagon
+                    "Leon Sportstourer",
+                    // SUV
+                    "Formentor", "Terramar"
+                } },
+                { "Togg", new[] {
+                    // Hatchback/Fastback
+                    "T10F",
+                    // SUV
+                    "T10X"
+                } },
+                { "Citroen", new[] {
+                    // Hatchback
+                    "C3", "C4", "C4 X",
+                    // Sedan
+                    "C-Elysee", "C4 Sedan",
+                    // Station Wagon
+                    "C5 Tourer",
+                    // SUV
+                    "C3 Aircross", "C5 Aircross",
+                    // Minivan/Ticari
+                    "Berlingo", "SpaceTourer", "Jumpy", "Jumper"
+                } },
+                { "Jaguar", new[] {
+                    // Sedan
+                    "XE", "XF",
+                    // Coupe
+                    "F-Type Coupe",
+                    // Cabrio
+                    "F-Type Cabrio",
+                    // Roadster
+                    "F-Type Roadster",
+                    // SUV
+                    "F-Pace", "E-Pace", "I-Pace"
+                } },
+                { "Lexus", new[] {
+                    // Hatchback
+                    "CT",
+                    // Sedan
+                    "IS", "ES", "GS", "LS",
+                    // Coupe
+                    "RC", "LC",
+                    // Cabrio
+                    "LC Cabrio",
+                    // SUV
+                    "NX", "RX", "UX", "LX"
+                } },
+                { "Maserati", new[] {
+                    // Sedan
+                    "Ghibli", "Quattroporte",
+                    // Coupe
+                    "MC20", "GranTurismo",
+                    // Cabrio
+                    "GranCabrio",
+                    // Roadster
+                    "MC20 Cielo",
+                    // SUV
+                    "Levante", "Grecale"
+                } },
+                { "Porsche", new[] {
+                    // Sedan
+                    "Panamera", "Taycan",
+                    // Coupe
+                    "911", "718 Cayman",
+                    // Cabrio
+                    "911 Cabrio",
+                    // Roadster
+                    "718 Boxster", "911 Targa",
+                    // SUV
+                    "Cayenne", "Macan"
+                } },
+                { "Mini", new[] {
+                    // Hatchback
+                    "Cooper", "Cooper S", "Cooper SE",
+                    // Cabrio
+                    "Cooper Cabrio", "Cooper S Cabrio",
+                    // Station Wagon
+                    "Clubman",
+                    // SUV
+                    "Countryman", "Countryman SE"
+                } },
+                { "Suzuki", new[] {
+                    // Hatchback
+                    "Swift", "Baleno", "Celerio", "Ignis",
+                    // SUV
+                    "Vitara", "S-Cross", "Jimny"
+                } },
+                { "DS", new[] {
+                    // Hatchback
+                    "DS 3", "DS 4",
+                    // Sedan
+                    "DS 9",
+                    // SUV
+                    "DS 3 Crossback", "DS 7", "DS 7 Crossback"
+                } },
+                { "Chevrolet", new[] {
+                    // Hatchback
+                    "Aveo", "Cruze HB", "Spark",
+                    // Sedan
+                    "Cruze", "Malibu", "Lacetti",
+                    // SUV
+                    "Captiva", "Trax", "Trailblazer"
                 } }
             };
 
@@ -535,7 +719,18 @@ namespace DataAcessLayer.SeedData
                     // Elektrikli SUV
                     "EV6", "EV9", "Niro EV"
                 } },
-                { "Peugeot", new[] { "Boxer" } },
+                { "Peugeot", new[] {
+                    // Hatchback
+                    "208", "308",
+                    // Sedan
+                    "301", "508",
+                    // Station Wagon
+                    "308 SW", "508 SW",
+                    // SUV
+                    "2008", "3008", "5008",
+                    // Minivan/Ticari
+                    "Boxer", "Rifter", "Partner", "Expert", "Traveller"
+                } },
                 { "Land Rover", new[] {
                     // SUV
                     "Range Rover", "Range Rover Sport", "Range Rover Velar",
