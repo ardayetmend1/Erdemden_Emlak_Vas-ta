@@ -18,6 +18,7 @@ namespace DataAcessLayer.Concrete
         public DbSet<Model> Models { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<District> Districts { get; set; }
+        public DbSet<Neighborhood> Neighborhoods { get; set; }
         public DbSet<VehicleType> VehicleTypes { get; set; }
         public DbSet<BodyType> BodyTypes { get; set; }
         public DbSet<FuelType> FuelTypes { get; set; }
@@ -46,6 +47,7 @@ namespace DataAcessLayer.Concrete
                 entity.HasIndex(e => e.Status);
                 entity.HasIndex(e => e.Category);
                 entity.HasIndex(e => e.CityId);
+                entity.HasIndex(e => e.NeighborhoodId);
                 entity.HasIndex(e => e.ListingDate);
 
                 // City - Listing (1:N)
@@ -58,6 +60,12 @@ namespace DataAcessLayer.Concrete
                 entity.HasOne(e => e.District)
                     .WithMany(d => d.Listings)
                     .HasForeignKey(e => e.DistrictId)
+                    .OnDelete(DeleteBehavior.SetNull);
+
+                // Neighborhood - Listing (1:N, optional)
+                entity.HasOne(e => e.Neighborhood)
+                    .WithMany(n => n.Listings)
+                    .HasForeignKey(e => e.NeighborhoodId)
                     .OnDelete(DeleteBehavior.SetNull);
             });
 
@@ -150,6 +158,15 @@ namespace DataAcessLayer.Concrete
                 entity.HasOne(e => e.City)
                     .WithMany(c => c.Districts)
                     .HasForeignKey(e => e.CityId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // ==================== NEIGHBORHOOD - DISTRICT (1:N) ====================
+            modelBuilder.Entity<Neighborhood>(entity =>
+            {
+                entity.HasOne(e => e.District)
+                    .WithMany(d => d.Neighborhoods)
+                    .HasForeignKey(e => e.DistrictId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
 

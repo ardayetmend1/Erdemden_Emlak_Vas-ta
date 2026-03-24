@@ -27,6 +27,8 @@ public class ListingDto
     // Konum
     public LookupDto? City { get; set; }
     public LookupWithParentDto? District { get; set; }
+    public LookupWithParentDto? Neighborhood { get; set; }
+    public string? Street { get; set; }
 
     // Görseller
     public List<ImageDto> Images { get; set; } = new();

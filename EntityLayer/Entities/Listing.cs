@@ -30,6 +30,10 @@ public class Listing : BaseEntity
     // Konum
     public Guid? CityId { get; set; }
     public Guid? DistrictId { get; set; }
+    public Guid? NeighborhoodId { get; set; }
+
+    [MaxLength(200)]
+    public string? Street { get; set; }
 
     // Satış Bilgileri (Admin)
     [Column(TypeName = "decimal(18,2)")]
@@ -66,6 +70,7 @@ public class Listing : BaseEntity
     // Navigation
     public virtual City? City { get; set; }
     public virtual District? District { get; set; }
+    public virtual Neighborhood? Neighborhood { get; set; }
     public virtual Vehicle? Vehicle { get; set; }
     public virtual RealEstate? RealEstate { get; set; }
     public virtual ICollection<ListingImage> Images { get; set; } = new List<ListingImage>();

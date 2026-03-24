@@ -45,6 +45,8 @@ public class ListingService : IListingService
                 Status = listingDto.Status,
                 CityId = listingDto.CityId,
                 DistrictId = listingDto.DistrictId,
+                NeighborhoodId = listingDto.NeighborhoodId,
+                Street = listingDto.Street,
                 PurchasePrice = listingDto.PurchasePrice,
                 Expenses = listingDto.Expenses,
                 ListingDate = DateTime.UtcNow
@@ -190,6 +192,8 @@ public class ListingService : IListingService
                 Status = listingDto.Status,
                 CityId = listingDto.CityId,
                 DistrictId = listingDto.DistrictId,
+                NeighborhoodId = listingDto.NeighborhoodId,
+                Street = listingDto.Street,
                 PurchasePrice = listingDto.PurchasePrice,
                 Expenses = listingDto.Expenses,
                 ListingDate = DateTime.UtcNow
@@ -288,6 +292,7 @@ public class ListingService : IListingService
             .Query()
             .Include(l => l.City)
             .Include(l => l.District)
+            .Include(l => l.Neighborhood)
             .Include(l => l.Images)
             .Include(l => l.Vehicle)
                 .ThenInclude(v => v!.VehicleType)
@@ -326,6 +331,7 @@ public class ListingService : IListingService
             .AsNoTracking()
             .Include(l => l.City)
             .Include(l => l.District)
+            .Include(l => l.Neighborhood)
             .Include(l => l.Vehicle)
                 .ThenInclude(v => v!.VehicleType)
             .Include(l => l.Vehicle)
@@ -362,6 +368,9 @@ public class ListingService : IListingService
 
         if (filter.DistrictId.HasValue)
             query = query.Where(l => l.DistrictId == filter.DistrictId.Value);
+
+        if (filter.NeighborhoodId.HasValue)
+            query = query.Where(l => l.NeighborhoodId == filter.NeighborhoodId.Value);
 
         if (!string.IsNullOrWhiteSpace(filter.SearchTerm))
             query = query.Where(l => l.Title.Contains(filter.SearchTerm) ||
@@ -507,6 +516,8 @@ public class ListingService : IListingService
         if (updateDto.ListingDate.HasValue) listing.ListingDate = updateDto.ListingDate.Value;
         if (updateDto.CityId.HasValue) listing.CityId = updateDto.CityId.Value;
         if (updateDto.DistrictId.HasValue) listing.DistrictId = updateDto.DistrictId;
+        if (updateDto.NeighborhoodId.HasValue) listing.NeighborhoodId = updateDto.NeighborhoodId;
+        if (updateDto.Street != null) listing.Street = updateDto.Street;
 
         // Satış bilgileri
         if (updateDto.PurchasePrice.HasValue) listing.PurchasePrice = updateDto.PurchasePrice;
@@ -890,6 +901,14 @@ public class ListingService : IListingService
                 ParentId = listing.District.CityId,
                 ParentName = listing.City?.Name ?? string.Empty
             } : null,
+            Neighborhood = listing.Neighborhood != null ? new LookupWithParentDto
+            {
+                Id = listing.Neighborhood.Id,
+                Name = listing.Neighborhood.Name,
+                ParentId = listing.Neighborhood.DistrictId,
+                ParentName = listing.District?.Name ?? string.Empty
+            } : null,
+            Street = listing.Street,
             Images = listing.Images?.OrderBy(i => i.Order).Select(i => new ImageDto
             {
                 Id = i.Id,

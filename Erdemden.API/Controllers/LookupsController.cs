@@ -123,6 +123,28 @@ public class LookupsController : ControllerBase
     }
 
     /// <summary>
+    /// İlçeye ait mahalleleri getir
+    /// </summary>
+    [HttpGet("neighborhoods/{districtId:guid}")]
+    public async Task<IActionResult> GetNeighborhoodsByDistrict(Guid districtId)
+    {
+        var neighborhoods = await _unitOfWork.Repository<Neighborhood>()
+            .Query()
+            .Where(n => n.DistrictId == districtId)
+            .OrderBy(n => n.Name)
+            .Select(n => new LookupWithParentDto
+            {
+                Id = n.Id,
+                Name = n.Name,
+                ParentId = n.DistrictId,
+                ParentName = n.District.Name
+            })
+            .ToListAsync();
+
+        return Ok(ApiResponseDto<List<LookupWithParentDto>>.SuccessResponse(neighborhoods));
+    }
+
+    /// <summary>
     /// Araç tiplerini getir
     /// </summary>
     [HttpGet("vehicle-types")]

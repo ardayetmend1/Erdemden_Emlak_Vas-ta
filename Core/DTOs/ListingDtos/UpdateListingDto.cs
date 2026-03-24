@@ -31,6 +31,11 @@ public class UpdateListingDto
 
     public Guid? DistrictId { get; set; }
 
+    public Guid? NeighborhoodId { get; set; }
+
+    [StringLength(200)]
+    public string? Street { get; set; }
+
     // Admin satış bilgileri
     [Range(0, (double)decimal.MaxValue, ErrorMessage = "Alış fiyatı 0'dan büyük olmalıdır")]
     public decimal? PurchasePrice { get; set; }

@@ -18,6 +18,7 @@ public class ListingFilterDto : PaginationRequestDto
     // Konum
     public Guid? CityId { get; set; }
     public Guid? DistrictId { get; set; }
+    public Guid? NeighborhoodId { get; set; }
 
     // Arama
     public string? SearchTerm { get; set; }

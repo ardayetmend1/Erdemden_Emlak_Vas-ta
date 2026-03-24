@@ -16,6 +16,7 @@ namespace DataAcessLayer.SeedData
             await SeedFuelTypes.SeedAsync(context);
             await SeedTransmissionTypes.SeedAsync(context);
             await SeedCities.SeedAsync(context);
+            await SeedCities.AddMissingDistrictsAndNeighborhoodsAsync(context);
             await SeedHousingTypes.SeedAsync(context);
 
             // Mevcut markalara eksik modelleri ekle

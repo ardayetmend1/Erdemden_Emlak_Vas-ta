@@ -35,6 +35,11 @@ public class CreateListingDto
 
     public Guid? DistrictId { get; set; }
 
+    public Guid? NeighborhoodId { get; set; }
+
+    [StringLength(200)]
+    public string? Street { get; set; }
+
     /// <summary>
     /// Admin satın alma fiyatı
     /// </summary>
