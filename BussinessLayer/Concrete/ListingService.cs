@@ -423,6 +423,9 @@ public class ListingService : IListingService
         if (!string.IsNullOrWhiteSpace(filter.RoomCount))
             query = query.Where(l => l.RealEstate != null && l.RealEstate.RoomCount == filter.RoomCount);
 
+        if (filter.ListingType.HasValue)
+            query = query.Where(l => l.RealEstate != null && (int)l.RealEstate.ListingType == filter.ListingType.Value);
+
         if (filter.MinSize.HasValue)
             query = query.Where(l => l.RealEstate != null && l.RealEstate.Size >= filter.MinSize.Value);
 

@@ -14,6 +14,12 @@ public class PaginationRequestDto
         set => _pageNumber = value < 1 ? 1 : value;
     }
 
+    public int Page
+    {
+        get => PageNumber;
+        set => PageNumber = value;
+    }
+
     public int PageSize
     {
         get => _pageSize;

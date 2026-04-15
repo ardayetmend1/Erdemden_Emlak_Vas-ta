@@ -43,6 +43,7 @@ public class ListingFilterDto : PaginationRequestDto
     // ==================== Emlak Filtreleri ====================
     public Guid? HousingTypeId { get; set; }
     public string? RoomCount { get; set; }
+    public int? ListingType { get; set; }
     public int? MinSize { get; set; }
     public int? MaxSize { get; set; }
 
