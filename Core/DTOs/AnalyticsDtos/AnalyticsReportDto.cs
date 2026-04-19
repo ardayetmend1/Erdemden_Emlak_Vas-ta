@@ -2,10 +2,10 @@ namespace Core.DTOs.AnalyticsDtos;
 
 public class AnalyticsOverviewDto
 {
-    public int TotalVisitors { get; set; }
-    public int TotalPageViews { get; set; }
-    public int TotalSessions { get; set; }
-    public double BounceRate { get; set; }
+    public int ActiveUsers { get; set; }
+    public int NewUsers { get; set; }
+    public double AverageEngagementTimePerActiveUserSeconds { get; set; }
+    public int EventCount { get; set; }
     public List<DailyMetricDto> DailyMetrics { get; set; } = new();
     public List<TrafficSourceDto> TrafficSources { get; set; } = new();
     public List<PopularPageDto> PopularPages { get; set; } = new();
@@ -15,9 +15,9 @@ public class AnalyticsOverviewDto
 public class DailyMetricDto
 {
     public string Date { get; set; } = string.Empty;
-    public int Visitors { get; set; }
-    public int PageViews { get; set; }
-    public int Sessions { get; set; }
+    public int ActiveUsers { get; set; }
+    public int NewUsers { get; set; }
+    public int EventCount { get; set; }
 }
 
 public class TrafficSourceDto
