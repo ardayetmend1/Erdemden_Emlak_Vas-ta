@@ -5,6 +5,7 @@
 
 # Service account credentials
 **/credentials/
+secrets/
 
 # Environment files
 .env

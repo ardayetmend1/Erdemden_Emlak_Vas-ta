@@ -9,6 +9,7 @@ using Google.Apis.AnalyticsData.v1beta.Data;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Services;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -20,15 +21,18 @@ public class AnalyticsService : IAnalyticsService
 
     private readonly GoogleAnalyticsSettings _settings;
     private readonly IMemoryCache _cache;
+    private readonly IHostEnvironment _hostEnvironment;
     private readonly ILogger<AnalyticsService> _logger;
 
     public AnalyticsService(
         IOptions<GoogleAnalyticsSettings> settings,
         IMemoryCache cache,
+        IHostEnvironment hostEnvironment,
         ILogger<AnalyticsService> logger)
     {
         _settings = settings.Value;
         _cache = cache;
+        _hostEnvironment = hostEnvironment;
         _logger = logger;
     }
 
@@ -44,8 +48,9 @@ public class AnalyticsService : IAnalyticsService
             ?? _settings.PropertyId;
         var credentialsFilePath = Environment.GetEnvironmentVariable("GoogleAnalyticsSettings__CredentialsFilePath")
             ?? _settings.CredentialsFilePath;
+        var resolvedCredentialsFilePath = ResolveCredentialsFilePath(credentialsFilePath);
 
-        var validationError = ValidateConfiguration(propertyId, credentialsFilePath);
+        var validationError = ValidateConfiguration(propertyId, resolvedCredentialsFilePath);
         if (validationError != null)
         {
             return validationError;
@@ -54,7 +59,7 @@ public class AnalyticsService : IAnalyticsService
         try
         {
             var credential = GoogleCredential
-                .FromFile(credentialsFilePath)
+                .FromFile(resolvedCredentialsFilePath)
                 .CreateScoped(AnalyticsScope);
 
             var service = new AnalyticsDataService(new BaseClientService.Initializer
@@ -171,6 +176,16 @@ public class AnalyticsService : IAnalyticsService
         }
 
         return null;
+    }
+
+    private string ResolveCredentialsFilePath(string credentialsFilePath)
+    {
+        if (string.IsNullOrWhiteSpace(credentialsFilePath) || Path.IsPathRooted(credentialsFilePath))
+        {
+            return credentialsFilePath;
+        }
+
+        return Path.GetFullPath(Path.Combine(_hostEnvironment.ContentRootPath, credentialsFilePath));
     }
 
     private async Task<SummaryMetricsRaw> RunSummaryMetricsReport(
