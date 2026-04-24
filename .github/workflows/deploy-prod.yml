@@ -37,27 +37,33 @@ jobs:
           ssh-keyscan -H ${{ env.SSH_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
 
       - name: Stop service
+        timeout-minutes: 2
         run: |
-          ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "sudo systemctl stop ${{ env.SERVICE_NAME }}"
+          ssh -o ConnectTimeout=30 -o ServerAliveInterval=15 ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "sudo systemctl stop ${{ env.SERVICE_NAME }}"
 
       - name: Deploy via rsync
+        timeout-minutes: 10
         run: |
           rsync -avz --delete \
             --exclude '.env' \
             --exclude 'appsettings.Production.json' \
             --exclude 'logs/' \
             --exclude 'uploads/' \
+            -e "ssh -o ConnectTimeout=30 -o ServerAliveInterval=15" \
             publish/ ${{ env.SSH_USER }}@${{ env.SSH_HOST }}:${{ env.DEPLOY_PATH }}/
 
-      - name: Fix permissions
+      - name: Start service and health check
+        timeout-minutes: 3
         run: |
-          ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "chown -R www-data:www-data ${{ env.DEPLOY_PATH }}"
-
-      - name: Start service
-        run: |
-          ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "sudo systemctl start ${{ env.SERVICE_NAME }}"
-
-      - name: Health check
-        run: |
-          sleep 5
-          ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "systemctl is-active ${{ env.SERVICE_NAME }} && echo 'Service is running' || (journalctl -u ${{ env.SERVICE_NAME }} -n 20 --no-pager && exit 1)"
+          sleep 3
+          ssh -o ConnectTimeout=30 -o ServerAliveInterval=15 ${{ env.SSH_USER }}@${{ env.SSH_HOST }} bash -c '
+            chown -R www-data:www-data ${{ env.DEPLOY_PATH }}
+            sudo systemctl start ${{ env.SERVICE_NAME }}
+            sleep 5
+            if systemctl is-active --quiet ${{ env.SERVICE_NAME }}; then
+              echo "Service is running"
+            else
+              systemctl status ${{ env.SERVICE_NAME }} --no-pager -l | head -40
+              exit 1
+            fi
+          '
