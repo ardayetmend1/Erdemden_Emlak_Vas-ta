@@ -1,4 +1,5 @@
 using System.Net;
+using System.Globalization;
 using BussinessLayer.Abstract;
 using BussinessLayer.Settings;
 using Core.DTOs.AnalyticsDtos;
@@ -199,11 +200,7 @@ public class AnalyticsService : IAnalyticsService
                 new Metric { Name = "activeUsers" },
                 new Metric { Name = "newUsers" },
                 new Metric { Name = "eventCount" },
-                new Metric
-                {
-                    Name = "averageEngagementTimePerActiveUser",
-                    Expression = "userEngagementDuration/activeUsers"
-                }
+                new Metric { Name = "userEngagementDuration" }
             }
         };
 
@@ -220,7 +217,7 @@ public class AnalyticsService : IAnalyticsService
             ActiveUsers = GetIntValue(row, 0),
             NewUsers = GetIntValue(row, 1),
             EventCount = GetIntValue(row, 2),
-            AverageEngagementTimePerActiveUserSeconds = GetDoubleValue(row, 3)
+            AverageEngagementTimePerActiveUserSeconds = GetAverageEngagementSeconds(row)
         };
     }
 
@@ -379,7 +376,25 @@ public class AnalyticsService : IAnalyticsService
 
     private static double GetDoubleValue(Row row, int metricIndex)
     {
-        return double.TryParse(row.MetricValues[metricIndex].Value, out var value) ? value : 0;
+        return double.TryParse(
+            row.MetricValues[metricIndex].Value,
+            NumberStyles.Float,
+            CultureInfo.InvariantCulture,
+            out var value)
+            ? value
+            : 0;
+    }
+
+    private static double GetAverageEngagementSeconds(Row row)
+    {
+        var activeUsers = GetIntValue(row, 0);
+        if (activeUsers <= 0)
+        {
+            return 0;
+        }
+
+        var totalEngagementSeconds = GetDoubleValue(row, 3);
+        return totalEngagementSeconds / activeUsers;
     }
 
     private class SummaryMetricsRaw
