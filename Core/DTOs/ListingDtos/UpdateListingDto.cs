@@ -10,7 +10,7 @@ namespace Core.DTOs.ListingDtos;
 /// </summary>
 public class UpdateListingDto
 {
-    [StringLength(200, MinimumLength = 5, ErrorMessage = "Başlık 5-200 karakter arasında olmalıdır")]
+    [StringLength(200, MinimumLength = 1, ErrorMessage = "Başlık 1-200 karakter arasında olmalıdır")]
     public string? Title { get; set; }
 
     [Range(0, double.MaxValue, ErrorMessage = "Fiyat 0'dan büyük olmalıdır")]

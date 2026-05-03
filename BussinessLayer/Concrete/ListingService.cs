@@ -179,6 +179,26 @@ public class ListingService : IListingService
     {
         try
         {
+            // Kategoriye göre validation (HousingType yüklenir)
+            var housingType = await _unitOfWork.Repository<HousingType>().GetByIdAsync(realEstateDto.HousingTypeId);
+            if (housingType == null)
+            {
+                return ApiResponseDto<ListingDto>.FailResponse("Geçersiz emlak tipi.");
+            }
+
+            if (housingType.Category == RealEstateCategory.Konut)
+            {
+                if (string.IsNullOrWhiteSpace(realEstateDto.RoomCount))
+                    return ApiResponseDto<ListingDto>.FailResponse("Konut ilanı için oda sayısı zorunludur.");
+                if (!realEstateDto.Size.HasValue || realEstateDto.Size.Value <= 0)
+                    return ApiResponseDto<ListingDto>.FailResponse("Konut ilanı için metrekare zorunludur.");
+            }
+            else if (housingType.Category == RealEstateCategory.Arsa)
+            {
+                if (!realEstateDto.Size.HasValue || realEstateDto.Size.Value <= 0)
+                    return ApiResponseDto<ListingDto>.FailResponse("Arsa ilanı için metrekare zorunludur.");
+            }
+
             await _unitOfWork.BeginTransactionAsync();
 
             // Listing oluştur
@@ -241,7 +261,43 @@ public class ListingService : IListingService
                 HasCableTv = realEstateDto.HasCableTv,
                 HasInternet = realEstateDto.HasInternet,
                 HasGenerator = realEstateDto.HasGenerator,
-                HasNaturalGas = realEstateDto.HasNaturalGas
+                HasNaturalGas = realEstateDto.HasNaturalGas,
+                // Ortak (İş Yeri + Arsa)
+                IsCreditEligible = realEstateDto.IsCreditEligible,
+                IsExchangeable = realEstateDto.IsExchangeable,
+                // İş Yeri — sayısal
+                GrossArea = realEstateDto.GrossArea,
+                NetArea = realEstateDto.NetArea,
+                CeilingHeight = realEstateDto.CeilingHeight,
+                FrontWidth = realEstateDto.FrontWidth,
+                // İş Yeri — enum
+                HeatingType = realEstateDto.HeatingType,
+                BuildingCondition = realEstateDto.BuildingCondition,
+                UsageStatus = realEstateDto.UsageStatus,
+                BuildingType = realEstateDto.BuildingType,
+                // İş Yeri — bool
+                HasShowcase = realEstateDto.HasShowcase,
+                HasShutter = realEstateDto.HasShutter,
+                HasMezzanine = realEstateDto.HasMezzanine,
+                HasBasement = realEstateDto.HasBasement,
+                HasLoadingDock = realEstateDto.HasLoadingDock,
+                HasColdStorage = realEstateDto.HasColdStorage,
+                HasFireSystem = realEstateDto.HasFireSystem,
+                HasCameraSystem = realEstateDto.HasCameraSystem,
+                HasThreePhasePower = realEstateDto.HasThreePhasePower,
+                // Arsa — sayısal
+                FloorAreaRatio = realEstateDto.FloorAreaRatio,
+                HeightLimit = realEstateDto.HeightLimit,
+                BlockNumber = realEstateDto.BlockNumber,
+                ParcelNumber = realEstateDto.ParcelNumber,
+                SheetNumber = realEstateDto.SheetNumber,
+                // Arsa — enum
+                ZoningStatus = realEstateDto.ZoningStatus,
+                DeedStatus = realEstateDto.DeedStatus,
+                // Arsa — bool
+                IsRoadAccessible = realEstateDto.IsRoadAccessible,
+                HasWaterSource = realEstateDto.HasWaterSource,
+                HasElectricityConnection = realEstateDto.HasElectricityConnection
             };
 
             await _unitOfWork.
@@ -417,6 +473,9 @@ public class ListingService : IListingService
             query = query.Where(l => l.Vehicle != null && l.Vehicle.Km <= filter.MaxKm.Value);
 
         // ==================== Emlak Filtreleri ====================
+        if (filter.RealEstateCategory.HasValue)
+            query = query.Where(l => l.RealEstate != null && l.RealEstate.HousingType.Category == filter.RealEstateCategory.Value);
+
         if (filter.HousingTypeId.HasValue)
             query = query.Where(l => l.RealEstate != null && l.RealEstate.HousingTypeId == filter.HousingTypeId.Value);
 
@@ -801,6 +860,42 @@ public class ListingService : IListingService
         if (updateDto.HasInternet.HasValue) realEstate.HasInternet = updateDto.HasInternet.Value;
         if (updateDto.HasGenerator.HasValue) realEstate.HasGenerator = updateDto.HasGenerator.Value;
         if (updateDto.HasNaturalGas.HasValue) realEstate.HasNaturalGas = updateDto.HasNaturalGas.Value;
+        // Ortak (İş Yeri + Arsa)
+        if (updateDto.IsCreditEligible.HasValue) realEstate.IsCreditEligible = updateDto.IsCreditEligible;
+        if (updateDto.IsExchangeable.HasValue) realEstate.IsExchangeable = updateDto.IsExchangeable;
+        // İş Yeri — sayısal
+        if (updateDto.GrossArea.HasValue) realEstate.GrossArea = updateDto.GrossArea;
+        if (updateDto.NetArea.HasValue) realEstate.NetArea = updateDto.NetArea;
+        if (updateDto.CeilingHeight.HasValue) realEstate.CeilingHeight = updateDto.CeilingHeight;
+        if (updateDto.FrontWidth.HasValue) realEstate.FrontWidth = updateDto.FrontWidth;
+        // İş Yeri — enum
+        if (updateDto.HeatingType.HasValue) realEstate.HeatingType = updateDto.HeatingType;
+        if (updateDto.BuildingCondition.HasValue) realEstate.BuildingCondition = updateDto.BuildingCondition;
+        if (updateDto.UsageStatus.HasValue) realEstate.UsageStatus = updateDto.UsageStatus;
+        if (updateDto.BuildingType.HasValue) realEstate.BuildingType = updateDto.BuildingType;
+        // İş Yeri — bool
+        if (updateDto.HasShowcase.HasValue) realEstate.HasShowcase = updateDto.HasShowcase;
+        if (updateDto.HasShutter.HasValue) realEstate.HasShutter = updateDto.HasShutter;
+        if (updateDto.HasMezzanine.HasValue) realEstate.HasMezzanine = updateDto.HasMezzanine;
+        if (updateDto.HasBasement.HasValue) realEstate.HasBasement = updateDto.HasBasement;
+        if (updateDto.HasLoadingDock.HasValue) realEstate.HasLoadingDock = updateDto.HasLoadingDock;
+        if (updateDto.HasColdStorage.HasValue) realEstate.HasColdStorage = updateDto.HasColdStorage;
+        if (updateDto.HasFireSystem.HasValue) realEstate.HasFireSystem = updateDto.HasFireSystem;
+        if (updateDto.HasCameraSystem.HasValue) realEstate.HasCameraSystem = updateDto.HasCameraSystem;
+        if (updateDto.HasThreePhasePower.HasValue) realEstate.HasThreePhasePower = updateDto.HasThreePhasePower;
+        // Arsa — sayısal
+        if (updateDto.FloorAreaRatio.HasValue) realEstate.FloorAreaRatio = updateDto.FloorAreaRatio;
+        if (updateDto.HeightLimit.HasValue) realEstate.HeightLimit = updateDto.HeightLimit;
+        if (updateDto.BlockNumber != null) realEstate.BlockNumber = updateDto.BlockNumber;
+        if (updateDto.ParcelNumber != null) realEstate.ParcelNumber = updateDto.ParcelNumber;
+        if (updateDto.SheetNumber != null) realEstate.SheetNumber = updateDto.SheetNumber;
+        // Arsa — enum
+        if (updateDto.ZoningStatus.HasValue) realEstate.ZoningStatus = updateDto.ZoningStatus;
+        if (updateDto.DeedStatus.HasValue) realEstate.DeedStatus = updateDto.DeedStatus;
+        // Arsa — bool
+        if (updateDto.IsRoadAccessible.HasValue) realEstate.IsRoadAccessible = updateDto.IsRoadAccessible;
+        if (updateDto.HasWaterSource.HasValue) realEstate.HasWaterSource = updateDto.HasWaterSource;
+        if (updateDto.HasElectricityConnection.HasValue) realEstate.HasElectricityConnection = updateDto.HasElectricityConnection;
 
         _unitOfWork.Repository<RealEstate>().Update(realEstate);
         await _unitOfWork.SaveChangesAsync();
@@ -1032,15 +1127,20 @@ public class ListingService : IListingService
     {
         return new RealEstateDto
         {
-            RoomCount = realEstate.RoomCount ?? string.Empty,
-            Size = realEstate.Size ?? 0,
+            RoomCount = realEstate.RoomCount,
+            Size = realEstate.Size,
             Floor = realEstate.Floor,
             TotalFloors = realEstate.TotalFloors,
             BuildingAge = realEstate.BuildingAge,
             HasElevator = realEstate.HasElevator ?? false,
             HasParking = realEstate.HasParking ?? false,
             IsFurnished = realEstate.IsFurnished ?? false,
-            HousingType = new LookupDto { Id = realEstate.HousingType.Id, Name = realEstate.HousingType.Name },
+            HousingType = new HousingTypeLookupDto
+            {
+                Id = realEstate.HousingType.Id,
+                Name = realEstate.HousingType.Name,
+                Category = realEstate.HousingType.Category
+            },
             ListingType = (int)realEstate.ListingType,
             MonthlyRent = realEstate.MonthlyRent,
             Deposit = realEstate.Deposit,
@@ -1067,7 +1167,39 @@ public class ListingService : IListingService
             HasCableTv = realEstate.HasCableTv ?? false,
             HasInternet = realEstate.HasInternet ?? false,
             HasGenerator = realEstate.HasGenerator ?? false,
-            HasNaturalGas = realEstate.HasNaturalGas ?? false
+            HasNaturalGas = realEstate.HasNaturalGas ?? false,
+            // Ortak (İş Yeri + Arsa)
+            IsCreditEligible = realEstate.IsCreditEligible,
+            IsExchangeable = realEstate.IsExchangeable,
+            // İş Yeri
+            GrossArea = realEstate.GrossArea,
+            NetArea = realEstate.NetArea,
+            CeilingHeight = realEstate.CeilingHeight,
+            FrontWidth = realEstate.FrontWidth,
+            HeatingType = realEstate.HeatingType,
+            BuildingCondition = realEstate.BuildingCondition,
+            UsageStatus = realEstate.UsageStatus,
+            BuildingType = realEstate.BuildingType,
+            HasShowcase = realEstate.HasShowcase,
+            HasShutter = realEstate.HasShutter,
+            HasMezzanine = realEstate.HasMezzanine,
+            HasBasement = realEstate.HasBasement,
+            HasLoadingDock = realEstate.HasLoadingDock,
+            HasColdStorage = realEstate.HasColdStorage,
+            HasFireSystem = realEstate.HasFireSystem,
+            HasCameraSystem = realEstate.HasCameraSystem,
+            HasThreePhasePower = realEstate.HasThreePhasePower,
+            // Arsa
+            FloorAreaRatio = realEstate.FloorAreaRatio,
+            HeightLimit = realEstate.HeightLimit,
+            BlockNumber = realEstate.BlockNumber,
+            ParcelNumber = realEstate.ParcelNumber,
+            SheetNumber = realEstate.SheetNumber,
+            ZoningStatus = realEstate.ZoningStatus,
+            DeedStatus = realEstate.DeedStatus,
+            IsRoadAccessible = realEstate.IsRoadAccessible,
+            HasWaterSource = realEstate.HasWaterSource,
+            HasElectricityConnection = realEstate.HasElectricityConnection
         };
     }
 

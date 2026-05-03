@@ -44,3 +44,67 @@ public enum QuoteStatus
     Accepted,   // Kabul Edildi
     Rejected    // Reddedildi
 }
+
+public enum RealEstateCategory
+{
+    Konut = 0,
+    IsYeri = 1,
+    Arsa = 2
+}
+
+public enum HeatingType
+{
+    Yok = 0,
+    Soba = 1,
+    Dogalgaz = 2,
+    Klima = 3,
+    Merkezi = 4,
+    Kombi = 5,
+    YerdenIsitma = 6,
+    VRV = 7
+}
+
+public enum BuildingCondition
+{
+    Sifir = 0,
+    IkinciEl = 1,
+    InsaatHalinde = 2
+}
+
+public enum UsageStatus
+{
+    Bos = 0,
+    Kiracili = 1,
+    MulkSahibi = 2
+}
+
+public enum BuildingType
+{
+    ApartmanIci = 0,
+    MustakilBina = 1,
+    Plaza = 2,
+    IsHani = 3,
+    AVM = 4
+}
+
+public enum ZoningStatus
+{
+    Konut = 0,
+    Ticari = 1,
+    Sanayi = 2,
+    Turizm = 3,
+    Karma = 4,
+    Tarim = 5,
+    Imarsiz = 6,
+    Belirtilmemis = 7
+}
+
+public enum DeedStatus
+{
+    Mustakil = 0,
+    Hisseli = 1,
+    KatIrtifakli = 2,
+    KatMulkiyetli = 3,
+    TahsisBelgeli = 4,
+    Belirsiz = 5
+}

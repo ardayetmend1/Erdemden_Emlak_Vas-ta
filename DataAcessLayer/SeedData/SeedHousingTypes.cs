@@ -8,24 +8,62 @@ namespace DataAcessLayer.SeedData
     {
         public static async Task SeedAsync(Context context)
         {
-            if (await context.Set<HousingType>().AnyAsync())
-                return;
+            var dbSet = context.Set<HousingType>();
+            var existingNames = await dbSet.Select(h => h.Name).ToListAsync();
 
-            var housingTypes = new[] { "Daire", "Villa", "Rezidans", "Yazlık", "Yalı Dairesi", "Müstakil Ev", "Prefabrik" };
-
-            foreach (var housingTypeName in housingTypes)
+            var seedData = new (string Name, RealEstateCategory Category)[]
             {
-                var housingType = new HousingType
+                // ===== KONUT =====
+                ("Daire", RealEstateCategory.Konut),
+                ("Villa", RealEstateCategory.Konut),
+                ("Rezidans", RealEstateCategory.Konut),
+                ("Yazlık", RealEstateCategory.Konut),
+                ("Yalı Dairesi", RealEstateCategory.Konut),
+                ("Müstakil Ev", RealEstateCategory.Konut),
+                ("Prefabrik", RealEstateCategory.Konut),
+
+                // ===== İŞ YERİ =====
+                ("Dükkan", RealEstateCategory.IsYeri),
+                ("Mağaza", RealEstateCategory.IsYeri),
+                ("Ofis", RealEstateCategory.IsYeri),
+                ("Plaza", RealEstateCategory.IsYeri),
+                ("İş Hanı Katı", RealEstateCategory.IsYeri),
+                ("Depo", RealEstateCategory.IsYeri),
+                ("Atölye", RealEstateCategory.IsYeri),
+                ("Fabrika", RealEstateCategory.IsYeri),
+                ("Showroom", RealEstateCategory.IsYeri),
+                ("Kafe & Restaurant", RealEstateCategory.IsYeri),
+                ("Otel & Pansiyon", RealEstateCategory.IsYeri),
+                ("Düğün Salonu", RealEstateCategory.IsYeri),
+                ("Çiftlik", RealEstateCategory.IsYeri),
+
+                // ===== ARSA =====
+                ("Konut Arsası", RealEstateCategory.Arsa),
+                ("Ticari Arsa", RealEstateCategory.Arsa),
+                ("Sanayi Arsası", RealEstateCategory.Arsa),
+                ("Turizm Arsası", RealEstateCategory.Arsa),
+                ("Karma İmar Arsası", RealEstateCategory.Arsa),
+                ("Tarım Arsası", RealEstateCategory.Arsa),
+                ("Tarla", RealEstateCategory.Arsa),
+                ("Bağ & Bahçe", RealEstateCategory.Arsa)
+            };
+
+            var toAdd = seedData
+                .Where(s => !existingNames.Contains(s.Name))
+                .Select(s => new HousingType
                 {
                     Id = Guid.NewGuid(),
-                    Name = housingTypeName,
+                    Name = s.Name,
+                    Category = s.Category,
                     CreatedAt = DateTime.UtcNow
-                };
+                })
+                .ToList();
 
-                context.Set<HousingType>().Add(housingType);
+            if (toAdd.Count > 0)
+            {
+                dbSet.AddRange(toAdd);
+                await context.SaveChangesAsync();
             }
-
-            await context.SaveChangesAsync();
         }
     }
 }

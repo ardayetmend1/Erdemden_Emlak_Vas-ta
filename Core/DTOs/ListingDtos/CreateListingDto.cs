@@ -10,7 +10,7 @@ namespace Core.DTOs.ListingDtos;
 public class CreateListingDto
 {
     [Required(ErrorMessage = "İlan başlığı gereklidir")]
-    [StringLength(200, MinimumLength = 5, ErrorMessage = "Başlık 5-200 karakter arasında olmalıdır")]
+    [StringLength(200, MinimumLength = 1, ErrorMessage = "Başlık 1-200 karakter arasında olmalıdır")]
     public string Title { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Fiyat gereklidir")]

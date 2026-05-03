@@ -55,6 +55,55 @@ public class RealEstate : BaseEntity
     public bool? HasGenerator { get; set; }
     public bool? HasNaturalGas { get; set; }
 
+    // ==================== ORTAK (İŞ YERİ + ARSA) ====================
+    public bool? IsCreditEligible { get; set; }
+    public bool? IsExchangeable { get; set; }
+
+    // ==================== İŞ YERİ — SAYISAL ====================
+    public int? GrossArea { get; set; }
+    public int? NetArea { get; set; }
+    public decimal? CeilingHeight { get; set; }
+    public decimal? FrontWidth { get; set; }
+
+    // ==================== İŞ YERİ — ENUM ====================
+    public HeatingType? HeatingType { get; set; }
+    public BuildingCondition? BuildingCondition { get; set; }
+    public UsageStatus? UsageStatus { get; set; }
+    public BuildingType? BuildingType { get; set; }
+
+    // ==================== İŞ YERİ — BOOL ====================
+    public bool? HasShowcase { get; set; }
+    public bool? HasShutter { get; set; }
+    public bool? HasMezzanine { get; set; }
+    public bool? HasBasement { get; set; }
+    public bool? HasLoadingDock { get; set; }
+    public bool? HasColdStorage { get; set; }
+    public bool? HasFireSystem { get; set; }
+    public bool? HasCameraSystem { get; set; }
+    public bool? HasThreePhasePower { get; set; }
+
+    // ==================== ARSA — SAYISAL ====================
+    public decimal? FloorAreaRatio { get; set; }
+    public decimal? HeightLimit { get; set; }
+
+    [MaxLength(50)]
+    public string? BlockNumber { get; set; }
+
+    [MaxLength(50)]
+    public string? ParcelNumber { get; set; }
+
+    [MaxLength(50)]
+    public string? SheetNumber { get; set; }
+
+    // ==================== ARSA — ENUM ====================
+    public ZoningStatus? ZoningStatus { get; set; }
+    public DeedStatus? DeedStatus { get; set; }
+
+    // ==================== ARSA — BOOL ====================
+    public bool? IsRoadAccessible { get; set; }
+    public bool? HasWaterSource { get; set; }
+    public bool? HasElectricityConnection { get; set; }
+
     // Kiralık/Satılık bilgileri
     public RealEstateListingType ListingType { get; set; } = RealEstateListingType.Satilik;
 

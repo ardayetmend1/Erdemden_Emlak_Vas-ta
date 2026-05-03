@@ -8,5 +8,7 @@ public class HousingType : BaseEntity
     [MaxLength(100)]
     public string Name { get; set; } = null!;
 
+    public RealEstateCategory Category { get; set; } = RealEstateCategory.Konut;
+
     public virtual ICollection<RealEstate> RealEstates { get; set; } = new List<RealEstate>();
 }

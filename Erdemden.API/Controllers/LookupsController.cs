@@ -246,11 +246,96 @@ public class LookupsController : ControllerBase
     {
         var housingTypes = await _unitOfWork.Repository<HousingType>()
             .Query()
-            .OrderBy(h => h.Name)
-            .Select(h => new LookupDto { Id = h.Id, Name = h.Name })
+            .OrderBy(h => h.Category).ThenBy(h => h.Name)
+            .Select(h => new HousingTypeLookupDto { Id = h.Id, Name = h.Name, Category = h.Category })
             .ToListAsync();
 
-        return Ok(ApiResponseDto<List<LookupDto>>.SuccessResponse(housingTypes));
+        return Ok(ApiResponseDto<List<HousingTypeLookupDto>>.SuccessResponse(housingTypes));
+    }
+
+    /// <summary>
+    /// Emlak ile ilgili sabit enum'ları (Konut/İşYeri/Arsa, ısıtma türü, imar durumu vb.)
+    /// label/value şeklinde döner. Frontend dropdown'ları bunu kullanır.
+    /// </summary>
+    [HttpGet("real-estate-enums")]
+    public IActionResult GetRealEstateEnums()
+    {
+        var result = new
+        {
+            RealEstateCategories = EnumToList<RealEstateCategory>(name => name switch
+            {
+                "Konut" => "Konut",
+                "IsYeri" => "İş Yeri",
+                "Arsa" => "Arsa",
+                _ => name
+            }),
+            HeatingTypes = EnumToList<HeatingType>(name => name switch
+            {
+                "Yok" => "Yok",
+                "Soba" => "Soba",
+                "Dogalgaz" => "Doğalgaz",
+                "Klima" => "Klima",
+                "Merkezi" => "Merkezi",
+                "Kombi" => "Kombi",
+                "YerdenIsitma" => "Yerden Isıtma",
+                "VRV" => "VRV",
+                _ => name
+            }),
+            BuildingConditions = EnumToList<BuildingCondition>(name => name switch
+            {
+                "Sifir" => "Sıfır",
+                "IkinciEl" => "İkinci El",
+                "InsaatHalinde" => "İnşaat Halinde",
+                _ => name
+            }),
+            UsageStatuses = EnumToList<UsageStatus>(name => name switch
+            {
+                "Bos" => "Boş",
+                "Kiracili" => "Kiracılı",
+                "MulkSahibi" => "Mülk Sahibi",
+                _ => name
+            }),
+            BuildingTypes = EnumToList<BuildingType>(name => name switch
+            {
+                "ApartmanIci" => "Apartman İçi",
+                "MustakilBina" => "Müstakil Bina",
+                "Plaza" => "Plaza",
+                "IsHani" => "İş Hanı",
+                "AVM" => "AVM",
+                _ => name
+            }),
+            ZoningStatuses = EnumToList<ZoningStatus>(name => name switch
+            {
+                "Konut" => "Konut",
+                "Ticari" => "Ticari",
+                "Sanayi" => "Sanayi",
+                "Turizm" => "Turizm",
+                "Karma" => "Karma",
+                "Tarim" => "Tarım",
+                "Imarsiz" => "İmarsız",
+                "Belirtilmemis" => "Belirtilmemiş",
+                _ => name
+            }),
+            DeedStatuses = EnumToList<DeedStatus>(name => name switch
+            {
+                "Mustakil" => "Müstakil",
+                "Hisseli" => "Hisseli",
+                "KatIrtifakli" => "Kat İrtifaklı",
+                "KatMulkiyetli" => "Kat Mülkiyetli",
+                "TahsisBelgeli" => "Tahsis Belgeli",
+                "Belirsiz" => "Belirsiz",
+                _ => name
+            })
+        };
+
+        return Ok(ApiResponseDto<object>.SuccessResponse(result));
+    }
+
+    private static List<object> EnumToList<TEnum>(Func<string, string> labelMap) where TEnum : struct, Enum
+    {
+        return Enum.GetValues<TEnum>()
+            .Select(e => (object)new { value = Convert.ToInt32(e), label = labelMap(e.ToString()) })
+            .ToList();
     }
 
     /// <summary>
@@ -314,8 +399,8 @@ public class LookupsController : ControllerBase
             .Select(t => new LookupDto { Id = t.Id, Name = t.Name }).ToListAsync();
 
         var housingTypes = await _unitOfWork.Repository<HousingType>()
-            .Query().OrderBy(h => h.Name)
-            .Select(h => new LookupDto { Id = h.Id, Name = h.Name }).ToListAsync();
+            .Query().OrderBy(h => h.Category).ThenBy(h => h.Name)
+            .Select(h => new HousingTypeLookupDto { Id = h.Id, Name = h.Name, Category = h.Category }).ToListAsync();
 
         var result = new
         {

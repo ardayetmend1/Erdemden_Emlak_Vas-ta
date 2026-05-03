@@ -41,6 +41,10 @@ public class ListingFilterDto : PaginationRequestDto
     public int? MaxKm { get; set; }
 
     // ==================== Emlak Filtreleri ====================
+    /// <summary>
+    /// Konut / İş Yeri / Arsa kategorisi (RealEstate ilanları içinde)
+    /// </summary>
+    public RealEstateCategory? RealEstateCategory { get; set; }
     public Guid? HousingTypeId { get; set; }
     public string? RoomCount { get; set; }
     public int? ListingType { get; set; }

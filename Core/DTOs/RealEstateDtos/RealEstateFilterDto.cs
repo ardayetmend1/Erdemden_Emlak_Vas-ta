@@ -1,4 +1,5 @@
 using Core.DTOs.Common;
+using EntityLayer.Entities;
 
 namespace Core.DTOs.RealEstateDtos;
 
@@ -7,6 +8,11 @@ namespace Core.DTOs.RealEstateDtos;
 /// </summary>
 public class RealEstateFilterDto : PaginationRequestDto
 {
+    /// <summary>
+    /// Konut / İş Yeri / Arsa filtresi
+    /// </summary>
+    public RealEstateCategory? Category { get; set; }
+
     public Guid? HousingTypeId { get; set; }
 
     // Oda sayısı
