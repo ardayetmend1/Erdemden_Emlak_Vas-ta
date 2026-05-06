@@ -48,6 +48,7 @@ jobs:
             --exclude '.env' \
             --exclude 'appsettings.Production.json' \
             --exclude 'logs/' \
+            --exclude 'uploads/' \
             -e "ssh -o ConnectTimeout=30 -o ServerAliveInterval=15" \
             publish/ ${{ env.SSH_USER }}@${{ env.SSH_HOST }}:${{ env.DEPLOY_PATH }}/
 
