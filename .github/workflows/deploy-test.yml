@@ -37,9 +37,19 @@ jobs:
           ssh-keyscan -H ${{ env.SSH_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
 
       - name: Stop service
-        timeout-minutes: 2
+        timeout-minutes: 5
         run: |
-          ssh -o ConnectTimeout=30 -o ServerAliveInterval=15 ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "sudo systemctl stop ${{ env.SERVICE_NAME }}"
+          for attempt in 1 2 3 4 5; do
+            echo "=== Stop service attempt $attempt ==="
+            if ssh -o ConnectTimeout=30 -o ServerAliveInterval=15 ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "sudo systemctl stop ${{ env.SERVICE_NAME }}"; then
+              echo "Service stopped on attempt $attempt"
+              exit 0
+            fi
+            echo "Attempt $attempt failed, retrying in 20s..."
+            sleep 20
+          done
+          echo "All stop attempts failed"
+          exit 1
 
       - name: Deploy via rsync
         timeout-minutes: 10
@@ -53,17 +63,23 @@ jobs:
             publish/ ${{ env.SSH_USER }}@${{ env.SSH_HOST }}:${{ env.DEPLOY_PATH }}/
 
       - name: Start service and health check
-        timeout-minutes: 3
+        timeout-minutes: 8
         run: |
           sleep 3
-          ssh -o ConnectTimeout=30 -o ServerAliveInterval=15 ${{ env.SSH_USER }}@${{ env.SSH_HOST }} bash -c '
-            chown -R www-data:www-data ${{ env.DEPLOY_PATH }}
-            sudo systemctl start ${{ env.SERVICE_NAME }}
-            sleep 5
-            if systemctl is-active --quiet ${{ env.SERVICE_NAME }}; then
-              echo "Service is running"
-            else
-              systemctl status ${{ env.SERVICE_NAME }} --no-pager -l | head -40
-              exit 1
+          for attempt in 1 2 3 4 5; do
+            echo "=== Start service attempt $attempt ==="
+            if ssh -o ConnectTimeout=30 -o ServerAliveInterval=15 ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "
+              chown -R www-data:www-data ${{ env.DEPLOY_PATH }} &&
+              sudo systemctl start ${{ env.SERVICE_NAME }} &&
+              sleep 5 &&
+              systemctl is-active --quiet ${{ env.SERVICE_NAME }}
+            "; then
+              echo "Service is running (attempt $attempt)"
+              exit 0
             fi
-          '
+            echo "Attempt $attempt failed, retrying in 20s..."
+            sleep 20
+          done
+          echo "All start attempts failed, dumping status:"
+          ssh -o ConnectTimeout=30 ${{ env.SSH_USER }}@${{ env.SSH_HOST }} "systemctl status ${{ env.SERVICE_NAME }} --no-pager -l | head -40" || true
+          exit 1
